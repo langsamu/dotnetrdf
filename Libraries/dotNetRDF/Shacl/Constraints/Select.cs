@@ -50,7 +50,7 @@ namespace VDS.RDF.Shacl.Constraints
         {
         }
 
-        protected override string Query
+        protected override string QueryString
         {
             get
             {

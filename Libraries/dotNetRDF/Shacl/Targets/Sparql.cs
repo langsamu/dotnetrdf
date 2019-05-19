@@ -24,35 +24,27 @@
 // </copyright>
 */
 
-namespace VDS.RDF.Shacl
+namespace VDS.RDF.Shacl.Targets
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using VDS.RDF.Shacl.Targets;
+    using System.Linq;
+    using VDS.RDF.Query;
 
-    internal abstract class Target : WrapperNode
+    internal class Sparql : Custom
     {
         [DebuggerStepThrough]
-        protected Target(INode node)
-            : base(node)
+        internal Sparql(Shape shape, INode node)
+            : base(shape, node)
         {
         }
 
-        internal static Target Parse(Shape shape, INode type, INode value)
+        internal override IEnumerable<INode> SelectFocusNodes(IGraph dataGragh)
         {
-            switch (type)
-            {
-                case INode t when t.Equals(Vocabulary.TargetNode): return new Node(value);
-                case INode t when t.Equals(Vocabulary.TargetClass): return new Class(value);
-                case INode t when t.Equals(Vocabulary.TargetSubjectsOf): return new SubjectsOf(value);
-                case INode t when t.Equals(Vocabulary.TargetObjectsOf): return new ObjectsOf(value);
-                case INode t when t.Equals(Vocabulary.Target): return Custom.Parse(shape, value);
-
-                default: throw new Exception();
-            }
+            var select = new Constraints.Select(Shape, this);
+            var query = select.Query;
+            var results = (SparqlResultSet)dataGragh.ExecuteQuery(query);
+            return results.Select(result => result["this"]);
         }
-
-        internal abstract IEnumerable<INode> SelectFocusNodes(IGraph dataGragh);
     }
 }

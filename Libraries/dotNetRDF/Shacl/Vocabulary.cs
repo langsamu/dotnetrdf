@@ -525,6 +525,11 @@ namespace VDS.RDF.Shacl
         public static IUriNode SparqlConstraintComponent { get; } = ShaclNode("SPARQLConstraintComponent");
 
         /// <summary>
+        /// Gets a node representing target.
+        /// </summary>
+        public static IUriNode Target { get; } = ShaclNode("target");
+
+        /// <summary>
         /// Gets a node representing targetClass.
         /// </summary>
         public static IUriNode TargetClass { get; } = ShaclNode("targetClass");
@@ -624,6 +629,7 @@ namespace VDS.RDF.Shacl
                 yield return TargetClass;
                 yield return TargetSubjectsOf;
                 yield return TargetObjectsOf;
+                yield return Target;
             }
         }
 

@@ -99,14 +99,14 @@ namespace VDS.RDF.Shacl
 
                 IEnumerable<Target> selectTargets(INode type) =>
                     from target in type.ObjectsOf(this)
-                    select Target.Parse(type, target);
+                    select Target.Parse(this, type, target);
 
                 var targets = Vocabulary.Targets.SelectMany(selectTargets);
 
                 var implicitClassTargets =
                     from shape in this.AsEnumerable()
                     where isClass(shape) && isShape(shape)
-                    select Target.Parse(Vocabulary.TargetClass, shape);
+                    select Target.Parse(this, Vocabulary.TargetClass, shape);
 
                 return targets.Union(implicitClassTargets);
             }

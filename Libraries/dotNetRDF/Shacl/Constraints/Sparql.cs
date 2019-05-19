@@ -59,7 +59,22 @@ namespace VDS.RDF.Shacl.Constraints
             }
         }
 
-        protected abstract string Query { get; }
+        internal SparqlQuery Query
+        {
+            get
+            {
+                var query = new SparqlParameterizedString(QueryString);
+
+                foreach (var item in Prefixes)
+                {
+                    query.Namespaces.AddNamespace(item.Prefix, item.Namespace);
+                }
+
+                return new SparqlQueryParser().ParseFromString(query);
+            }
+        }
+
+        protected abstract string QueryString { get; }
 
         protected INode Message
         {
@@ -81,14 +96,7 @@ namespace VDS.RDF.Shacl.Constraints
 
         internal override bool Validate(INode focusNode, IEnumerable<INode> valueNodes, Report report)
         {
-            var queryString = new SparqlParameterizedString(Query);
-
-            foreach (var item in Prefixes)
-            {
-                queryString.Namespaces.AddNamespace(item.Prefix, item.Namespace);
-            }
-
-            var query = new SparqlQueryParser().ParseFromString(queryString);
+            var query = Query;
 
             Validate(query.RootGraphPattern);
 

@@ -75,6 +75,7 @@ SELECT DISTINCT ?shape {
                 sh:targetClass
                 sh:targetSubjectsOf
                 sh:targetObjectsOf
+                sh:target
             }
 
             ?shape ?target ?any .

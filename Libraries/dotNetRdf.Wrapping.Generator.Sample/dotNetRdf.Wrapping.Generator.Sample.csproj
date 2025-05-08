@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>VDS.RDF.Wrapping.Generator.Sample</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\dotNetRdf.Wrapping\dotNetRdf.Wrapping.csproj" />
+    <ProjectReference Include="..\dotNetRdf.Wrapping.Attributes\dotNetRdf.Wrapping.Attributes.csproj" />
+    <ProjectReference Include="..\dotNetRdf.Wrapping.Generator\dotNetRdf.Wrapping.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+</Project>

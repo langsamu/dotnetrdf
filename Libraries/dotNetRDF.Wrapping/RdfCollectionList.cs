@@ -5,9 +5,8 @@ using System.Linq;
 
 namespace VDS.RDF.Wrapping;
 
-internal class RdfList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INode predicate, NodeMapping<T> toNode, ValueMapping<T> toValue) : IList<T>
+internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INode predicate, NodeMapping<T> toNode, ValueMapping<T> toValue) : IList<T>
 {
-    private readonly IGraph graph = subject.Graph ?? throw new ArgumentException("must have graph", nameof(subject));
     private GraphWrapperNode? root = root switch
     {
         null => null,
@@ -16,20 +15,13 @@ internal class RdfList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INod
         _ => root,
     };
 
+    private readonly IGraph graph = subject.Graph ?? throw new ArgumentException("must have graph", nameof(subject));
+
     T IList<T>.this[int index]
     {
         get => default!; // TODO: adapt to this framework version: toValue(Items.GetItemByIndex(index));
         set => throw new NotImplementedException();
     }
-
-    private IEnumerable<GraphWrapperNode> Items => root switch
-    {
-        null => [],
-        var root when root.Equals(Vocabulary.Nil) => [],
-        _ => graph.GetListItems(root).In(graph),
-    };
-
-    private IEnumerable<T> Values => Items.Select(item => toValue(item) ?? throw new Exception()); // TODO: Specific exception: No nulls in RDF collections
 
     int ICollection<T>.Count => Items.Count();
 
@@ -60,10 +52,15 @@ internal class RdfList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INod
     }
 
     void ICollection<T>.Clear() => graph.RetractList(root);
-    public bool Contains(T item) => Items.Contains(NodeFrom(item));
+
+    bool ICollection<T>.Contains(T item) => Items.Contains(NodeFrom(item));
+
     void ICollection<T>.CopyTo(T[] array, int arrayIndex) => Values.ToArray().CopyTo(array, arrayIndex);
-    public IEnumerator<T> GetEnumerator() => Values.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() => Values.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
+
     int IList<T>.IndexOf(T item)
     {
         var itemNode = NodeFrom(item);
@@ -87,7 +84,7 @@ internal class RdfList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INod
     /// <remarks>This implementation removes from the underlying RDF collection all occurences of nodes that correspond to the <paramref name="item"/>. This is different from the definition of <see cref="ICollection{T}.Remove(T)"/>, which is to remove only the first occurence. The justification for this behaviour is to align with idioms of the underlying core library.</remarks>
     bool ICollection<T>.Remove(T item)
     {
-        if (!Contains(item))
+        if (!((ICollection<T>)this).Contains(item))
         {
             return false;
         }
@@ -95,12 +92,21 @@ internal class RdfList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INod
         graph.RemoveFromList(root, [item], NodeFrom);
         return true;
     }
+
     void IList<T>.RemoveAt(int index) => throw new NotImplementedException();
+
+    private IEnumerable<GraphWrapperNode> Items => root switch
+    {
+        null => [],
+        var root when root.Equals(Vocabulary.Nil) => [],
+        _ => graph.GetListItems(root).In(graph),
+    };
+
+    private IEnumerable<T> Values => Items.Select(item => toValue(item) ?? throw new Exception()); // TODO: Specific exception: No nulls in RDF collections
 
     private GraphWrapperNode NodeFrom(T item) => item switch
     {
-        null => throw new ArgumentNullException(nameof(item)),
+        null => throw new ArgumentNullException("Cannot add null to an RDF collection", nameof(item)),
         _ => toNode(item, graph)
     };
-
 }

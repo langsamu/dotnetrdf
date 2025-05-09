@@ -6,9 +6,9 @@ using Xunit;
 
 namespace VDS.RDF.Wrapping;
 
-public class RdfListTest
+public class RdfCollectionListTest
 {
-    private readonly static NodeFactory facgtory = new NodeFactory();
+    private readonly static NodeFactory facgtory = new();
     private readonly static INode s = facgtory.CreateUriNode(UriFactory.Create("http://example.com/s"));
 
 
@@ -37,7 +37,7 @@ public class RdfListTest
     }
 
     [Fact]
-    public void list1()
+    public void List1()
     {
         var g = new Graph();
         g.LoadFromString("<http://example.com/s> <http://example.com/p1> () .", new TurtleParser());
@@ -47,7 +47,7 @@ public class RdfListTest
     }
 
     [Fact]
-    public void list2()
+    public void List2()
     {
         var g = new Graph();
         g.LoadFromString("<http://example.com/s> <http://example.com/p1> ('o') .", new TurtleParser());
@@ -57,16 +57,16 @@ public class RdfListTest
     }
 
     [Fact]
-    public void add0()
+    public void Add0()
     {
         var g = new Graph();
         var l = SampleWrapperResource.Wrap(s, g).List;
 
-        l.Invoking(l => l.Add(null)).Should().Throw<ArgumentNullException>();
+        l.Invoking(l => l.Add(null!)).Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void add1()
+    public void Add1()
     {
         var expected = new Graph();
         expected.LoadFromString("<http://example.com/s> <http://example.com/p1> ('o') .", new TurtleParser());
@@ -80,7 +80,7 @@ public class RdfListTest
     }
 
     [Fact]
-    public void add2()
+    public void Add2()
     {
         var expected = new Graph();
         expected.LoadFromString("<http://example.com/s> <http://example.com/p1> ('o') .", new TurtleParser());
@@ -95,7 +95,7 @@ public class RdfListTest
     }
 
     [Fact]
-    public void add3()
+    public void Add3()
     {
         var expected = new Graph();
         expected.LoadFromString("<http://example.com/s> <http://example.com/p1> ('o' 'o2') .", new TurtleParser());

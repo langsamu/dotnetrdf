@@ -14,5 +14,5 @@ public static class ValueMappings
         };
 
     public static ValueMapping<IList<T>> AsList<T>(GraphWrapperNode subject, INode predicate, NodeMapping<T> nmap, ValueMapping<T> vmap) =>
-        node => new RdfList<T>(node, subject, predicate, nmap, vmap);
+        node => new RdfCollectionList<T>(node, subject, predicate, nmap, vmap);
 }

@@ -29,7 +29,7 @@ internal class RdfList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INod
         _ => graph.GetListItems(root).In(graph),
     };
 
-    private IEnumerable<T> Values => Items.Select(item => toValue(item));
+    private IEnumerable<T> Values => Items.Select(item => toValue(item) ?? throw new Exception()); // TODO: Specific exception: No nulls in RDF collections
 
     int ICollection<T>.Count => Items.Count();
 

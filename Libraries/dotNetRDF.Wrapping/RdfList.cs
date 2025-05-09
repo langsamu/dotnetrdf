@@ -12,7 +12,7 @@ internal class RdfList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INod
     {
         null => null,
         var root when root.Equals(Vocabulary.Nil) => root,
-        var root when !root.IsListRoot(subject.Graph) => throw new ArgumentException("must be list",nameof(root)),
+        var root when !root.IsListRoot(subject.Graph) => throw new ArgumentException("must be list", nameof(root)),
         _ => root,
     };
 

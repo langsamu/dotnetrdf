@@ -19,11 +19,34 @@ internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode sub
 
     T IList<T>.this[int index]
     {
-        get => default!; // TODO: adapt to this framework version: toValue(Items.GetItemByIndex(index));
-        set => throw new NotImplementedException();
+        get
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            return toValue(Items.ElementAt(index))!;
+        }
+
+        set
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            RemoveAt(index);
+            Insert(index, value);
+        }
     }
 
-    int ICollection<T>.Count => Items.Count();
+    public int Count => Items.Count();
 
     bool ICollection<T>.IsReadOnly => false;
 
@@ -53,16 +76,29 @@ internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode sub
 
     void ICollection<T>.Clear() => graph.RetractList(root);
 
-    bool ICollection<T>.Contains(T item) => Items.Contains(NodeFrom(item));
+    public bool Contains(T item)
+    {
+        if (item is null)
+        {
+            throw new ArgumentNullException(nameof(item));
+        }
+
+        return Items.Contains(NodeFrom(item));
+    }
 
     void ICollection<T>.CopyTo(T[] array, int arrayIndex) => Values.ToArray().CopyTo(array, arrayIndex);
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator() => Values.GetEnumerator();
+    public IEnumerator<T> GetEnumerator() => Values.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     int IList<T>.IndexOf(T item)
     {
+        if (item is null)
+        {
+            throw new ArgumentNullException(nameof(item));
+        }
+
         var itemNode = NodeFrom(item);
         var index = 0;
 
@@ -79,12 +115,30 @@ internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode sub
         return -1;
     }
 
-    void IList<T>.Insert(int index, T item) => throw new NotImplementedException();
+    public void Insert(int index, T item)
+    {
+        if (item is null)
+        {
+            throw new ArgumentNullException(nameof(item));
+        }
+
+        if (index < 0 || index > Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+
+        throw new NotImplementedException();
+    }
 
     /// <remarks>This implementation removes from the underlying RDF collection all occurences of nodes that correspond to the <paramref name="item"/>. This is different from the definition of <see cref="ICollection{T}.Remove(T)"/>, which is to remove only the first occurence. The justification for this behaviour is to align with idioms of the underlying core library.</remarks>
     bool ICollection<T>.Remove(T item)
     {
-        if (!((ICollection<T>)this).Contains(item))
+        if (item is null)
+        {
+            throw new ArgumentNullException(nameof(item));
+        }
+
+        if (!Contains(item))
         {
             return false;
         }
@@ -93,7 +147,15 @@ internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode sub
         return true;
     }
 
-    void IList<T>.RemoveAt(int index) => throw new NotImplementedException();
+    public void RemoveAt(int index)
+    {
+        if (index < 0 || index >= Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index));
+        }
+
+        throw new NotImplementedException();
+    }
 
     private IEnumerable<GraphWrapperNode> Items => root switch
     {
@@ -102,11 +164,7 @@ internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode sub
         _ => graph.GetListItems(root).In(graph),
     };
 
-    private IEnumerable<T> Values => Items.Select(item => toValue(item) ?? throw new Exception()); // TODO: Specific exception: No nulls in RDF collections
+    private IEnumerable<T> Values => Items.Select(item => toValue(item)!);
 
-    private GraphWrapperNode NodeFrom(T item) => item switch
-    {
-        null => throw new ArgumentNullException("Cannot add null to an RDF collection", nameof(item)),
-        _ => toNode(item, graph)
-    };
+    private GraphWrapperNode NodeFrom(T item) => toNode(item, graph);
 }

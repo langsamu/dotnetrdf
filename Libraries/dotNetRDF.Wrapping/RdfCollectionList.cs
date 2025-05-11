@@ -143,6 +143,7 @@ internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode
         throw new NotImplementedException();
     }
 
+    // TODO: Surface below remark to extension method and generator attribute documentation
     /// <remarks>This implementation removes from the underlying RDF collection all occurences of nodes that correspond to the <paramref name="item"/>. This is different from the definition of <see cref="ICollection{T}.Remove(T)"/>, which is to remove only the first occurence. The justification for this behaviour is to align with idioms of the underlying core library.</remarks>
     bool ICollection<T>.Remove(T item)
     {

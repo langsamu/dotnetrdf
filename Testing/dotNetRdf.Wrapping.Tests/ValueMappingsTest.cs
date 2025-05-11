@@ -1,8 +1,6 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
 using VDS.RDF.Nodes;
 using VDS.RDF.Parsing;
-using Xunit;
 
 namespace VDS.RDF.Wrapping;
 

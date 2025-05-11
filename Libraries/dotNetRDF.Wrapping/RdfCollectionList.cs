@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace VDS.RDF.Wrapping;
 
-internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode subject, INode predicate, NodeMapping<T> toNode, ValueMapping<T> toValue) : IList<T>
+internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode predicate, NodeMapping<T> toNode, ValueMapping<T> toValue) : IList<T>
 {
-    private GraphWrapperNode? root = root switch
+    private INode? root = root switch
     {
         null => null,
         var root when root.Equals(Vocabulary.Nil) => root,
@@ -57,7 +57,7 @@ internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode sub
             throw new ArgumentNullException(nameof(item));
         }
 
-        var isNil = Vocabulary.Nil.Equals(root as INode);
+        var isNil = Vocabulary.Nil.Equals(root);
 
         if (isNil)
         {
@@ -66,7 +66,7 @@ internal class RdfCollectionList<T>(GraphWrapperNode? root, GraphWrapperNode sub
 
         if (root is null || isNil)
         {
-            root = graph.AssertList([item], NodeFrom).In(graph);
+            root = graph.AssertList([item], NodeFrom);
             graph.Assert(subject, predicate, root);
             return;
         }

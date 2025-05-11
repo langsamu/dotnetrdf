@@ -74,7 +74,20 @@ internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode
         graph.AddToList(root, [item], NodeFrom);
     }
 
-    void ICollection<T>.Clear() => graph.RetractList(root);
+    void ICollection<T>.Clear()
+    {
+        if (root is null)
+        {
+            return;
+        }
+
+        graph.RetractList(root);
+        if (!Vocabulary.Nil.Equals(root))
+        {
+            graph.Retract(subject, predicate, root);
+            graph.Assert(subject, predicate, Vocabulary.Nil);
+        }
+    }
 
     public bool Contains(T item)
     {

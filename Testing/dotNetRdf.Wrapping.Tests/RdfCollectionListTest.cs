@@ -95,7 +95,7 @@ public class RdfCollectionListTest
         g.Assert(s, p, g.AssertList([o]));
 
         var expected = new Graph();
-        expected.Assert(s, p, expected.AssertList([o, o,s]));
+        expected.Assert(s, p, expected.AssertList([o, o]));
 
         wrapper.List.Add(v);
 

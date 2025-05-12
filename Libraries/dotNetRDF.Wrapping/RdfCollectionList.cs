@@ -82,6 +82,7 @@ internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode
         }
 
         graph.RetractList(root);
+
         if (!Vocabulary.Nil.Equals(root))
         {
             graph.Retract(subject, predicate, root);

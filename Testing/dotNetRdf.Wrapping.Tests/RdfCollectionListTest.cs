@@ -172,6 +172,26 @@ public class RdfCollectionListTest
     }
 
     [Fact]
+    public void CopyToNull() => wrapper.List.Invoking(l => l.CopyTo(null!, default)).Should().ThrowExactly<ArgumentNullException>();
+
+    [Theory]
+    [InlineData(-1, typeof(ArgumentOutOfRangeException))]
+    [InlineData(1, typeof(ArgumentException))]
+    public void CopyToBounds(int index, Type exception) => wrapper.List.Invoking(l => l.CopyTo([], index)).Should().Throw<Exception>().Which.Should().BeOfType(exception);
+
+    [Fact]
+    public void CopyTo()
+    {
+        g.Assert(s, p, g.AssertList([o]));
+
+        var array = new string[5]; // +2 for padding on each side
+
+        wrapper.List.CopyTo(array, 1);
+
+        array.Should().ContainInOrder([null, v, null]);
+    }
+
+    [Fact]
     public void IndexOfNull() => wrapper.List.Invoking(l => l.IndexOf(null!)).Should().Throw<ArgumentNullException>();
 
     [Fact]

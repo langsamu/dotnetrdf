@@ -99,7 +99,25 @@ internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode
         return Items.Contains(NodeFrom(item));
     }
 
-    void ICollection<T>.CopyTo(T[] array, int arrayIndex) => Values.ToArray().CopyTo(array, arrayIndex);
+    void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+    {
+        if (array is null)
+        {
+            throw new ArgumentNullException(nameof(array));
+        }
+
+        if (arrayIndex < 0)
+        {
+            throw new ArgumentOutOfRangeException();
+        }
+
+        if (arrayIndex > array.Length)
+        {
+            throw new ArgumentException();
+        }
+
+        Values.ToArray().CopyTo(array, arrayIndex);
+    }
 
     public IEnumerator<T> GetEnumerator() => Values.GetEnumerator();
 

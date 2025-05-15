@@ -75,6 +75,9 @@ public static class WrappingExtensions
     public static ISet<T> Objects<T>(this GraphWrapperNode subject, INode predicate, NodeMapping<T> nmap, ValueMapping<T> vmap) =>
         new NodeSet<T>(subject, predicate, TripleSegment.Subject, nmap, vmap);
 
+    public static IDictionary<T, K> Dictionary<T, K>(this GraphWrapperNode subject, INode predicate, NodeMapping<KeyValuePair<T, K>> nmap, ValueMapping<KeyValuePair<T, K>> vmap) =>
+        new WrappingDictionary<T, K>(subject, predicate, nmap, vmap);
+
     public static IList<T> List<T>(this GraphWrapperNode subject, INode predicate, NodeMapping<T> nmap, ValueMapping<T> vmap) =>
         Singular(subject, predicate, ValueMappings.AsList(subject, predicate, nmap, vmap));
 }

@@ -7,6 +7,11 @@ namespace VDS.RDF.Wrapping;
 
 internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode predicate, NodeMapping<T> toNode, ValueMapping<T> toValue) : IList<T>
 {
+    private readonly INode subject = subject ?? throw new ArgumentNullException(nameof(subject));
+    private readonly INode predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
+    private readonly NodeMapping<T> toNode = toNode ?? throw new ArgumentNullException(nameof(toNode));
+    private readonly ValueMapping<T> toValue = toValue ?? throw new ArgumentNullException(nameof(toValue));
+    private readonly IGraph graph = subject.Graph ?? throw new ArgumentException("must have graph", nameof(subject));
     private INode? root = root switch
     {
         null => null,
@@ -15,32 +20,12 @@ internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode
         _ => root,
     };
 
-    private readonly IGraph graph = subject.Graph ?? throw new ArgumentException("must have graph", nameof(subject));
-
-    T IList<T>.this[int index]
+    public T this[int index]
     {
-        get
-        {
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            return toValue(Items.ElementAt(index))!;
-        }
+        get => Values.ElementAt(index);
 
         set
         {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
             RemoveAt(index);
             Insert(index, value);
         }
@@ -48,95 +33,63 @@ internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode
 
     public int Count => Items.Count();
 
-    bool ICollection<T>.IsReadOnly => false;
+    public bool IsReadOnly => false;
 
-    void ICollection<T>.Add(T item)
+    public void Add(T item)
     {
-        if (item is null)
+        if (IsEmpty)
         {
-            throw new ArgumentNullException(nameof(item));
+            RemoveAnchorTriple();
         }
 
-        var isNil = Vocabulary.Nil.Equals(root);
-
-        if (isNil)
-        {
-            graph.Retract(subject, predicate, root);
-        }
-
-        if (root is null || isNil)
+        if (root is null || IsEmpty)
         {
             root = graph.AssertList([item], NodeFrom);
-            graph.Assert(subject, predicate, root);
+            AddAnchorTriple();
             return;
         }
 
         graph.AddToList(root, [item], NodeFrom);
     }
 
-    void ICollection<T>.Clear()
+    public void Clear()
     {
+        // If our triple doesn't exist then let's not create one.
         if (root is null)
         {
             return;
         }
 
-        graph.RetractList(root);
-
-        if (!Vocabulary.Nil.Equals(root))
+        // If the underlying list is already empty then no need to do anything.
+        if (IsEmpty)
         {
-            graph.Retract(subject, predicate, root);
-            graph.Assert(subject, predicate, Vocabulary.Nil);
+            return;
         }
+
+        graph.RetractList(root); // Remove all the `first` & `rest` triples.
+        RemoveAnchorTriple();
+        MakeEmpty();
+        AddAnchorTriple();
     }
 
-    public bool Contains(T item)
-    {
-        if (item is null)
-        {
-            throw new ArgumentNullException(nameof(item));
-        }
+    private void MakeEmpty() => root = Vocabulary.Nil;
+    private bool IsEmpty => Vocabulary.Nil.Equals(root);
 
-        return Items.Contains(NodeFrom(item));
-    }
+    public bool Contains(T item) => Values.Contains(item);
 
-    void ICollection<T>.CopyTo(T[] array, int arrayIndex)
-    {
-        if (array is null)
-        {
-            throw new ArgumentNullException(nameof(array));
-        }
-
-        if (arrayIndex < 0)
-        {
-            throw new ArgumentOutOfRangeException();
-        }
-
-        if (arrayIndex > array.Length)
-        {
-            throw new ArgumentException();
-        }
-
-        Values.ToArray().CopyTo(array, arrayIndex);
-    }
+    public void CopyTo(T[] array, int index) => Values.ToArray().CopyTo(array, index);
 
     public IEnumerator<T> GetEnumerator() => Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    int IList<T>.IndexOf(T item)
+    public int IndexOf(T item)
     {
-        if (item is null)
-        {
-            throw new ArgumentNullException(nameof(item));
-        }
-
-        var itemNode = NodeFrom(item);
         var index = 0;
 
-        foreach (var node in Items)
+        foreach (var value in Values)
         {
-            if (itemNode.Equals((INode)node))
+            if (Equals(item, value))
             {
                 return index;
             }
@@ -149,55 +102,61 @@ internal class RdfCollectionList<T>(INode? root, GraphWrapperNode subject, INode
 
     public void Insert(int index, T item)
     {
-        if (item is null)
+        var items = Items.ToList();
+        items.Insert(index, NodeFrom(item));
+        Clear();
+
+        if (root is not null)
         {
-            throw new ArgumentNullException(nameof(item));
+            RemoveAnchorTriple();
         }
 
-        if (index < 0 || index > Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index));
-        }
-
-        throw new NotImplementedException();
+        root = graph.AssertList(items);
+        AddAnchorTriple();
     }
 
-    // TODO: Surface below remark to extension method and generator attribute documentation
-    /// <remarks>This implementation removes from the underlying RDF collection all occurences of nodes that correspond to the <paramref name="item"/>. This is different from the definition of <see cref="ICollection{T}.Remove(T)"/>, which is to remove only the first occurence. The justification for this behaviour is to align with idioms of the underlying core library.</remarks>
-    bool ICollection<T>.Remove(T item)
+    public bool Remove(T item)
     {
-        if (item is null)
-        {
-            throw new ArgumentNullException(nameof(item));
-        }
-
         if (!Contains(item))
         {
             return false;
         }
 
         graph.RemoveFromList(root, [item], NodeFrom);
+
+        if (!root.IsListRoot(graph))
+        {
+            RemoveAnchorTriple();
+            MakeEmpty();
+            AddAnchorTriple();
+        }
+
         return true;
     }
 
     public void RemoveAt(int index)
     {
-        if (index < 0 || index >= Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index));
-        }
+        var items = Items.ToList();
+        items.RemoveAt(index);
+        Clear();
 
-        throw new NotImplementedException();
+        RemoveAnchorTriple();
+        root = graph.AssertList(items);
+        AddAnchorTriple();
     }
 
     private IEnumerable<GraphWrapperNode> Items => root switch
     {
         null => [],
-        var root when root.Equals(Vocabulary.Nil) => [],
+        var _ when IsEmpty => [],
         _ => graph.GetListItems(root).In(graph),
     };
 
     private IEnumerable<T> Values => Items.Select(item => toValue(item)!);
 
     private GraphWrapperNode NodeFrom(T item) => toNode(item, graph);
+
+    private void RemoveAnchorTriple() => graph.Retract(subject, predicate, root);
+
+    private void AddAnchorTriple() => graph.Assert(subject, predicate, root);
 }

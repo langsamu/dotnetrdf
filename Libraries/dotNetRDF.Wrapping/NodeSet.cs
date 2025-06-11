@@ -11,7 +11,7 @@ internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegmen
     private readonly GraphWrapperNode anchor = anchor switch
     {
         null => throw new ArgumentNullException(nameof(anchor)),
-        { Graph: null } => throw new ArgumentException("nust have graph", nameof(anchor)),
+        { Graph: null } => throw new ArgumentException("must have graph", nameof(anchor)),
         _ => anchor,
     };
     private readonly INode predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
@@ -25,49 +25,47 @@ internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegmen
     //private readonly NodeMapping<T> toNode = toNode ?? throw new ArgumentNullException(nameof(toNode));
     private readonly ValueMapping<T> toValue = toValue ?? throw new ArgumentNullException(nameof(toValue));
 
-    int ICollection<T>.Count => AssertedStatements.Count();
+    public int Count => AssertedStatements.Count();
 
-    bool ICollection<T>.IsReadOnly => false;
+    public bool IsReadOnly => false;
 
     private IEnumerable<Triple> AssertedStatements => segment switch
     {
         TripleSegment.Subject => Graph.GetTriplesWithSubjectPredicate(anchor, predicate),
-        TripleSegment.Object => Graph.GetTriplesWithPredicateObject(predicate, anchor),
-        _ => throw new InvalidOperationException(),
+        TripleSegment.Object or _ => Graph.GetTriplesWithPredicateObject(predicate, anchor),
     };
 
     private IEnumerable<GraphWrapperNode> AssertedNodes => segment switch
     {
         TripleSegment.Subject => AssertedStatements.Select(statement => statement.Object).In(Graph),
-        TripleSegment.Object => AssertedStatements.Select(statement => statement.Subject).In(Graph),
-        _ => throw new InvalidOperationException(),
+        TripleSegment.Object or _ => AssertedStatements.Select(statement => statement.Subject).In(Graph),
     };
 
     private IGraph Graph => anchor.Graph;
 
     private IEnumerable<T?> AssertedValues => AssertedNodes.Select(toValue.Invoke);
 
-    bool ISet<T>.Add(T item) => Graph.Assert(StatementFrom(item));
+    public bool Add(T item) => Graph.Assert(StatementFrom(item));
 
-    void ICollection<T>.Add(T item) => ((ISet<T>)this).Add(item);
+    void ICollection<T>.Add(T item) => Add(item);
 
-    void ICollection<T>.Clear() => Graph.Retract(AssertedStatements);
+    public void Clear() => Graph.Retract(AssertedStatements);
 
-    bool ICollection<T>.Contains(T item) => Graph.ContainsTriple(StatementFrom(item));
+    public bool Contains(T item) => Graph.ContainsTriple(StatementFrom(item));
 
-    void ICollection<T>.CopyTo(T[] array, int arrayIndex) => AssertedValues.ToArray().CopyTo(array, arrayIndex); // TODO: validate inputs
+    public void CopyTo(T[] array, int arrayIndex) => AssertedValues.ToArray().CopyTo(array, arrayIndex); // TODO: validate inputs
 
-    bool ICollection<T>.Remove(T item) => Graph.Retract(StatementFrom(item));
+    public bool Remove(T item) => Graph.Retract(StatementFrom(item));
 
-    void ISet<T>.ExceptWith(IEnumerable<T> other) => Graph.Retract(StatementsFrom(other));
+    public void ExceptWith(IEnumerable<T> other) => Graph.Retract(StatementsFrom(other));
 
     public IEnumerator<T> GetEnumerator() => AssertedValues.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    void ISet<T>.IntersectWith(IEnumerable<T> other) => Graph.Retract(AssertedStatements.Except(StatementsFrom(other)));
+    public void IntersectWith(IEnumerable<T> other) => Graph.Retract(AssertedStatements.Except(StatementsFrom(other)));
 
-    void ISet<T>.SymmetricExceptWith(IEnumerable<T> other)
+    public void SymmetricExceptWith(IEnumerable<T> other)
     {
         var otherStatements = StatementsFrom(other);
         var intersecting = AssertedStatements.Intersect(otherStatements);
@@ -76,17 +74,17 @@ internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegmen
         Graph.Retract(intersecting);
     }
 
-    void ISet<T>.UnionWith(IEnumerable<T> other) => Graph.Assert(StatementsFrom(other).Except(AssertedStatements));
+    public void UnionWith(IEnumerable<T> other) => Graph.Assert(StatementsFrom(other).Except(AssertedStatements));
 
-    bool ISet<T>.IsProperSubsetOf(IEnumerable<T> other) => throw new NotImplementedException();
+    public bool IsProperSubsetOf(IEnumerable<T> other) => throw new NotImplementedException();
 
-    bool ISet<T>.IsProperSupersetOf(IEnumerable<T> other) => throw new NotImplementedException();
+    public bool IsProperSupersetOf(IEnumerable<T> other) => throw new NotImplementedException();
 
-    bool ISet<T>.IsSubsetOf(IEnumerable<T> other)
+    public bool IsSubsetOf(IEnumerable<T> other)
     {
         // The empty set is a subset of any set, and a set is a subset of itself.
         // Set is always a subset of itself.
-        if (((ICollection<T>)this).Count == 0 || other == this)
+        if (Count == 0 || other == this)
         {
             return true;
         }
@@ -94,17 +92,16 @@ internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegmen
         return !AssertedStatements.Except(StatementsFrom(other)).Any();
     }
 
-    bool ISet<T>.IsSupersetOf(IEnumerable<T> other) => !StatementsFrom(other).Except(AssertedStatements).Any();
+    public bool IsSupersetOf(IEnumerable<T> other) => !StatementsFrom(other).Except(AssertedStatements).Any();
 
-    bool ISet<T>.Overlaps(IEnumerable<T> other) => throw new NotImplementedException();
+    public bool Overlaps(IEnumerable<T> other) => throw new NotImplementedException();
 
-    bool ISet<T>.SetEquals(IEnumerable<T> other) => throw new NotImplementedException();
+    public bool SetEquals(IEnumerable<T> other) => throw new NotImplementedException();
 
     private Triple StatementFrom(T item) => segment switch
     {
         TripleSegment.Subject => new(anchor, predicate, NodeFrom(item)),
-        TripleSegment.Object => new(NodeFrom(item), predicate, anchor),
-        _ => throw new InvalidOperationException(),
+        TripleSegment.Object or _ => new(NodeFrom(item), predicate, anchor),
     };
 
     private INode NodeFrom(T item) => item switch

@@ -270,7 +270,7 @@ public class RdfCollectionListTest
     }
 
     [Fact]
-    public void GetEnumerator1()
+    public void GetEnumerator()
     {
         g.Assert(s, p, g.AssertList([o, o, o]));
 
@@ -394,29 +394,16 @@ public class RdfCollectionListTest
         g.Should().BeIsomorphicWith(expected);
     }
 
-    //[Theory]
-    //[InlineData(-1)]
-    //[InlineData(0)]
-    //public void RemoveAtBounds(int index) => Collection
-    //    .Invoking(l => l.RemoveAt(index))
-    //    .Should().ThrowExactly<ArgumentOutOfRangeException>()
-    //    .WithParameterName("index");
-
-    //[Fact]
-    //public void RemoveAtEmpty()
-    //{
-    //    g.Assert(s, p, g.AssertList([]));
-
-    //    Collection.Invoking(l => l.RemoveAt(0))
-    //        .Should().ThrowExactly<ArgumentOutOfRangeException>()
-    //        .WithParameterName("index");
-    //}
-
     [Fact]
     public void RemoveAt()
     {
-        g.Assert(s, p, g.AssertList([o]));
+        g.Assert(s, p, g.AssertList([s, p, o]));
 
-        Collection.RemoveAt(0);
+        var expected = new Graph();
+        expected.Assert(s, p, expected.AssertList([s, o]));
+
+        Collection.RemoveAt(1);
+
+        g.Should().BeIsomorphicWith(expected);
     }
 }

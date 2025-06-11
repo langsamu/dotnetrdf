@@ -142,11 +142,11 @@ public class RdfCollectionListTest
         Collection.Should().HaveCount(objects.Count());
     }
 
-    public static IEnumerable<object[]> NodeCollections => [
-        [ Array.Empty<INode>() ],
-        [ new INode[] { s } ],
-        [ new INode[] { s, p } ],
-        [ new INode[] { s, p, o } ],
+    public static IEnumerable<TheoryDataRow<IEnumerable<INode>>> NodeCollections => [
+        new TheoryDataRow<IEnumerable<INode>>([]),
+        new TheoryDataRow<IEnumerable<INode>>([s]),
+        new TheoryDataRow<IEnumerable<INode>>([s, p]),
+        new TheoryDataRow<IEnumerable<INode>>([s, p, o]),
     ];
 
     [Fact]

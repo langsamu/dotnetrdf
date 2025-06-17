@@ -6,9 +6,9 @@ namespace VDS.RDF.Wrapping;
 
 internal static class GraphAssertionExtensions
 {
-    internal static GraphAssertions Should(this IGraph instance) => new(instance);
+    internal static GraphAssertions Should(this IGraph instance) => new(instance, AssertionChain.GetOrCreate());
 
-    internal class GraphAssertions(IGraph instance) : ReferenceTypeAssertions<IGraph, GraphAssertions>(instance)
+    internal class GraphAssertions(IGraph instance, AssertionChain chain) : ReferenceTypeAssertions<IGraph, GraphAssertions>(instance, chain)
     {
         private const string Message = """
             Expected {context:subject graph} to be isomorphic with target graph{reason}, but it was not.
@@ -27,7 +27,7 @@ internal static class GraphAssertionExtensions
             var subjectRdf = StringWriter.Write(Subject, new CompressingTurtleWriter());
             var otherRdf = StringWriter.Write(other, new CompressingTurtleWriter());
 
-            Execute.Assertion
+            chain
                 .ForCondition(Subject.Equals(other))
                 .BecauseOf(because, becauseArgs)
                 .FailWith(Message, subjectRdf, otherRdf, becauseArgs);

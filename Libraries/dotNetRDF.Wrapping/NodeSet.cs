@@ -76,27 +76,17 @@ internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegmen
 
     public void UnionWith(IEnumerable<T> other) => Graph.Assert(StatementsFrom(other).Except(AssertedStatements));
 
-    public bool IsProperSubsetOf(IEnumerable<T> other) => throw new NotImplementedException();
+    public bool IsProperSubsetOf(IEnumerable<T> other) => IsSubsetOf(other) && !IsSupersetOf(other);
 
-    public bool IsProperSupersetOf(IEnumerable<T> other) => throw new NotImplementedException();
+    public bool IsProperSupersetOf(IEnumerable<T> other) => IsSupersetOf(other) && !IsSubsetOf(other);
 
-    public bool IsSubsetOf(IEnumerable<T> other)
-    {
-        // The empty set is a subset of any set, and a set is a subset of itself.
-        // Set is always a subset of itself.
-        if (Count == 0 || other == this)
-        {
-            return true;
-        }
+    public bool IsSubsetOf(IEnumerable<T> other) => AssertedValues.All(other.Contains);
 
-        return !AssertedStatements.Except(StatementsFrom(other)).Any();
-    }
+    public bool IsSupersetOf(IEnumerable<T> other) => other.All(Contains);
 
-    public bool IsSupersetOf(IEnumerable<T> other) => !StatementsFrom(other).Except(AssertedStatements).Any();
+    public bool Overlaps(IEnumerable<T> other) => other.Any(Contains) || AssertedValues.Any(other.Contains);
 
-    public bool Overlaps(IEnumerable<T> other) => throw new NotImplementedException();
-
-    public bool SetEquals(IEnumerable<T> other) => throw new NotImplementedException();
+    public bool SetEquals(IEnumerable<T> other) => IsSupersetOf(other) && IsSubsetOf(other);
 
     private Triple StatementFrom(T item) => segment switch
     {

@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        framework: ["net8.0", "net472"]
+        framework: ["net8.0"]
         suite: 
           - "dotNetRdf.Tests"
           - "dotNetRdf.Dynamic.Tests"
@@ -119,7 +119,7 @@ jobs:
     - name: Download coverage artifacts
       uses: actions/download-artifact@v4
     - name: Generate coverage report
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.4.7
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.4.8
       with:
         reports: '*\*\*.xml'
         targetdir: 'coveragereport'

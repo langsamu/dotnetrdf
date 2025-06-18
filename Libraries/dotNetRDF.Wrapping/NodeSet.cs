@@ -8,102 +8,95 @@ namespace VDS.RDF.Wrapping;
 
 internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegment segment, NodeMapping<T> toNode, ValueMapping<T> toValue) : ISet<T>
 {
-    private readonly GraphWrapperNode anchor = anchor switch
-    {
-        null => throw new ArgumentNullException(nameof(anchor)),
-        { Graph: null } => throw new ArgumentException("must have graph", nameof(anchor)),
-        _ => anchor,
-    };
+    private readonly GraphWrapperNode anchor = anchor ?? throw new ArgumentNullException(nameof(anchor));
     private readonly INode predicate = predicate ?? throw new ArgumentNullException(nameof(predicate));
     private readonly TripleSegment segment = segment switch
     {
         TripleSegment.Subject
         or TripleSegment.Object => segment,
-
         _ => throw new ArgumentException("must be s or o", nameof(segment)),
     };
-    //private readonly NodeMapping<T> toNode = toNode ?? throw new ArgumentNullException(nameof(toNode));
+    private readonly NodeMapping<T> toNode = toNode ?? throw new ArgumentNullException(nameof(toNode));
     private readonly ValueMapping<T> toValue = toValue ?? throw new ArgumentNullException(nameof(toValue));
+    private readonly IGraph graph = anchor.Graph ?? throw new ArgumentException("must have graph", nameof(anchor));
 
-    public int Count => AssertedStatements.Count();
+    public int Count => Statements.Count();
 
     public bool IsReadOnly => false;
 
-    private IEnumerable<Triple> AssertedStatements => segment switch
-    {
-        TripleSegment.Subject => Graph.GetTriplesWithSubjectPredicate(anchor, predicate),
-        TripleSegment.Object or _ => Graph.GetTriplesWithPredicateObject(predicate, anchor),
-    };
-
-    private IEnumerable<GraphWrapperNode> AssertedNodes => segment switch
-    {
-        TripleSegment.Subject => AssertedStatements.Select(statement => statement.Object).In(Graph),
-        TripleSegment.Object or _ => AssertedStatements.Select(statement => statement.Subject).In(Graph),
-    };
-
-    private IGraph Graph => anchor.Graph;
-
-    private IEnumerable<T?> AssertedValues => AssertedNodes.Select(toValue.Invoke);
-
-    public bool Add(T item) => Graph.Assert(StatementFrom(item));
+    public bool Add(T item) => graph.Assert(StatementFrom(item));
 
     void ICollection<T>.Add(T item) => Add(item);
 
-    public void Clear() => Graph.Retract(AssertedStatements);
+    public void Clear() => graph.Retract(Statements);
 
-    public bool Contains(T item) => Graph.ContainsTriple(StatementFrom(item));
+    public bool Contains(T item) => graph.ContainsTriple(StatementFrom(item));
 
-    public void CopyTo(T[] array, int arrayIndex) => AssertedValues.ToArray().CopyTo(array, arrayIndex); // TODO: validate inputs
+    public void CopyTo(T[] array, int arrayIndex) => Values.ToArray().CopyTo(array, arrayIndex);
 
-    public bool Remove(T item) => Graph.Retract(StatementFrom(item));
+    public bool Remove(T item) => graph.Retract(StatementFrom(item));
 
-    public void ExceptWith(IEnumerable<T> other) => Graph.Retract(StatementsFrom(other));
+    public void ExceptWith(IEnumerable<T> other) => graph.Retract(StatementsFrom(other));
 
-    public IEnumerator<T> GetEnumerator() => AssertedValues.GetEnumerator();
+    public IEnumerator<T> GetEnumerator() => Values.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public void IntersectWith(IEnumerable<T> other) => Graph.Retract(AssertedStatements.Except(StatementsFrom(other)));
+    public void IntersectWith(IEnumerable<T> other) => graph.Retract(Statements.Except(StatementsFrom(other)));
 
     public void SymmetricExceptWith(IEnumerable<T> other)
     {
         var otherStatements = StatementsFrom(other);
-        var intersecting = AssertedStatements.Intersect(otherStatements);
+        var intersecting = Statements.Intersect(otherStatements);
 
-        Graph.Assert(otherStatements.Except(intersecting));
-        Graph.Retract(intersecting);
+        graph.Assert(otherStatements.Except(intersecting));
+        graph.Retract(intersecting);
     }
 
-    public void UnionWith(IEnumerable<T> other) => Graph.Assert(StatementsFrom(other).Except(AssertedStatements));
+    public void UnionWith(IEnumerable<T> other) => graph.Assert(StatementsFrom(other).Except(Statements));
 
     public bool IsProperSubsetOf(IEnumerable<T> other) => IsSubsetOf(other) && !IsSupersetOf(other);
 
     public bool IsProperSupersetOf(IEnumerable<T> other) => IsSupersetOf(other) && !IsSubsetOf(other);
 
-    public bool IsSubsetOf(IEnumerable<T> other) => AssertedValues.All(other.Contains);
+    public bool IsSubsetOf(IEnumerable<T> other) => Values.All(other.Contains);
 
     public bool IsSupersetOf(IEnumerable<T> other) => other.All(Contains);
 
-    public bool Overlaps(IEnumerable<T> other) => other.Any(Contains) || AssertedValues.Any(other.Contains);
+    public bool Overlaps(IEnumerable<T> other) => other.Any(Contains) || Values.Any(other.Contains);
 
     public bool SetEquals(IEnumerable<T> other) => IsSupersetOf(other) && IsSubsetOf(other);
 
-    private Triple StatementFrom(T item) => segment switch
+    private IEnumerable<Triple> Statements => segment switch
     {
-        TripleSegment.Subject => new(anchor, predicate, NodeFrom(item)),
-        TripleSegment.Object or _ => new(NodeFrom(item), predicate, anchor),
+        TripleSegment.Subject => graph.GetTriplesWithSubjectPredicate(anchor, predicate),
+        TripleSegment.Object or _ => graph.GetTriplesWithPredicateObject(predicate, anchor),
     };
 
-    private INode NodeFrom(T item) => item switch
+    private IEnumerable<GraphWrapperNode> Nodes => segment switch
     {
-        null => throw new ArgumentNullException(nameof(item)),
-        _ => toNode(item, Graph)
+        TripleSegment.Subject => Statements.Select(statement => statement.Object).In(graph),
+        TripleSegment.Object or _ => Statements.Select(statement => statement.Subject).In(graph),
+    };
+
+    private IEnumerable<T?> Values => Nodes.Select(toValue.Invoke);
+
+    private Triple StatementFrom(T value) => segment switch
+    {
+        TripleSegment.Subject => new(anchor, predicate, NodeFrom(value)),
+        TripleSegment.Object or _ => new(NodeFrom(value), predicate, anchor),
+    };
+
+    private INode NodeFrom(T value) => value switch
+    {
+        null => throw new ArgumentNullException(nameof(value)),
+        _ => toNode(value, graph)
     };
 
     private IEnumerable<Triple> StatementsFrom(IEnumerable<T> other) => other switch
     {
         null => throw new ArgumentNullException(nameof(other)),
-        NodeSet<T> otherSet => otherSet.AssertedStatements,
+        NodeSet<T> otherSet => otherSet.Statements,
         IGraph otherGraph => otherGraph.Triples,
         IEnumerable<Triple> otherTriples => otherTriples,
         _ => other.Select(StatementFrom)

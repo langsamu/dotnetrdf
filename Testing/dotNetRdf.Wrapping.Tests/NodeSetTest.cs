@@ -1,11 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VDS.RDF.Writing;
 
 namespace VDS.RDF.Wrapping;
 
 public class NodeSetTest
 {
+    private readonly static NodeFactory factory = new();
+    private readonly static INode predicate = factory.CreateUriNode(UriFactory.Create("http://example.com/p"));
+    private readonly static TripleSegment segment = TripleSegment.Subject;
+
+    private readonly Graph g = new();
+    private readonly GraphWrapperNode anchor;
+
+    public NodeSetTest()
+    {
+        anchor = factory.CreateUriNode(UriFactory.Create("http://example.com/s")).In(g);
+    }
+
     public static IEnumerable<TheoryDataRow<IEnumerable<string>, IEnumerable<string>, bool>> SubsetData => [
         new([], [], true),
         new([], ["b"], true),
@@ -40,21 +51,7 @@ public class NodeSetTest
 
     [Theory]
     [MemberData(nameof(SubsetData))]
-    public void Subset(IEnumerable<string> data1, IEnumerable<string> data2, bool result)
-    {
-        var g = new Graph();
-        var anchor = g.CreateUriNode(new Uri("http://example.com/s")).In(g);
-        var predicate = g.CreateUriNode(new Uri("http://example.com/p"));
-        var segment = TripleSegment.Subject;
-
-        var a = new NodeSet<string>(anchor, predicate, segment, NodeMappings.From, ValueMappings.As<string>);
-        foreach (var item in data1)
-        {
-            a.Add(item);
-        }
-
-        a.IsSubsetOf(data2).Should().Be(result);
-    }
+    public void Subset(IEnumerable<string> items, IEnumerable<string> other, bool result) => NodeSetFrom(items).IsSubsetOf(other).Should().Be(result);
 
     public static IEnumerable<TheoryDataRow<IEnumerable<string>, IEnumerable<string>, bool>> ProperSubsetData => [
         new([], [], false),
@@ -90,21 +87,7 @@ public class NodeSetTest
 
     [Theory]
     [MemberData(nameof(ProperSubsetData))]
-    public void ProperSubset(IEnumerable<string> data1, IEnumerable<string> data2, bool result)
-    {
-        var g = new Graph();
-        var anchor = g.CreateUriNode(new Uri("http://example.com/s")).In(g);
-        var predicate = g.CreateUriNode(new Uri("http://example.com/p"));
-        var segment = TripleSegment.Subject;
-
-        var a = new NodeSet<string>(anchor, predicate, segment, NodeMappings.From, ValueMappings.As<string>);
-        foreach (var item in data1)
-        {
-            a.Add(item);
-        }
-
-        a.IsProperSubsetOf(data2).Should().Be(result);
-    }
+    public void ProperSubset(IEnumerable<string> items, IEnumerable<string> other, bool result) => NodeSetFrom(items).IsProperSubsetOf(other).Should().Be(result);
 
     public static IEnumerable<TheoryDataRow<IEnumerable<string>, IEnumerable<string>, bool>> SupersetData => [
         new([], [], true),
@@ -140,21 +123,7 @@ public class NodeSetTest
 
     [Theory]
     [MemberData(nameof(SupersetData))]
-    public void Superset(IEnumerable<string> data1, IEnumerable<string> data2, bool result)
-    {
-        var g = new Graph();
-        var anchor = g.CreateUriNode(new Uri("http://example.com/s")).In(g);
-        var predicate = g.CreateUriNode(new Uri("http://example.com/p"));
-        var segment = TripleSegment.Subject;
-
-        var a = new NodeSet<string>(anchor, predicate, segment, NodeMappings.From, ValueMappings.As<string>);
-        foreach (var item in data1)
-        {
-            a.Add(item);
-        }
-
-        a.IsSupersetOf(data2).Should().Be(result);
-    }
+    public void Superset(IEnumerable<string> items, IEnumerable<string> other, bool result) => NodeSetFrom(items).IsSupersetOf(other).Should().Be(result);
 
     public static IEnumerable<TheoryDataRow<IEnumerable<string>, IEnumerable<string>, bool>> ProperSupersetData => [
         new([], [], false),
@@ -190,21 +159,7 @@ public class NodeSetTest
 
     [Theory]
     [MemberData(nameof(ProperSupersetData))]
-    public void ProperSuperset(IEnumerable<string> data1, IEnumerable<string> data2, bool result)
-    {
-        var g = new Graph();
-        var anchor = g.CreateUriNode(new Uri("http://example.com/s")).In(g);
-        var predicate = g.CreateUriNode(new Uri("http://example.com/p"));
-        var segment = TripleSegment.Subject;
-
-        var a = new NodeSet<string>(anchor, predicate, segment, NodeMappings.From, ValueMappings.As<string>);
-        foreach (var item in data1)
-        {
-            a.Add(item);
-        }
-
-        a.IsProperSupersetOf(data2).Should().Be(result);
-    }
+    public void ProperSuperset(IEnumerable<string> items, IEnumerable<string> other, bool result) => NodeSetFrom(items).IsProperSupersetOf(other).Should().Be(result);
 
     public static IEnumerable<TheoryDataRow<IEnumerable<string>, IEnumerable<string>, bool>> OverlapsData => [
         new([], [], false),
@@ -240,21 +195,7 @@ public class NodeSetTest
 
     [Theory]
     [MemberData(nameof(OverlapsData))]
-    public void Overlaps(IEnumerable<string> data1, IEnumerable<string> data2, bool result)
-    {
-        var g = new Graph();
-        var anchor = g.CreateUriNode(new Uri("http://example.com/s")).In(g);
-        var predicate = g.CreateUriNode(new Uri("http://example.com/p"));
-        var segment = TripleSegment.Subject;
-
-        var a = new NodeSet<string>(anchor, predicate, segment, NodeMappings.From, ValueMappings.As<string>);
-        foreach (var item in data1)
-        {
-            a.Add(item);
-        }
-
-        a.Overlaps(data2).Should().Be(result);
-    }
+    public void Overlaps(IEnumerable<string> items, IEnumerable<string> other, bool result) => NodeSetFrom(items).Overlaps(other).Should().Be(result);
 
     public static IEnumerable<TheoryDataRow<IEnumerable<string>, IEnumerable<string>, bool>> SetEqualsData => [
         new([], [], true),
@@ -290,19 +231,17 @@ public class NodeSetTest
 
     [Theory]
     [MemberData(nameof(SetEqualsData))]
-    public void SetEquals(IEnumerable<string> data1, IEnumerable<string> data2, bool result)
-    {
-        var g = new Graph();
-        var anchor = g.CreateUriNode(new Uri("http://example.com/s")).In(g);
-        var predicate = g.CreateUriNode(new Uri("http://example.com/p"));
-        var segment = TripleSegment.Subject;
+    public void SetEquals(IEnumerable<string> items, IEnumerable<string> other, bool result) => NodeSetFrom(items).SetEquals(other).Should().Be(result);
 
-        var a = new NodeSet<string>(anchor, predicate, segment, NodeMappings.From, ValueMappings.As<string>);
-        foreach (var item in data1)
+    private ISet<string> NodeSetFrom(IEnumerable<string> items)
+    {
+        var nodes = new NodeSet<string>(anchor, predicate, segment, NodeMappings.From, ValueMappings.As<string>);
+
+        foreach (var item in items)
         {
-            a.Add(item);
+            nodes.Add(item);
         }
 
-        a.SetEquals(data2).Should().Be(result);
+        return nodes;
     }
 }

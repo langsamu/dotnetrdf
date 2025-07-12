@@ -47,13 +47,13 @@ internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegmen
     public void SymmetricExceptWith(IEnumerable<T> other)
     {
         var otherStatements = StatementsFrom(other);
-        var intersecting = Statements.Intersect(otherStatements);
+        var intersecting = Statements.Intersect(otherStatements).ToArray();
 
-        graph.Assert(otherStatements.Except(intersecting));
+        graph.Assert(otherStatements);
         graph.Retract(intersecting);
     }
 
-    public void UnionWith(IEnumerable<T> other) => graph.Assert(StatementsFrom(other).Except(Statements));
+    public void UnionWith(IEnumerable<T> other) => graph.Assert(StatementsFrom(other));
 
     public bool IsProperSubsetOf(IEnumerable<T> other) => IsSubsetOf(other) && !IsSupersetOf(other);
 

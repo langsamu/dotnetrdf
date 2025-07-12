@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using VDS.RDF.Nodes;
 
 namespace VDS.RDF.Wrapping;
@@ -30,6 +31,12 @@ public static class NodeMappings
 
         return node.In(graph);
     }
+
+    public static GraphWrapperNode FromLangStringPair(KeyValuePair<CultureInfo, string> kv, IGraph graph) => graph.CreateLiteralNode(kv.Value, kv.Key.Name).In(graph);
+
+    public static GraphWrapperNode NameFromEnum<T>(T enumeration, IGraph graph) where T : Enum => From(Enum.GetName(typeof(T), enumeration), graph);
+
+    public static NodeMapping<T> UriFromEnum<T>(string prefix) where T : Enum => (enumeration, graph) => From(new Uri(new Uri(prefix), Enum.GetName(typeof(T), enumeration)), graph);
 
     public static NodeMapping<IList<T>> AsList<T>(NodeMapping<T> map) => (value, graph) => graph.AssertList(value, item => map(item, graph)).In(graph);
 }

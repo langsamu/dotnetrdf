@@ -9,7 +9,13 @@ public class WrappingDictionary<T, K>(GraphWrapperNode subject, INode predicate,
 {
     public K this[T key]
     {
-        get => throw new NotImplementedException();
+        get => subject.Graph.GetTriplesWithSubjectPredicate(subject, predicate)
+            .Select(t => t.Object)
+            .Select(obj => valueMapping(obj.In(subject.Graph)))
+            .Where(k => EqualityComparer<T>.Default.Equals(k.Key, key))
+            .Select(x => x.Value)
+            .Single();
+
         set => throw new NotImplementedException();
     }
 
@@ -26,7 +32,7 @@ public class WrappingDictionary<T, K>(GraphWrapperNode subject, INode predicate,
         .Select(l => l.Value)
         .ToList();
 
-    public int Count => throw new NotImplementedException();
+    public int Count => subject.Graph.GetTriplesWithSubjectPredicate(subject, predicate).Count();
 
     public bool IsReadOnly => throw new NotImplementedException();
 

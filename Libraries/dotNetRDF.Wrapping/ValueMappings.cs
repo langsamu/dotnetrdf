@@ -17,13 +17,17 @@ public static class ValueMappings
 
     public static GraphWrapperNode? AsIs(GraphWrapperNode? node) => node;
 
-    public static KeyValuePair<CultureInfo, string> AsLangStringPair(GraphWrapperNode? node) => new KeyValuePair<CultureInfo, string>(
+    public static KeyValuePair<CultureInfo, string> AsLangStringPair(GraphWrapperNode? node) => new(
         CultureInfo.GetCultureInfo((node as ILiteralNode).Language), (node as ILiteralNode).Value);
 
     public static T ToEnum<T>(GraphWrapperNode? node) where T : Enum => (T)Enum.ToObject(typeof(T), node.AsValuedNode().AsInteger());
-    
+
     public static T EnumFromName<T>(GraphWrapperNode? node) where T : Enum => (T)Enum.Parse(typeof(T), (node as ILiteralNode).Value);
-    
+
+    public static Uri UriFromStringLiteral(GraphWrapperNode? node) => new((node as ILiteralNode).Value);
+
+    public static DateTimeOffset DateTimeOffsetFromStringLiteral(GraphWrapperNode? node) => DateTimeOffset.Parse((node as ILiteralNode).Value);
+
     public static ValueMapping<T> EnumFromUri<T>(string prefix) where T : Enum => node => (T)Enum.Parse(typeof(T), new Uri(prefix).MakeRelativeUri((node as IUriNode).Uri).ToString());
 
     public static ValueMapping<IList<T>> AsList<T>(GraphWrapperNode subject, INode predicate, NodeMapping<T> nmap, ValueMapping<T> vmap) =>

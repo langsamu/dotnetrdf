@@ -6,7 +6,7 @@ using VDS.RDF.Writing;
 namespace VDS.RDF.Wrapping;
 
 // TODO: Read only set and list
-public static class WrappingExtensions
+public static class GraphWrapperNodeExtensions
 {
     public static T? Singular<T>(this GraphWrapperNode subject, string predicate, ValueMapping<T> map, bool throwWhenMissing = false, bool throwWhenMore = false) =>
         subject.Singular(subject.Graph.CreateUriNode(UriFactory.Create(predicate)), map, throwWhenMissing, throwWhenMore);

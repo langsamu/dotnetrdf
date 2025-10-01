@@ -38,5 +38,9 @@ public static class NodeMappings
 
     public static NodeMapping<T> UriFromEnum<T>(string prefix) where T : Enum => (enumeration, graph) => From(new Uri(new Uri(prefix), Enum.GetName(typeof(T), enumeration)), graph);
 
+    public static GraphWrapperNode StringLiteralFromUri(Uri value, IGraph graph) => From(value.AbsoluteUri, graph);
+
+    public static GraphWrapperNode StringLiteralFromDateTimeOffset(DateTimeOffset value, IGraph graph) => From(value.ToString(), graph);
+
     public static NodeMapping<IList<T>> AsList<T>(NodeMapping<T> map) => (value, graph) => graph.AssertList(value, item => map(item, graph)).In(graph);
 }

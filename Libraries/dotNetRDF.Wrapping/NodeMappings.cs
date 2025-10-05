@@ -34,13 +34,13 @@ public static class NodeMappings
 
     public static GraphWrapperNode FromLangStringPair(KeyValuePair<CultureInfo, string> kv, IGraph graph) => graph.CreateLiteralNode(kv.Value, kv.Key.Name).In(graph);
 
-    public static GraphWrapperNode NameFromEnum<T>(T enumeration, IGraph graph) where T : Enum => From(Enum.GetName(typeof(T), enumeration), graph);
+    public static GraphWrapperNode NameFromEnum<T>(T? enumeration, IGraph graph) => From(Enum.GetName(Nullable.GetUnderlyingType(typeof(T)), enumeration), graph);
 
     public static NodeMapping<T> UriFromEnum<T>(string prefix) where T : Enum => (enumeration, graph) => From(new Uri(new Uri(prefix), Enum.GetName(typeof(T), enumeration)), graph);
 
     public static GraphWrapperNode StringLiteralFromUri(Uri value, IGraph graph) => From(value.AbsoluteUri, graph);
 
-    public static GraphWrapperNode StringLiteralFromDateTimeOffset(DateTimeOffset value, IGraph graph) => From(value.ToString(), graph);
+    public static GraphWrapperNode StringLiteralFromDateTimeOffset(DateTimeOffset? value, IGraph graph) => From(value?.ToString("yyyy-MM-dd'T'HH:mm:sszzz"), graph);
 
     public static NodeMapping<IList<T>> AsList<T>(NodeMapping<T> map) => (value, graph) => graph.AssertList(value, item => map(item, graph)).In(graph);
 }

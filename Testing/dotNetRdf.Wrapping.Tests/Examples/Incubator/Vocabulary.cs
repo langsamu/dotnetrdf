@@ -1,4 +1,6 @@
-﻿namespace VDS.RDF.Wrapping.Tests.Examples.Incubator;
+﻿using VDS.RDF.Parsing;
+
+namespace VDS.RDF.Wrapping.Tests.Examples.Incubator;
 
 internal static class Vocabulary
 {
@@ -27,12 +29,27 @@ internal static class Vocabulary
     internal static IUriNode Where { get; } = DecisionNode("Where");
     internal static IUriNode When { get; } = DecisionNode("When");
 
+    internal static IUriNode Decisions { get; } = DecisionNode("Decisions");
     internal static IUriNode Decision { get; } = DecisionNode("Decision");
+    internal static IUriNode Question { get; } = DecisionNode("Question");
+    internal static IUriNode Options { get; } = DecisionNode("Options");
+    internal static IUriNode Option { get; } = DecisionNode("Option");
     internal static IUriNode Person { get; } = DecisionNode("Person");
+    internal static IUriNode Idea { get; } = DecisionNode("Idea");
+    internal static IUriNode Pro { get; } = DecisionNode("Pro");
+    internal static IUriNode Metric { get; } = DecisionNode("Metric");
+    internal static IUriNode Con { get; } = DecisionNode("Con");
+    internal static IUriNode States { get; } = DecisionNode("States");
+    internal static IUriNode State { get; } = DecisionNode("State");
+    internal static IUriNode BasicInfo { get; } = DecisionNode("BasicInfo");
 
     internal static IUriNode gml_pos { get; } = AnyNode("http://www.opengis.net/gml#pos");
+    internal static IUriNode GmlPoint { get; } = AnyNode("http://www.opengis.net/gml#Point");
+
+    internal static IUriNode RdfType { get; } = AnyNode(RdfSpecsHelper.RdfType);
 
     private static IUriNode DecisionNode(string name) => AnyNode($"{BaseUri}{name}");
+
 
     private static IUriNode AnyNode(string uri) => Factory.CreateUriNode(Factory.UriFactory.Create(uri));
 }

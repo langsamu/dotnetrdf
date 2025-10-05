@@ -11,6 +11,8 @@ internal class GmlPosition : GraphWrapperNode
 
     internal static GmlPosition Wrap(GraphWrapperNode node) => Wrap(node, node.Graph);
 
+    internal static GmlPosition Create(double x,double y, RDF.Graph g) => Wrap(g.CreateLiteralNode($"{x} {y}"), g);
+
     internal double X => double.Parse(this.AsValuedNode().AsString().Split(' ').First());
 
     internal double Y => double.Parse(this.AsValuedNode().AsString().Split(' ').Last());

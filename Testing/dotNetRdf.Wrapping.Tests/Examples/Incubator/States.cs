@@ -3,19 +3,21 @@ using System.Collections.Generic;
 
 namespace VDS.RDF.Wrapping.Tests.Examples.Incubator;
 
-internal class States : GraphWrapperNode
+internal class States : Typed
 {
     protected States(INode node, IGraph graph) : base(node, graph) { }
 
-    internal static States Wrap(INode node, IGraph graph) => new(node, graph);
+    internal static new States Wrap(INode node, IGraph graph) => new(node, graph);
 
-    internal static States Wrap(GraphWrapperNode node) => Wrap(node, node.Graph);
+    internal static new States Wrap(GraphWrapperNode node) => Wrap(node, node.Graph);
 
-    internal Uri StatesValueList
+    internal static States Create(string uri, RDF.Graph g) => Wrap(g.CreateUriNode(g.UriFactory.Create(uri)), g);
+
+    internal Uri? StatesValueList
     {
         get => this.Singular(Vocabulary.StatesValueList, ValueMappings.UriFromStringLiteral);
 
-        set => this.Overwrite(Vocabulary.StatesValueList, value, NodeMappings.StringLiteralFromUri);
+        set => this.OverwriteNullable(Vocabulary.StatesValueList, value, NodeMappings.StringLiteralFromUri);
     }
 
 

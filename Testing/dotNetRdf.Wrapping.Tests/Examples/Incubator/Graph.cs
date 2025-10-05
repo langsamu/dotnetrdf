@@ -1,4 +1,6 @@
-﻿namespace VDS.RDF.Wrapping.Tests.Examples.Incubator;
+﻿using System.Linq;
+
+namespace VDS.RDF.Wrapping.Tests.Examples.Incubator;
 
 internal class Graph : WrapperGraph
 {
@@ -6,5 +8,12 @@ internal class Graph : WrapperGraph
 
     internal static Graph Wrap(IGraph graph) => new(graph);
 
-    internal Decisions MyDecisions(string uri) => Decisions.Wrap(GetUriNode(UriFactory.Create(uri)), this);
+    internal Decisions? MyDecisions() =>
+        GetTriplesWithPredicateObject(
+            Vocabulary.RdfType,
+            CreateUriNode(UriFactory.Create("http://www.freshdecisions.org/decisions/Decisions")))
+        .Select(static t => t.Subject)
+        .In(this)
+        .Select(Decisions.Wrap)
+        .SingleOrDefault();
 }

@@ -6,5 +6,5 @@ internal class Graph : WrapperGraph
 
     internal static Graph Wrap(IGraph graph) => new(graph);
 
-    internal Concept MyConcept(string uri) => Concept.Wrap(GetUriNode(UriFactory.Create(uri)), this);
+    internal Concept MyConcept(string uri) => Concept.Wrap(CreateUriNode(UriFactory.Create(uri)), this);
 }

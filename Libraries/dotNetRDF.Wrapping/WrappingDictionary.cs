@@ -16,7 +16,11 @@ public class WrappingDictionary<T, K>(GraphWrapperNode subject, INode predicate,
             .Select(x => x.Value)
             .Single();
 
-        set => throw new NotImplementedException();
+        set
+        {
+            Remove(key);
+            Add(key, value);
+        }
     }
 
     public ICollection<T> Keys => subject.Graph.GetTriplesWithSubjectPredicate(subject, predicate)
@@ -42,7 +46,7 @@ public class WrappingDictionary<T, K>(GraphWrapperNode subject, INode predicate,
 
     public void Clear()
     {
-        throw new NotImplementedException();
+        subject.Graph.Retract(subject.Graph.GetTriplesWithSubjectPredicate(subject, predicate));
     }
 
     public bool Contains(KeyValuePair<T, K> item)
@@ -52,7 +56,13 @@ public class WrappingDictionary<T, K>(GraphWrapperNode subject, INode predicate,
 
     public bool ContainsKey(T key)
     {
-        throw new NotImplementedException();
+        return subject.Graph
+            .GetTriplesWithSubjectPredicate(subject, predicate)
+            .Select(t => t.Object)
+            .Select(o => o.In(subject.Graph))
+            .Select(o => valueMapping(o))
+            .Select(v => v.Key)
+            .Any(k => EqualityComparer<T>.Default.Equals(k, key));
     }
 
     public void CopyTo(KeyValuePair<T, K>[] array, int arrayIndex)
@@ -67,7 +77,14 @@ public class WrappingDictionary<T, K>(GraphWrapperNode subject, INode predicate,
 
     public bool Remove(T key)
     {
-        throw new NotImplementedException();
+        var contains = ContainsKey(key);
+
+        var t = subject.Graph
+            .GetTriplesWithSubjectPredicate(subject, predicate)
+            .Where(t => EqualityComparer<T>.Default.Equals(valueMapping(t.Object.In(subject.Graph)).Key, key));
+        subject.Graph.Retract(t);
+
+        return contains;
     }
 
     public bool Remove(KeyValuePair<T, K> item)

@@ -11,7 +11,14 @@ internal class Concept : GraphWrapperNode
 
     internal static Concept Wrap(GraphWrapperNode node) => Wrap(node, node.Graph);
 
-    internal ConceptScheme Scheme => this.Singular(Vocabulary.inScheme, ConceptScheme.Wrap);
+    internal static Concept Create(string uri, RDF.Graph g) => Wrap(g.CreateUriNode(g.UriFactory.Create(uri)), g);
+
+    internal ConceptScheme? Scheme
+    {
+        get => this.Singular(Vocabulary.inScheme, ConceptScheme.Wrap);
+
+        set => this.OverwriteNullable(Vocabulary.inScheme, value, ConceptScheme.Wrap);
+    }
 
     internal ISet<Concept> Narrower => this.Objects(Vocabulary.narrower, Wrap, Wrap);
 

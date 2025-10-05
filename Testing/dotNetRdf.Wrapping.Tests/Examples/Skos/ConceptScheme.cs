@@ -10,5 +10,7 @@ internal class ConceptScheme : GraphWrapperNode
 
     internal static ConceptScheme Wrap(GraphWrapperNode node) => Wrap(node, node.Graph);
 
+    internal static ConceptScheme Create(string uri, RDF.Graph g) => Wrap(g.CreateUriNode(g.UriFactory.Create(uri)), g);
+
     internal ISet<Concept> TopConcepts => this.Objects(Vocabulary.hasTopConcept, Concept.Wrap, Concept.Wrap);
 }

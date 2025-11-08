@@ -1,7 +1,7 @@
 ﻿using System;
 using VDS.RDF.Parsing;
 using VDS.RDF.Query.Patterns;
-using VDS.RDF.Update.Commands;
+using VDS.RDF.Writing;
 
 namespace VDS.RDF.Wrapping.Tests.Examples.SolidPatch;
 
@@ -53,12 +53,45 @@ public class Tests
     public void Create()
     {
         var actual = new RDF.Graph();
-        var x = InsertDeletePatch.Create(actual);
-        x.Type = Vocabulary.InsertDeletePatch.Uri;
 
-        Graph.Wrap(actual).Command = new ModifyCommand(
-            new GraphPattern(),
-            new GraphPattern(),
-            new GraphPattern());
+        var patch = InsertDeletePatch.Create(actual);
+        patch.Type = Vocabulary.InsertDeletePatch.Uri;
+
+
+        var deletions = new GraphPattern();
+        deletions.AddTriplePattern(
+            new TriplePattern(
+                new VariablePattern("person"),
+                new NodeMatchPattern(
+                    actual.CreateUriNode(
+                        actual.UriFactory.Create("http://www.example.org/terms#givenName"))),
+                new NodeMatchPattern(
+                    actual.CreateLiteralNode("Claudia"))));
+
+        var insertions = new GraphPattern();
+        insertions.AddTriplePattern(
+            new TriplePattern(
+                new VariablePattern("person"),
+                new NodeMatchPattern(
+                    actual.CreateUriNode(
+                        actual.UriFactory.Create("http://www.example.org/terms#givenName"))),
+                new NodeMatchPattern(
+                    actual.CreateLiteralNode("Alex"))));
+
+        var where = new GraphPattern();
+        where.AddTriplePattern(
+            new TriplePattern(
+                new VariablePattern("person"),
+                new NodeMatchPattern(
+                    actual.CreateUriNode(
+                        actual.UriFactory.Create("http://www.example.org/terms#familyName"))),
+                new NodeMatchPattern(
+                    actual.CreateLiteralNode("Garcia"))));
+
+        patch.Deletions = deletions;
+        patch.Inserts = insertions;
+        patch.Where = where;
+
+        output.WriteLine(StringWriter.Write(actual, new Notation3Writer()));
     }
 }

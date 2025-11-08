@@ -45,7 +45,24 @@ public static class NodeMappings
 
     public static GraphWrapperNode GraphLiteraFromGraph(IGraph value, IGraph graph) => graph.CreateGraphLiteralNode(value).In(graph);
 
-    public static GraphWrapperNode GraphLiteraFromGraphPattern(GraphPattern value, IGraph graph) => throw new NotImplementedException();
+    public static GraphWrapperNode GraphLiteraFromGraphPattern(GraphPattern value, IGraph graph)
+    {
+        var subgraph = new Graph();
+        foreach (var pattern in value.TriplePatterns)
+        {
+            if (pattern is not TriplePattern triplePattern)
+            {
+                throw new Exception("unexpected triple pattern type");
+            }
+
+            subgraph.Assert(
+                triplePattern.Subject.NodeIn(subgraph),
+                triplePattern.Predicate.NodeIn(subgraph),
+                triplePattern.Object.NodeIn(subgraph));
+        }
+
+        return graph.CreateGraphLiteralNode(subgraph).In(graph);
+    }
 
     public static NodeMapping<IList<T>> AsList<T>(NodeMapping<T> map) => (value, graph) => graph.AssertList(value, item => map(item, graph)).In(graph);
 }

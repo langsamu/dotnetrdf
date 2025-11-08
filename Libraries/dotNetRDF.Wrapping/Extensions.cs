@@ -1,9 +1,9 @@
-﻿using System.CodeDom.Compiler;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using VDS.RDF.Nodes;
 using VDS.RDF.Parsing;
+using VDS.RDF.Query.Patterns;
 
 namespace VDS.RDF.Wrapping;
 
@@ -32,5 +32,12 @@ internal static class Extensions
             StringNode stringNode when stringNode.DataType.AbsoluteUri.Equals(XmlSpecsHelper.XmlSchemaDataTypeString) => stringNode.AsString(),
             _ => node,
         };
+
+    internal static INode NodeIn(this PatternItem pattern, IGraph graph) => pattern switch
+    {
+        VariablePattern variable => graph.CreateVariableNode(variable.VariableName),
+        NodeMatchPattern nodeMatch => nodeMatch.Node,
+        _ => throw new Exception("unexpected pattern item type")
+    };
 }
 

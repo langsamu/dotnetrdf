@@ -1,11 +1,10 @@
-﻿using System;
-using VDS.RDF.Parsing;
+﻿using VDS.RDF.Parsing;
 using VDS.RDF.Query.Patterns;
 using VDS.RDF.Writing;
 
 namespace VDS.RDF.Wrapping.Tests.Examples.SolidPatch;
 
-public class Tests
+public class Tests(ITestOutputHelper output)
 {
     private const string originalRdf = """
         @prefix solid: <http://www.w3.org/ns/solid/terms#>.
@@ -29,7 +28,7 @@ public class Tests
 
         var command = Graph.Wrap(actual).Command;
 
-        Console.WriteLine(command);
+        output.WriteLine(command.ToString());
 
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using VDS.RDF.Nodes;
+using VDS.RDF.Query.Patterns;
 
 namespace VDS.RDF.Wrapping;
 
@@ -41,6 +42,10 @@ public static class NodeMappings
     public static GraphWrapperNode StringLiteralFromUri(Uri value, IGraph graph) => From(value.AbsoluteUri, graph);
 
     public static GraphWrapperNode StringLiteralFromDateTimeOffset(DateTimeOffset? value, IGraph graph) => From(value?.ToString("yyyy-MM-dd'T'HH:mm:sszzz"), graph);
+
+    public static GraphWrapperNode GraphLiteraFromGraph(IGraph value, IGraph graph) => graph.CreateGraphLiteralNode(value).In(graph);
+
+    public static GraphWrapperNode GraphLiteraFromGraphPattern(GraphPattern value, IGraph graph) => throw new NotImplementedException();
 
     public static NodeMapping<IList<T>> AsList<T>(NodeMapping<T> map) => (value, graph) => graph.AssertList(value, item => map(item, graph)).In(graph);
 }

@@ -36,6 +36,7 @@
     <ProjectReference Include="..\dotNetRdf.Skos\dotNetRdf.Skos.csproj" />
     <ProjectReference Include="..\dotNetRdf.Writing.HtmlSchema\dotNetRdf.Writing.HtmlSchema.csproj" />
     <ProjectReference Include="..\dotNetRdf.Ldf\dotNetRdf.Ldf.csproj" />
+    <ProjectReference Include="..\dotNetRdf.Wrapping\dotNetRdf.Wrapping.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">

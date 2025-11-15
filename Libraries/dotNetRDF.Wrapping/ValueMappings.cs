@@ -34,17 +34,36 @@ public static class ValueMappings
 
     public static GraphPattern GraphPatternFromGraphLiteral(GraphWrapperNode? node)
     {
-        var a =
-            (node as IGraphLiteralNode)
-            .SubGraph
-            .Triples;
-        var cc = QueryBuilder.Describe(Array.Empty<string>());
-        foreach (var item in a)
+        if (node is not IGraphLiteralNode { NodeType: NodeType.GraphLiteral } graphLiteral)
         {
-            cc.Root.Where(bb => bb.Subject(item.Subject).PredicateUri(item.Predicate as IUriNode).Object(item.Object));
+            throw new Exception("unknown node type");
         }
 
-        return cc.BuildQuery().RootGraphPattern;
+        var describe = QueryBuilder.Describe(Array.Empty<string>());
+        foreach (var t in graphLiteral.SubGraph.Triples)
+        {
+            describe.Root.Where(b => b
+                .Subject(Convert(t.Subject))
+                .Predicate(Convert(t.Predicate))
+                .Object(Convert(t.Object)));
+        }
+
+        return describe.BuildQuery().RootGraphPattern;
+    }
+
+    private static PatternItem Convert(INode node)
+    {
+        return node switch
+        {
+            VariableNode { NodeType: NodeType.Variable } v => new VariablePattern(v.VariableName),
+            INode
+            {
+                NodeType: NodeType.Uri or
+                NodeType.Blank or
+                NodeType.Literal
+            } n => new NodeMatchPattern(n),
+            _ => throw new Exception("unknown node type")
+        };
     }
 
     public static ValueMapping<T> EnumFromUri<T>(string prefix) where T : Enum => node => (T)Enum.Parse(typeof(T), new Uri(prefix).MakeRelativeUri((node as IUriNode).Uri).ToString());

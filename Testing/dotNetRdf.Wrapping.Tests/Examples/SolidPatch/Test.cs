@@ -1,6 +1,5 @@
 ﻿using VDS.RDF.Parsing;
 using VDS.RDF.Query.Patterns;
-using VDS.RDF.Writing;
 
 namespace VDS.RDF.Wrapping.Tests.Examples.SolidPatch;
 
@@ -20,16 +19,43 @@ public class Tests(ITestOutputHelper output)
         x
         """;
 
+    private const string sampleBeforePatch = """
+        @prefix : <http://www.example.org/terms#>.
+        
+        <urn:example:>
+            :givenName "Claudia" ;
+            :familyName "Garcia" ;
+        .
+        """;
+
+    private const string sampleAfterPatch = """
+        @prefix : <http://www.example.org/terms#>.
+        
+        <urn:example:>
+            :givenName "Alex" ;
+            :familyName "Garcia" ;
+        .
+        """;
+
     [Fact]
     public void Read()
     {
         var actual = new RDF.Graph();
         actual.LoadFromString(originalRdf, new Notation3Parser());
 
+        var sample = new RDF.Graph();
+        sample.LoadFromString(sampleBeforePatch);
+
+        var expected = new RDF.Graph();
+        expected.LoadFromString(sampleAfterPatch);
+
         var command = Graph.Wrap(actual).Command;
 
-        output.WriteLine(command.ToString());
+        var ts = new TripleStore();
+        ts.Add(sample);
+        ts.ExecuteUpdate(command);
 
+        sample.Should().BeIsomorphicWith(expected);
     }
 
     [Fact]
@@ -55,7 +81,6 @@ public class Tests(ITestOutputHelper output)
 
         var patch = InsertDeletePatch.Create(actual);
         patch.Type = Vocabulary.InsertDeletePatch.Uri;
-
 
         var deletions = new GraphPattern();
         deletions.AddTriplePattern(
@@ -91,6 +116,9 @@ public class Tests(ITestOutputHelper output)
         patch.Inserts = insertions;
         patch.Where = where;
 
-        output.WriteLine(StringWriter.Write(actual, new Notation3Writer()));
+        var expected = new RDF.Graph();
+        expected.LoadFromString(originalRdf, new Notation3Parser());
+
+        actual.Should().BeIsomorphicWith(expected);
     }
 }

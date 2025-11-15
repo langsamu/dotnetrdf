@@ -1,6 +1,4 @@
-﻿using VDS.RDF.Parsing;
-
-namespace VDS.RDF.Wrapping;
+﻿namespace VDS.RDF.Wrapping;
 
 public class MyTestClass
 {
@@ -78,21 +76,6 @@ public class MyTestClass
             	] 
             ] .
             """);
-    }
-
-    [Fact]
-    public void solidn3patch()
-    {
-        var g = new Graph();
-        g.LoadFromString("""
-            @prefix solid: <http://www.w3.org/ns/solid/terms#>.
-            @prefix ex: <http://www.example.org/terms#>.
-
-            _:rename a solid:InsertDeletePatch;
-              solid:where   { ?person ex:familyName "Garcia". };
-              solid:inserts { ?person ex:givenName "Alex". };
-              solid:deletes { ?person ex:givenName "Claudia". }.
-            """, new Notation3Parser());
     }
 
     [Fact]

@@ -34,7 +34,7 @@ namespace VDS.RDF
     /// <summary>
     /// Interface to be implemented by RDF Writers which generate RDF Concrete Syntax.
     /// </summary>
-    public interface IRdfWriter
+    public partial interface IRdfWriter
     {
         /// <summary>
         /// Method for Saving a Graph to a Concrete RDF Syntax in a file based format.

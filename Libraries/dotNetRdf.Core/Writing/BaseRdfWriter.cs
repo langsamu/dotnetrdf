@@ -33,7 +33,7 @@ namespace VDS.RDF.Writing;
 /// <summary>
 /// Base implementation of <see cref="IRdfWriter"/> that simply handles the logic of optionally closing a text writer stream.
 /// </summary>
-public abstract class BaseRdfWriter : IRdfWriter
+public abstract partial class BaseRdfWriter : IRdfWriter
 {
     /// <inheritdoc/>
     public abstract event RdfWriterWarning Warning;

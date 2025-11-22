@@ -38,7 +38,7 @@ namespace VDS.RDF.Writing;
 /// Class for generating Notation 3 Concrete RDF Syntax which provides varying levels of Syntax Compression.
 /// </summary>
 /// <threadsafety instance="true">Designed to be Thread Safe - should be able to call the Save() method from multiple threads on different Graphs without issue.</threadsafety>
-public class Notation3Writer 
+public partial class Notation3Writer 
     : BaseRdfWriter, IPrettyPrintingWriter, IHighSpeedWriter, ICompressingWriter, INamespaceWriter, IFormatterBasedWriter
 {
     private bool _prettyprint = true;

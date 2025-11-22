@@ -38,7 +38,7 @@ namespace VDS.RDF.Writing;
 /// Class for generating RDF in NTriples Concrete Syntax.
 /// </summary>
 /// <threadsafety instance="true">Designed to be Thread Safe - should be able to call the Save() method from multiple threads on different Graphs without issue.</threadsafety>
-public class NTriplesWriter 
+public partial class NTriplesWriter 
     : BaseRdfWriter, IFormatterBasedWriter, IRdfStarCapableWriter
 {
     private bool _sort = false;

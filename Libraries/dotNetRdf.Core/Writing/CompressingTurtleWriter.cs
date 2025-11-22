@@ -44,7 +44,7 @@ namespace VDS.RDF.Writing;
 /// Similar in speed to the standard <see cref="TurtleWriter">TurtleWriter</see> but capable of using more syntax compressions depending on the Compression level set.
 /// </remarks>
 /// <threadsafety instance="true">Designed to be Thread Safe - should be able to call the Save() method from multiple threads on different Graphs without issue.</threadsafety>
-public class CompressingTurtleWriter 
+public partial class CompressingTurtleWriter
     : BaseRdfWriter, IPrettyPrintingWriter, IHighSpeedWriter, ICompressingWriter, INamespaceWriter, IFormatterBasedWriter
 {
     private readonly TurtleSyntax _syntax = TurtleSyntax.Original;

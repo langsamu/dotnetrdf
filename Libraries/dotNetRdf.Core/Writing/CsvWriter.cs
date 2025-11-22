@@ -33,7 +33,7 @@ namespace VDS.RDF.Writing;
 /// <summary>
 /// Class for generating CSV output from RDF Graphs.
 /// </summary>
-public class CsvWriter 
+public partial class CsvWriter
     : BaseRdfWriter, IFormatterBasedWriter
 {
     private readonly CsvFormatter _formatter = new CsvFormatter();

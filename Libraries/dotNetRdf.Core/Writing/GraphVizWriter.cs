@@ -34,7 +34,7 @@ namespace VDS.RDF.Writing;
 /// <summary>
 /// A Writer which generates GraphViz DOT Format files from an RDF Graph.
 /// </summary>
-public class GraphVizWriter : BaseRdfWriter, IPrettyPrintingWriter, ICollapseLiteralsWriter
+public partial class GraphVizWriter : BaseRdfWriter, IPrettyPrintingWriter, ICollapseLiteralsWriter
 {
     /// <summary>
     /// Gets/Sets Pretty Print Mode for the Writer.

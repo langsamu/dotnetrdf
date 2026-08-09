@@ -30,7 +30,7 @@ internal class NodeSet<T>(GraphWrapperNode anchor, INode predicate, TripleSegmen
 
     public void Clear() => graph.Retract(Statements);
 
-    public bool Contains(T item) => graph.ContainsTriple(StatementFrom(item));
+    public bool Contains(T item) => Values.Contains(item);
 
     public void CopyTo(T[] array, int arrayIndex) => Values.ToArray().CopyTo(array, arrayIndex);
 

@@ -9,6 +9,8 @@ namespace VDS.RDF.Wrapping;
 
 public static class ValueMappings
 {
+    private const string hash = "#";
+
     public static T? As<T>(GraphWrapperNode? node) =>
         node!.AsObject() switch
         {
@@ -16,6 +18,8 @@ public static class ValueMappings
             T typed => typed,
             _ => throw new InvalidCastException(), // TODO: describe
         };
+
+    public static string StringFromIri(GraphWrapperNode? node) => (node as IUriNode).Uri.ToString();
 
     public static GraphWrapperNode? AsIs(GraphWrapperNode? node) => node;
 
@@ -66,7 +70,19 @@ public static class ValueMappings
         };
     }
 
-    public static ValueMapping<T> EnumFromUri<T>(string prefix) where T : Enum => node => (T)Enum.Parse(typeof(T), new Uri(prefix).MakeRelativeUri((node as IUriNode).Uri).ToString());
+    public static ValueMapping<T> EnumFromUri<T>(string prefix) where T : Enum => node =>
+    {
+        if (node is not IUriNode { Uri: var uri })
+        {
+            throw new Exception("node is not a URI node");
+        }
+
+        string localPart() => prefix.EndsWith(hash)
+            ? uri.ToString().Replace(prefix, string.Empty)
+            : new Uri(prefix).MakeRelativeUri(uri).ToString();
+
+        return (T)Enum.Parse(typeof(T), localPart());
+    };
 
     public static ValueMapping<IList<T>> AsList<T>(GraphWrapperNode subject, INode predicate, NodeMapping<T> nmap, ValueMapping<T> vmap) =>
         node => new RdfCollectionList<T>(node, subject, predicate, nmap, vmap);

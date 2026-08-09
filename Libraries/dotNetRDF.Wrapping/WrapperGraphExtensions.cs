@@ -1,10 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VDS.RDF.Wrapping;
 
 public static class WrapperGraphExtensions
 {
-    // TODO: T instancesOf<T>(this igraph graph, inode @class, valuemapping<T>)
-    // using nodeset anchored on @class and predicate is rdf:type
+    public static IEnumerable<T> SubjectsOf<T>(this IGraph graph, INode predicate, Func<GraphWrapperNode, T> map) =>
+        graph
+            .GetTriplesWithPredicate(predicate)
+            .Select(triple => triple.Subject)
+            .Distinct()
+            .In(graph)
+            .Select(map);
+
+    public static IEnumerable<T> InstancesOf<T>(this IGraph graph, INode type, Func<GraphWrapperNode, T> map) =>
+        graph
+            .GetTriplesWithPredicateObject(Vocabulary.RdfType, type)
+            .Select(triple => triple.Subject)
+            .Distinct()
+            .In(graph)
+            .Select(map);
 }

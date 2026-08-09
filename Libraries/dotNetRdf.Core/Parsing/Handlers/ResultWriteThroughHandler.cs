@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ public class ResultWriteThroughHandler
     private readonly bool _closeOnEnd;
     private INamespaceMapper _formattingMapper = new QNameOutputMapper();
     private SparqlResultsType _currentType = SparqlResultsType.Boolean;
-    private List<string> _currVariables = new();
+    private List<string> _currVariables = [];
     private bool _headerWritten;
 
     /// <summary>
@@ -119,11 +119,11 @@ public class ResultWriteThroughHandler
                     {
                         if (ps[0].ParameterType == qNameMapperType)
                         {
-                            _formatter = Activator.CreateInstance(_formatterType, new object[] { _formattingMapper }) as IResultFormatter;
+                            _formatter = Activator.CreateInstance(_formatterType, [_formattingMapper]) as IResultFormatter;
                         }
                         else if (ps[0].ParameterType == nsMapperType)
                         {
-                            _formatter = Activator.CreateInstance(_formatterType, new object[] { _formattingMapper }) as IResultFormatter;
+                            _formatter = Activator.CreateInstance(_formatterType, [_formattingMapper]) as IResultFormatter;
                         }
                     }
                     else if (ps.Length == 0)

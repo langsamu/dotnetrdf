@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -146,11 +146,11 @@ public class StorageFactory
                 ConfigurationLoader.GetUsernameAndPassword(g, objNode, true, out user, out pwd);
                 if (user != null && pwd != null)
                 {
-                    storageProvider = (IStorageProvider) Activator.CreateInstance(targetType, new object[] {server, store, user, pwd});
+                    storageProvider = (IStorageProvider) Activator.CreateInstance(targetType, [server, store, user, pwd]);
                 }
                 else
                 {
-                    storageProvider = (IStorageProvider) Activator.CreateInstance(targetType, new object[] {server, store});
+                    storageProvider = (IStorageProvider) Activator.CreateInstance(targetType, [server, store]);
                 }
                 break;
 

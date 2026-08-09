@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ public class BindPattern
     {
         Variable = var;
         InnerExpression = expr;
-        _vars = Variable.AsEnumerable().Concat(InnerExpression.Variables).Distinct().ToList();
+        _vars = [.. ((IList<string>)[Variable, .. InnerExpression.Variables]).Distinct()];
         _vars.Sort();
     }
 
@@ -123,7 +123,7 @@ public class BindPattern
     /// </summary>
     public override IEnumerable<string> FixedVariables
     {
-        get { return Enumerable.Empty<string>(); }
+        get { return []; }
     }
 
     /// <summary>
@@ -131,7 +131,7 @@ public class BindPattern
     /// </summary>
     public override IEnumerable<string> FloatingVariables
     {
-        get { return Variable.AsEnumerable(); }
+        get { return [Variable]; }
     }
 
     /// <summary>

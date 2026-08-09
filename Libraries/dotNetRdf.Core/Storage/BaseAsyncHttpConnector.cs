@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -78,7 +78,7 @@ public abstract class BaseAsyncHttpConnector
     /// <param name="state">State to pass to the callback.</param>
     public virtual void LoadGraph(IGraph g, Uri graphUri, AsyncStorageCallback callback, object state)
     {
-        LoadGraph(g, graphUri.ToSafeString(), callback, state);
+        LoadGraph(g, graphUri?.AbsoluteUri ?? "", callback, state);
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public abstract class BaseAsyncHttpConnector
     /// <param name="state">State to pass to the callback.</param>
     public virtual void LoadGraph(IRdfHandler handler, Uri graphUri, AsyncStorageCallback callback, object state)
     {
-        LoadGraph(handler, graphUri.ToSafeString(), callback, state);
+        LoadGraph(handler, graphUri?.AbsoluteUri ?? "", callback, state);
     }
 
     /// <summary>
@@ -341,7 +341,7 @@ public abstract class BaseAsyncHttpConnector
     /// <param name="g">Graph to save.</param>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("This method is obsolete and will be removed in a future release.")]
+    [Obsolete("This method is obsolete and will be removed in a future release.", true)]
     protected internal void SaveGraphAsync(HttpWebRequest request, IRdfWriter writer, IGraph g, AsyncStorageCallback callback, object state)
     {
         request.BeginGetRequestStream(r =>
@@ -391,7 +391,7 @@ public abstract class BaseAsyncHttpConnector
     /// <param name="state">State to pass to the callback.</param>
     public virtual void UpdateGraph(Uri graphUri, IEnumerable<Triple> additions, IEnumerable<Triple> removals, AsyncStorageCallback callback, object state)
     {
-        UpdateGraph(graphUri.ToSafeString(), additions, removals, callback, state);
+        UpdateGraph(graphUri?.AbsoluteUri ?? "", additions, removals, callback, state);
     }
 
     /// <summary>
@@ -417,7 +417,7 @@ public abstract class BaseAsyncHttpConnector
     /// <param name="ts">Triples.</param>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("This method is obsolete and will be removed in a future release")]
+    [Obsolete("This method is obsolete and will be removed in a future release", true)]
     protected internal void UpdateGraphAsync(HttpWebRequest request, IRdfWriter writer, Uri graphUri, IEnumerable<Triple> ts, AsyncStorageCallback callback, object state)
     {
         var g = new Graph();
@@ -535,7 +535,7 @@ public abstract class BaseAsyncHttpConnector
     /// <param name="state">State to pass to the callback.</param>
     public virtual void DeleteGraph(Uri graphUri, AsyncStorageCallback callback, object state)
     {
-        DeleteGraph(graphUri.ToSafeString(), callback, state);
+        DeleteGraph(graphUri?.AbsoluteUri ?? "", callback, state);
     }
 
     /// <summary>
@@ -557,7 +557,7 @@ public abstract class BaseAsyncHttpConnector
     /// <param name="graphUri">URI of the Graph to delete.</param>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("This method is obsolete and will be removed in a future release")]
+    [Obsolete("This method is obsolete and will be removed in a future release", true)]
     protected internal void DeleteGraphAsync(HttpWebRequest request, bool allow404, string graphUri, AsyncStorageCallback callback, object state)
     {
         request.BeginGetResponse(r =>
@@ -660,7 +660,7 @@ public abstract class BaseAsyncHttpConnector
     /// </summary>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("Replaced with ListGraphsAsync(CancellationToken)")]
+    [Obsolete("Replaced with ListGraphsAsync(CancellationToken)", true)]
     public virtual void ListGraphs(AsyncStorageCallback callback, object state)
     {
         if (this is IAsyncQueryableStorage)
@@ -695,7 +695,7 @@ public abstract class BaseAsyncHttpConnector
     /// If the store does not implement the <see cref="IAsyncQueryableStorage"/> interface, then this method MUST be overridden.</remarks>
     public virtual async Task<IEnumerable<string>> ListGraphsAsync(CancellationToken cancellationToken)
     {
-        if (!(this is IAsyncQueryableStorage queryableStore))
+        if (this is not IAsyncQueryableStorage queryableStore)
         {
             throw new RdfStorageException(
                 "Underlying store does not supported listing graphs asynchronously or has failed to appropriately override this method");

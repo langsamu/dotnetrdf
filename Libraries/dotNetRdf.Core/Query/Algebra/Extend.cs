@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -78,9 +78,9 @@ public class Extend
     /// <returns></returns>
     public ISparqlAlgebra Transform(IAlgebraOptimiser optimiser)
     {
-        if (optimiser is IExpressionTransformer)
+        if (optimiser is IExpressionTransformer transformer)
         {
-            return new Extend(optimiser.Optimise(InnerAlgebra), ((IExpressionTransformer)optimiser).Transform(AssignExpression), VariableName);
+            return new Extend(optimiser.Optimise(InnerAlgebra), transformer.Transform(AssignExpression), VariableName);
         }
         else
         {
@@ -95,14 +95,14 @@ public class Extend
     {
         get 
         {
-            return InnerAlgebra.Variables.Concat(VariableName.AsEnumerable()); 
+            return [.. InnerAlgebra.Variables, VariableName]; 
         }
     }
 
     /// <summary>
     /// Gets the enumeration of floating variables in the algebra i.e. variables that are not guaranteed to have a bound value.
     /// </summary>
-    public IEnumerable<string> FloatingVariables { get { return InnerAlgebra.FloatingVariables.Concat(VariableName.AsEnumerable()); } }
+    public IEnumerable<string> FloatingVariables { get { return [.. InnerAlgebra.FloatingVariables, VariableName]; } }
 
     /// <summary>
     /// Gets the enumeration of fixed variables in the algebra i.e. variables that are guaranteed to have a bound value.
@@ -145,7 +145,7 @@ public class Extend
     /// <returns></returns>
     public override string ToString()
     {
-        return "Extend(" + InnerAlgebra.ToSafeString() + ", " + AssignExpression + " AS ?" + VariableName + ")";
+        return $"Extend({InnerAlgebra}, " + AssignExpression + " AS ?" + VariableName + ")";
     }
 
     /// <inheritdoc />

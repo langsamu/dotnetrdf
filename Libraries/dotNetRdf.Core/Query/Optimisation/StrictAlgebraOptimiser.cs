@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,20 +48,19 @@ public class StrictAlgebraOptimiser
     /// <returns></returns>
     public ISparqlAlgebra Optimise(ISparqlAlgebra algebra)
     {
-        if (algebra is IAbstractJoin)
+        if (algebra is IAbstractJoin join)
         {
-            return ((IAbstractJoin)algebra).Transform(this);
+            return join.Transform(this);
         }
-        else if (algebra is IUnaryOperator)
+        else if (algebra is IUnaryOperator @operator)
         {
-            return ((IUnaryOperator)algebra).Transform(this);
+            return @operator.Transform(this);
         }
-        else if (algebra is IBgp)
+        else if (algebra is IBgp current)
         {
             // Don't integerfer with other optimisers which have added custom BGP implementations
-            if (!(algebra is Bgp)) return algebra;
+            if (algebra is not Bgp) return algebra;
 
-            var current = (IBgp)algebra;
             if (current.PatternCount == 0)
             {
                 return current;

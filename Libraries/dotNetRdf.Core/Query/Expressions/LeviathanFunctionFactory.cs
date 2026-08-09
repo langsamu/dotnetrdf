@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -107,7 +107,7 @@ public class LeviathanFunctionFactory
     /// <summary>
     /// Array of Extension Function URIs.
     /// </summary>
-    private string[] FunctionUris = {
+    private string[] FunctionUris = [
                                         MD5Hash,
                                         Sha256Hash,
                                         Random,
@@ -137,12 +137,12 @@ public class LeviathanFunctionFactory
                                         Pythagoras,
                                         Cartesian,
                                         Factorial,
-                                    };
+                                    ];
 
     /// <summary>
     /// Array of Extension Aggregate URIs.
     /// </summary>
-    private string[] AggregateUris = {
+    private string[] AggregateUris = [
                                          All,
                                          Any,
                                          None,
@@ -150,7 +150,7 @@ public class LeviathanFunctionFactory
                                          NumericMin,
                                          Mode,
                                          Median,
-                                     };
+                                     ];
 
 
     /// <summary>

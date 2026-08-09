@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,11 +38,7 @@ public abstract class BaseStoreWriter : IStoreWriter
     /// <inheritdoc />
     public void Save(ITripleStore store, string filename)
     {
-        Save(store, filename,
-#pragma warning disable CS0618 // Type or member is obsolete
-                new UTF8Encoding(Options.UseBomForUtf8) //new UTF8Encoding(false)
-#pragma warning restore CS0618 // Type or member is obsolete
-            );
+        Save(store, filename, new UTF8Encoding(false));
     }
 
     /// <inheritdoc />

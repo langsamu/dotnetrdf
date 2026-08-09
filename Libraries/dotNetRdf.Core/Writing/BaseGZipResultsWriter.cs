@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,11 +62,7 @@ public abstract class BaseGZipResultsWriter
     /// <param name="filename">File to save to.</param>
     public void Save(SparqlResultSet results, string filename)
     {
-        Save(results, filename,
-#pragma warning disable CS0618 // Type or member is obsolete
-                new UTF8Encoding(Options.UseBomForUtf8) //new UTF8Encoding(false)
-#pragma warning restore CS0618 // Type or member is obsolete
-            );
+        Save(results, filename, new UTF8Encoding(false));
     }
 
     /// <inheritdoc />
@@ -87,10 +83,9 @@ public abstract class BaseGZipResultsWriter
     {
         if (results == null) throw new RdfOutputException("Cannot write RDF from a null Graph");
 
-        if (output is StreamWriter)
+        if (output is StreamWriter streamOutput)
         {
             // Check for inner GZipStream and re-wrap if required
-            var streamOutput = (StreamWriter)output;
             if (streamOutput.BaseStream is GZipStream)
             {
                 _writer.Save(results, streamOutput);

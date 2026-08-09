@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,8 +35,8 @@ namespace VDS.RDF.Query.Optimisation;
 public class SparqlOptimiser
 {
     private IQueryOptimiser _queryOpt = new DefaultOptimiser();
-    private List<IAlgebraOptimiser> _algebraOpt = new List<IAlgebraOptimiser>()
-    {
+    private List<IAlgebraOptimiser> _algebraOpt =
+    [
         // Optimise to insert Property Functions first - this is always a no-op if none registered
         new PropertyFunctionOptimiser(),
         // Optimise for Lazy Evaluation
@@ -46,7 +46,7 @@ public class SparqlOptimiser
         new OrderByDistinctOptimiser(),
         // Optimise for special filter constructs which improve performance
         new IdentityFilterOptimiser(),
-    };
+    ];
 
     /// <summary>
     /// Get a default pre-configured optimiser.
@@ -138,8 +138,8 @@ public class SparqlOptimiser
             _queryOpt = new DefaultOptimiser();
         }
 
-        _algebraOpt = new List<IAlgebraOptimiser>
-        {
+        _algebraOpt =
+        [
             // Optimise to insert Property Functions first - this is always a no-op if none registered
             new PropertyFunctionOptimiser(),
             // Optimise for Lazy Evaluation
@@ -149,6 +149,6 @@ public class SparqlOptimiser
             new OrderByDistinctOptimiser(),
             // Optimise for special filter constructs which improve performance
             new IdentityFilterOptimiser(),
-        };
+        ];
     }
 }

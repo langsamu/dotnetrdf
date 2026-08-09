@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -55,7 +56,7 @@ internal class EnumerableMetaObject : DynamicMetaObject
         {
             try
             {
-                Expression[] arguments = Expression.Convert(Expression, RuntimeType).AsEnumerable().Union(args.Select(arg => arg.Expression)).ToArray();
+                Expression[] arguments = ((IEnumerable<Expression>)[Expression.Convert(Expression, RuntimeType)]).Union(args.Select(arg => arg.Expression)).ToArray();
                 Type[] typeArguments = Enumerable.Repeat(typeof(object), i).ToArray();
                 MethodCallExpression expression = Expression.Call(typeof(Enumerable), binder.Name, typeArguments, arguments);
 

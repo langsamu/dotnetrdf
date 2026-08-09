@@ -39,8 +39,4 @@
     <ProjectReference Include="..\dotNetRdf.Wrapping\dotNetRdf.Wrapping.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <ProjectReference Include="..\dotNetRdf.AspNet\dotNetRdf.AspNet.csproj" />
-  </ItemGroup>
-
 </Project>

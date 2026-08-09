@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -72,11 +72,7 @@ public class AllegroGraphServer
     {
         _baseUri = baseUri;
         if (!_baseUri.EndsWith("/")) _baseUri += "/";
-#if NETCORE
-        this._agraphBase = this._baseUri.Copy();
-#else
         _agraphBase = string.Copy(_baseUri);
-#endif
         if (catalogID != null)
         {
             _baseUri += "catalogs/" + catalogID + "/";
@@ -151,7 +147,7 @@ public class AllegroGraphServer
     /// <returns></returns>
     public override IEnumerable<IStoreTemplate> GetAvailableTemplates(string id)
     {
-        return GetDefaultTemplate(id).AsEnumerable();
+        return [GetDefaultTemplate(id)];
     }
 
     /// <summary>
@@ -193,7 +189,7 @@ public class AllegroGraphServer
     {
         try
         {
-            HttpRequestMessage request = CreateRequest("repositories/" + storeID, "*/*", HttpMethod.Delete, new Dictionary<string, string>());
+            HttpRequestMessage request = CreateRequest("repositories/" + storeID, "*/*", HttpMethod.Delete, []);
 
             using HttpResponseMessage response = HttpClient.SendAsync(request).Result;
             if (!response.IsSuccessStatusCode)
@@ -216,7 +212,7 @@ public class AllegroGraphServer
         string data;
         try
         {
-            HttpRequestMessage request = CreateRequest("repositories", "application/json", HttpMethod.Get, new Dictionary<string, string>());
+            HttpRequestMessage request = CreateRequest("repositories", "application/json", HttpMethod.Get, []);
             using HttpResponseMessage response = HttpClient.SendAsync(request).Result;
             if (!response.IsSuccessStatusCode)
             {
@@ -263,13 +259,13 @@ public class AllegroGraphServer
     /// </summary>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to callback.</param>
-    [Obsolete("Replaced with ListStoresAsync(CancellationToken).")]
+    [Obsolete("Replaced with ListStoresAsync(CancellationToken).", true)]
     public override void ListStores(AsyncStorageCallback callback, object state)
     {
         try
         {
             HttpRequestMessage request = CreateRequest("repositories", "application/json", HttpMethod.Get,
-                new Dictionary<string, string>());
+                []);
             HttpClient.SendAsync(request).ContinueWith(requestTask =>
             {
                 if (requestTask.IsCanceled || requestTask.IsFaulted)
@@ -354,7 +350,7 @@ public class AllegroGraphServer
     /// <returns></returns>
     public override void GetAvailableTemplates(string id, AsyncStorageCallback callback, object state)
     {
-        callback(this, new AsyncStorageCallbackArgs(AsyncStorageOperation.AvailableTemplates, id, new IStoreTemplate[] { new StoreTemplate(id) }), state);
+        callback(this, new AsyncStorageCallbackArgs(AsyncStorageOperation.AvailableTemplates, id, [new StoreTemplate(id)]), state);
     }
 
     /// <summary>
@@ -422,7 +418,7 @@ public class AllegroGraphServer
         try
         {
             HttpRequestMessage request = CreateRequest("repositories/" + storeId, "*/*", HttpMethod.Delete,
-                new Dictionary<string, string>());
+                []);
             HttpClient.SendAsync(request).ContinueWith(requestTask =>
             {
                 if (requestTask.IsCanceled || requestTask.IsFaulted)

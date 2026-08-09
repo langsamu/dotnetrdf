@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -75,13 +75,13 @@ internal abstract class QueryImpl : AbstractSPINResource, ISolutionModifierQuery
         while (it.MoveNext())
         {
             INode node = it.Current.Object;
-            if (node is IValuedNode)
+            if (node is IValuedNode valuedNode)
             {
-                results.Add(((IValuedNode)node).AsString());
+                results.Add(valuedNode.AsString());
             }
-            else if (node is IUriNode)
+            else if (node is IUriNode uriNode)
             {
-                results.Add(((IUriNode)node).Uri.ToString());
+                results.Add(uriNode.Uri.ToString());
             }
         }
         return results;

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Mime;
 using System.Text;
 using VDS.RDF.Parsing;
 using VDS.RDF.Parsing.Tokens;
@@ -75,67 +74,67 @@ public static class MimeTypesHelper
     /// <summary>
     /// MIME Types for Turtle.
     /// </summary>
-    public static readonly string[] Turtle = { "text/turtle", "application/x-turtle", "application/turtle" };
+    public static readonly string[] Turtle = ["text/turtle", "application/x-turtle", "application/turtle"];
 
     /// <summary>
     /// MIME Types for RDF/XML.
     /// </summary>
-    public static readonly string[] RdfXml = { "application/rdf+xml", "text/xml", "application/xml" };
+    public static readonly string[] RdfXml = ["application/rdf+xml", "text/xml", "application/xml"];
 
     /// <summary>
     /// MIME Types for Notation 3.
     /// </summary>
-    public static readonly string[] Notation3 = { "text/n3", "text/rdf+n3" };
+    public static readonly string[] Notation3 = ["text/n3", "text/rdf+n3"];
 
     /// <summary>
     /// MIME Types for NTriples.
     /// </summary>
-    public static readonly string[] NTriples = { "application/n-triples", "text/plain", "text/ntriples", "text/ntriples+turtle", "application/rdf-triples", "application/x-ntriples", "application/ntriples" };
+    public static readonly string[] NTriples = ["application/n-triples", "text/plain", "text/ntriples", "text/ntriples+turtle", "application/rdf-triples", "application/x-ntriples", "application/ntriples"];
 
     /// <summary>
     /// MIME Types for NQuads.
     /// </summary>
-    public static readonly string[] NQuads = { "application/n-quads", "text/x-nquads" };
+    public static readonly string[] NQuads = ["application/n-quads", "text/x-nquads"];
 
     /// <summary>
     /// MIME Types for TriG.
     /// </summary>
-    public static readonly string[] TriG = { "application/trig", "application/x-trig" };
+    public static readonly string[] TriG = ["application/trig", "application/x-trig"];
 
     /// <summary>
     /// MIME Types for TriX.
     /// </summary>
-    public static readonly string[] TriX = { "application/trix" };
+    public static readonly string[] TriX = ["application/trix"];
 
     /// <summary>
     /// MIME Types for RDF/JSON.
     /// </summary>
-    public static readonly string[] Json = { "application/json", "text/json", "application/rdf+json" };
+    public static readonly string[] Json = ["application/json", "text/json", "application/rdf+json"];
 
     /// <summary>
     /// MIME types for JSON-LD.
     /// </summary>
-    public static readonly string[] JsonLd = {"application/ld+json"};
+    public static readonly string[] JsonLd = ["application/ld+json"];
 
     /// <summary>
     /// MIME Types for SPARQL Result Sets.
     /// </summary>
-    public static readonly string[] SparqlResults = { "application/sparql-results+xml", "application/sparql-results+json" };
+    public static readonly string[] SparqlResults = ["application/sparql-results+xml", "application/sparql-results+json"];
 
     /// <summary>
     /// MIME Types for SPARQL Results XML.
     /// </summary>
-    public static string[] SparqlResultsXml = { "application/sparql-results+xml" };
+    public static string[] SparqlResultsXml = ["application/sparql-results+xml"];
 
     /// <summary>
     /// MIME Types for SPARQL Results JSON.
     /// </summary>
-    public static readonly string[] SparqlResultsJson = { "application/sparql-results+json" };
+    public static readonly string[] SparqlResultsJson = ["application/sparql-results+json"];
 
     /// <summary>
     /// MIME Types for SPARQL Boolean Result.
     /// </summary>
-    public static readonly string[] SparqlResultsBoolean = { "text/boolean" };
+    public static readonly string[] SparqlResultsBoolean = ["text/boolean"];
 
     /// <summary>
     /// MIME Type for SPARQL Queries.
@@ -150,17 +149,17 @@ public static class MimeTypesHelper
     /// <summary>
     /// MIME Types for CSV.
     /// </summary>
-    public static readonly string[] Csv = { "text/csv", "text/comma-separated-values" };
+    public static readonly string[] Csv = ["text/csv", "text/comma-separated-values"];
 
     /// <summary>
     /// MIME Types for TSV.
     /// </summary>
-    public static readonly string[] Tsv = { "text/tab-separated-values" };
+    public static readonly string[] Tsv = ["text/tab-separated-values"];
 
     /// <summary>
     /// MIME Types for HTML.
     /// </summary>
-    public static readonly string[] Html = { "text/html", "application/xhtml+xml" };
+    public static readonly string[] Html = ["text/html", "application/xhtml+xml"];
 
     /// <summary>
     /// Default File Extension for Turtle Files.
@@ -243,7 +242,7 @@ public static class MimeTypesHelper
     /// <summary>
     /// Extensions which are considered stackable.
     /// </summary>
-    private static readonly string[] AllowedStackableExtensions = { DefaultGZipExtension };
+    private static readonly string[] AllowedStackableExtensions = [DefaultGZipExtension];
 
     /// <summary>
     /// Charset constants.
@@ -340,82 +339,82 @@ public static class MimeTypesHelper
         {
             if (!_init)
             {
-                _mimeTypes = new List<MimeTypeDefinition>();
+                _mimeTypes = [];
 
                 // Define NTriples
-                var ntriples = new MimeTypeDefinition("NTriples", W3CFormatsNamespace + "N-Triples", NTriples, new string[] { DefaultNTriplesExtension }, typeof(NTriplesParser), null, null, typeof(NTriplesWriter), null, null);
+                var ntriples = new MimeTypeDefinition("NTriples", W3CFormatsNamespace + "N-Triples", NTriples, [DefaultNTriplesExtension], typeof(NTriplesParser), null, null, typeof(NTriplesWriter), null, null);
                 ntriples.Encoding = Encoding.ASCII;
                 _mimeTypes.Add(ntriples);
-                var ntriplesGZipped = new MimeTypeDefinition("GZipped NTriples", NTriples, new string[] { DefaultNTriplesExtension + "." + DefaultGZipExtension }, typeof(GZippedNTriplesParser), null, null, typeof(GZippedNTriplesWriter), null, null);
+                var ntriplesGZipped = new MimeTypeDefinition("GZipped NTriples", NTriples, [DefaultNTriplesExtension + "." + DefaultGZipExtension], typeof(GZippedNTriplesParser), null, null, typeof(GZippedNTriplesWriter), null, null);
                 _mimeTypes.Add(ntriplesGZipped);
 
                 // Define Turtle
-                _mimeTypes.Add(new MimeTypeDefinition("Turtle", W3CFormatsNamespace + "Turtle", Turtle, new string[] { DefaultTurtleExtension }, typeof(TurtleParser), null, null, typeof(CompressingTurtleWriter), null, null));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped Turtle", Turtle, new string[] { DefaultTurtleExtension + "." + DefaultGZipExtension }, typeof(GZippedTurtleParser), null, null, typeof(GZippedTurtleWriter), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("Turtle", W3CFormatsNamespace + "Turtle", Turtle, [DefaultTurtleExtension], typeof(TurtleParser), null, null, typeof(CompressingTurtleWriter), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped Turtle", Turtle, [DefaultTurtleExtension + "." + DefaultGZipExtension], typeof(GZippedTurtleParser), null, null, typeof(GZippedTurtleWriter), null, null));
 
                 // Define Notation 3
-                _mimeTypes.Add(new MimeTypeDefinition("Notation 3", W3CFormatsNamespace + "N3", Notation3, new string[] { DefaultNotation3Extension }, typeof(Notation3Parser), null, null, typeof(Notation3Writer), null, null));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped Notation 3", Notation3, new string[] { DefaultNotation3Extension + "." + DefaultGZipExtension }, typeof(GZippedNotation3Parser), null, null, typeof(GZippedNotation3Writer), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("Notation 3", W3CFormatsNamespace + "N3", Notation3, [DefaultNotation3Extension], typeof(Notation3Parser), null, null, typeof(Notation3Writer), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped Notation 3", Notation3, [DefaultNotation3Extension + "." + DefaultGZipExtension], typeof(GZippedNotation3Parser), null, null, typeof(GZippedNotation3Writer), null, null));
 
                 // Define NQuads
-                _mimeTypes.Add(new MimeTypeDefinition("NQuads", NQuads, new string[] { DefaultNQuadsExtension }, null, typeof(NQuadsParser), null, null, typeof(NQuadsWriter), null));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped NQuads", NQuads, new string[] { DefaultNQuadsExtension + "." + DefaultGZipExtension }, null, typeof(GZippedNQuadsParser), null, null, typeof(GZippedNQuadsWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("NQuads", NQuads, [DefaultNQuadsExtension], null, typeof(NQuadsParser), null, null, typeof(NQuadsWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped NQuads", NQuads, [DefaultNQuadsExtension + "." + DefaultGZipExtension], null, typeof(GZippedNQuadsParser), null, null, typeof(GZippedNQuadsWriter), null));
 
                 // Define TriG
-                _mimeTypes.Add(new MimeTypeDefinition("TriG", TriG, new string[] { DefaultTriGExtension }, null, typeof(TriGParser), null, null, typeof(TriGWriter), null));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped TriG", TriG, new string[] { DefaultTriGExtension + "." + DefaultGZipExtension }, null, typeof(GZippedTriGParser), null, null, typeof(GZippedTriGWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("TriG", TriG, [DefaultTriGExtension], null, typeof(TriGParser), null, null, typeof(TriGWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped TriG", TriG, [DefaultTriGExtension + "." + DefaultGZipExtension], null, typeof(GZippedTriGParser), null, null, typeof(GZippedTriGWriter), null));
 
                 // Define TriX
-                _mimeTypes.Add(new MimeTypeDefinition("TriX", TriX, new string[] { DefaultTriXExtension }, null, typeof(TriXParser), null, null, typeof(TriXWriter), null));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped TriX", TriX, new string[] { DefaultTriXExtension + "." + DefaultGZipExtension }, null, typeof(GZippedTriXParser), null, null, typeof(GZippedTriXWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("TriX", TriX, [DefaultTriXExtension], null, typeof(TriXParser), null, null, typeof(TriXWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped TriX", TriX, [DefaultTriXExtension + "." + DefaultGZipExtension], null, typeof(GZippedTriXParser), null, null, typeof(GZippedTriXWriter), null));
 
                 // Define SPARQL Results XML
-                _mimeTypes.Add(new MimeTypeDefinition("SPARQL Results XML", W3CFormatsNamespace + "SPARQL_Results_XML", SparqlResultsXml, new string[] { DefaultSparqlXmlExtension }, null, null, typeof(SparqlXmlParser), null, null, typeof(SparqlXmlWriter)));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped SPARQL Results XML", SparqlResultsXml, new string[] { DefaultSparqlXmlExtension + "." + DefaultGZipExtension }, null, null, typeof(GZippedSparqlXmlParser), null, null, typeof(GZippedSparqlXmlWriter)));
+                _mimeTypes.Add(new MimeTypeDefinition("SPARQL Results XML", W3CFormatsNamespace + "SPARQL_Results_XML", SparqlResultsXml, [DefaultSparqlXmlExtension], null, null, typeof(SparqlXmlParser), null, null, typeof(SparqlXmlWriter)));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped SPARQL Results XML", SparqlResultsXml, [DefaultSparqlXmlExtension + "." + DefaultGZipExtension], null, null, typeof(GZippedSparqlXmlParser), null, null, typeof(GZippedSparqlXmlWriter)));
 
                 // Define SPARQL Results JSON
-                _mimeTypes.Add(new MimeTypeDefinition("SPARQL Results JSON", W3CFormatsNamespace + "SPARQL_Results_JSON", SparqlResultsJson, new string[] { DefaultSparqlJsonExtension, DefaultJsonExtension }, null, null, typeof(SparqlJsonParser), null, null, typeof(SparqlJsonWriter)));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped SPARQL Results JSON", SparqlResultsJson, new string[] { DefaultSparqlJsonExtension + "." + DefaultGZipExtension, DefaultJsonExtension + "." + DefaultGZipExtension }, null, null, typeof(GZippedSparqlJsonParser), null, null, typeof(GZippedSparqlJsonWriter)));
+                _mimeTypes.Add(new MimeTypeDefinition("SPARQL Results JSON", W3CFormatsNamespace + "SPARQL_Results_JSON", SparqlResultsJson, [DefaultSparqlJsonExtension, DefaultJsonExtension], null, null, typeof(SparqlJsonParser), null, null, typeof(SparqlJsonWriter)));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped SPARQL Results JSON", SparqlResultsJson, [DefaultSparqlJsonExtension + "." + DefaultGZipExtension, DefaultJsonExtension + "." + DefaultGZipExtension], null, null, typeof(GZippedSparqlJsonParser), null, null, typeof(GZippedSparqlJsonWriter)));
 
                 // Define SPARQL Boolean
-                _mimeTypes.Add(new MimeTypeDefinition("SPARQL Boolean Result", SparqlResultsBoolean, Enumerable.Empty<string>(), null, null, typeof(SparqlBooleanParser), null, null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("SPARQL Boolean Result", SparqlResultsBoolean, [], null, null, typeof(SparqlBooleanParser), null, null, null));
 
                 // Define RDF/XML - include SPARQL Parsers to support servers that send back incorrect MIME Type for SPARQL XML Results
                 // We define this after SPARQL Results XML to ensure we favour the correct MIME type for it
-                _mimeTypes.Add(new MimeTypeDefinition("RDF/XML", W3CFormatsNamespace + "RDF_XML", RdfXml, new string[] { DefaultRdfXmlExtension, "owl" }, typeof(RdfXmlParser), null, typeof(SparqlXmlParser), typeof(RdfXmlWriter), null, typeof(SparqlXmlWriter)));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped RDF/XML", RdfXml, new string[] { DefaultRdfXmlExtension + "." + DefaultGZipExtension }, typeof(GZippedRdfXmlParser), null, null, typeof(GZippedRdfXmlWriter), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("RDF/XML", W3CFormatsNamespace + "RDF_XML", RdfXml, [DefaultRdfXmlExtension, "owl"], typeof(RdfXmlParser), null, typeof(SparqlXmlParser), typeof(RdfXmlWriter), null, typeof(SparqlXmlWriter)));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped RDF/XML", RdfXml, [DefaultRdfXmlExtension + "." + DefaultGZipExtension], typeof(GZippedRdfXmlParser), null, null, typeof(GZippedRdfXmlWriter), null, null));
 
                 // Define RDF/JSON - include SPARQL Parsers to support servers that send back incorrect MIME Type for SPARQL JSON Results
                 // We define this after SPARQL Results JSON to ensure we favour the correct MIME type for it
-                _mimeTypes.Add(new MimeTypeDefinition("RDF/JSON", Json, new string[] { DefaultRdfJsonExtension, DefaultJsonExtension }, typeof(RdfJsonParser), null, typeof(SparqlJsonParser), typeof(RdfJsonWriter), null, typeof(SparqlJsonWriter)));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped RDF/JSON", Json, new string[] { DefaultRdfJsonExtension + "." + DefaultGZipExtension, DefaultJsonExtension + "." + DefaultGZipExtension }, typeof(GZippedRdfJsonParser), null, null, typeof(GZippedRdfJsonWriter), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("RDF/JSON", Json, [DefaultRdfJsonExtension, DefaultJsonExtension], typeof(RdfJsonParser), null, typeof(SparqlJsonParser), typeof(RdfJsonWriter), null, typeof(SparqlJsonWriter)));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped RDF/JSON", Json, [DefaultRdfJsonExtension + "." + DefaultGZipExtension, DefaultJsonExtension + "." + DefaultGZipExtension], typeof(GZippedRdfJsonParser), null, null, typeof(GZippedRdfJsonWriter), null, null));
 
                 // Define JSON-LD
-                _mimeTypes.Add(new MimeTypeDefinition("JSON-LD", JsonLd, new[] {DefaultJsonLdExtension, DefaultJsonExtension}, null, typeof(JsonLdParser), null, null, typeof(JsonLdWriter), null));
-                _mimeTypes.Add(new MimeTypeDefinition("JSON-LD", JsonLd, new[] {DefaultJsonLdExtension + "." + DefaultGZipExtension, DefaultJsonExtension + "." + DefaultGZipExtension }, null, typeof(GZippedJsonLdParser), null, null, typeof(GZippedJsonLdWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("JSON-LD", JsonLd, [DefaultJsonLdExtension, DefaultJsonExtension], null, typeof(JsonLdParser), null, null, typeof(JsonLdWriter), null));
+                _mimeTypes.Add(new MimeTypeDefinition("JSON-LD", JsonLd, [DefaultJsonLdExtension + "." + DefaultGZipExtension, DefaultJsonExtension + "." + DefaultGZipExtension], null, typeof(GZippedJsonLdParser), null, null, typeof(GZippedJsonLdWriter), null));
 
                 // Define CSV
-                _mimeTypes.Add(new MimeTypeDefinition("CSV", Csv, new string[] { DefaultCsvExtension }, null, null, typeof(SparqlCsvParser), typeof(CsvWriter), typeof(CsvStoreWriter), typeof(SparqlCsvWriter), 0.1m));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped SPARQL CSV", Csv, new string[] { DefaultCsvExtension + "." + DefaultGZipExtension }, null, null, typeof(GZippedSparqlCsvParser), null, null, typeof(GZippedSparqlCsvWriter), 0.1m));
+                _mimeTypes.Add(new MimeTypeDefinition("CSV", Csv, [DefaultCsvExtension], null, null, typeof(SparqlCsvParser), typeof(CsvWriter), typeof(CsvStoreWriter), typeof(SparqlCsvWriter), 0.1m));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped SPARQL CSV", Csv, [DefaultCsvExtension + "." + DefaultGZipExtension], null, null, typeof(GZippedSparqlCsvParser), null, null, typeof(GZippedSparqlCsvWriter), 0.1m));
 
                 // Define TSV
-                _mimeTypes.Add(new MimeTypeDefinition("TSV", Tsv, new string[] { DefaultTsvExtension }, null, null, typeof(SparqlTsvParser), typeof(TsvWriter), typeof(TsvStoreWriter), typeof(SparqlTsvWriter), 0.1m));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped TSV", Tsv, new string[] { DefaultTsvExtension + "." + DefaultGZipExtension }, null, null, typeof(GZippedSparqlTsvParser), null, null, typeof(GZippedSparqlTsvWriter), 0.1m));
+                _mimeTypes.Add(new MimeTypeDefinition("TSV", Tsv, [DefaultTsvExtension], null, null, typeof(SparqlTsvParser), typeof(TsvWriter), typeof(TsvStoreWriter), typeof(SparqlTsvWriter), 0.1m));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped TSV", Tsv, [DefaultTsvExtension + "." + DefaultGZipExtension], null, null, typeof(GZippedSparqlTsvParser), null, null, typeof(GZippedSparqlTsvWriter), 0.1m));
 
                 // Define HTML
-                _mimeTypes.Add(new MimeTypeDefinition("HTML", W3CFormatsNamespace + "RDFa", Html, new string[] { DefaultHtmlExtension, DefaultXHtmlExtension, ".htm" }, typeof(RdfAParser), null, null, typeof(HtmlWriter), null, typeof(SparqlHtmlWriter)));
-                _mimeTypes.Add(new MimeTypeDefinition("GZipped HTML", Html, new string[] { DefaultHtmlExtension + "." + DefaultGZipExtension, DefaultXHtmlExtension + "." + DefaultGZipExtension, ".htm." + DefaultGZipExtension }, typeof(GZippedRdfAParser), null, null, typeof(GZippedRdfAWriter), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("HTML", W3CFormatsNamespace + "RDFa", Html, [DefaultHtmlExtension, DefaultXHtmlExtension, ".htm"], typeof(RdfAParser), null, null, typeof(HtmlWriter), null, typeof(SparqlHtmlWriter)));
+                _mimeTypes.Add(new MimeTypeDefinition("GZipped HTML", Html, [DefaultHtmlExtension + "." + DefaultGZipExtension, DefaultXHtmlExtension + "." + DefaultGZipExtension, ".htm." + DefaultGZipExtension], typeof(GZippedRdfAParser), null, null, typeof(GZippedRdfAWriter), null, null));
 
                 // Define GraphViz DOT
-                _mimeTypes.Add(new MimeTypeDefinition("GraphViz DOT", new string[] { "text/vnd.graphviz" }, new string[] { ".gv", ".dot" }, null, null, null, typeof(GraphVizWriter), null, null));
+                _mimeTypes.Add(new MimeTypeDefinition("GraphViz DOT", ["text/vnd.graphviz"], [".gv", ".dot"], null, null, null, typeof(GraphVizWriter), null, null));
 
                 // Define SPARQL Query
-                var qDef = new MimeTypeDefinition("SPARQL Query", new string[] { SparqlQuery }, new string[] { DefaultSparqlQueryExtension });
+                var qDef = new MimeTypeDefinition("SPARQL Query", [SparqlQuery], [DefaultSparqlQueryExtension]);
                 qDef.SetObjectParserType<SparqlQuery>(typeof(SparqlQueryParser));
                 _mimeTypes.Add(qDef);
 
                 // Define SPARQL Update
-                var uDef = new MimeTypeDefinition("SPARQL Update", new string[] { SparqlUpdate }, new string[] { DefaultSparqlUpdateExtension });
+                var uDef = new MimeTypeDefinition("SPARQL Update", [SparqlUpdate], [DefaultSparqlUpdateExtension]);
                 uDef.SetObjectParserType<SparqlUpdateCommandSet>(typeof(SparqlUpdateParser));
                 _mimeTypes.Add(uDef);
 
@@ -695,7 +694,7 @@ public static class MimeTypesHelper
     /// <returns></returns>
     public static IEnumerable<MimeTypeDefinition> GetDefinitions(string mimeType)
     {
-        if (mimeType == null) return Enumerable.Empty<MimeTypeDefinition>();
+        if (mimeType == null) return [];
 
         if (!_init) Init();
 
@@ -712,7 +711,7 @@ public static class MimeTypesHelper
     /// <returns></returns>
     public static IEnumerable<MimeTypeDefinition> GetDefinitions(IEnumerable<string> mimeTypes)
     {
-        if (mimeTypes == null) return Enumerable.Empty<MimeTypeDefinition>();
+        if (mimeTypes == null) return [];
 
         if (!_init) Init();
 
@@ -730,7 +729,7 @@ public static class MimeTypesHelper
     /// <returns></returns>
     public static IEnumerable<MimeTypeDefinition> GetDefinitionsByFileExtension(string fileExt)
     {
-        if (fileExt == null) return Enumerable.Empty<MimeTypeDefinition>();
+        if (fileExt == null) return [];
 
         if (!_init) Init();
 
@@ -1266,12 +1265,12 @@ public static class MimeTypesHelper
             }
             else
             {
-                ctypes = new string[] { acceptHeader };
+                ctypes = [acceptHeader];
             }
         }
         else
         {
-            ctypes = new string[] { };
+            ctypes = [];
         }
 
         return GetWriter(ctypes, out contentType, compressionLevel, useDtd, useMultipleThreads);
@@ -1351,9 +1350,9 @@ public static class MimeTypesHelper
     /// <summary>
     /// Selects an appropriate <see cref="IRdfReader">IRdfReader</see> based on the given MIME Types.
     /// </summary>
-    /// <param name="ctypes">MIME TYpes.</param>
+    /// <param name="ctypes">MIME types.</param>
     /// <param name="tokenQueueMode">The default token queue mode used for tokeniser based parsers.</param>
-    /// <exception cref="RdfParserSelectionException">Raised if there is no </exception>
+    /// <exception cref="RdfParserSelectionException">Raised if there is no definition that support the <paramref name="ctypes">given MIME types</paramref>.</exception>
     /// <returns></returns>
     public static IRdfReader GetParser(IEnumerable<string> ctypes, TokenQueueMode tokenQueueMode = TokenQueueMode.SynchronousBufferDuringParsing)
     {
@@ -1382,7 +1381,7 @@ public static class MimeTypesHelper
     /// <returns></returns>
     public static IRdfReader GetParser(string contentType, TokenQueueMode tokenQueueMode = TokenQueueMode.SynchronousBufferDuringParsing)
     {
-        return GetParser(contentType.AsEnumerable(), tokenQueueMode);
+        return GetParser([contentType], tokenQueueMode);
     }
 
     /// <summary>
@@ -1444,7 +1443,7 @@ public static class MimeTypesHelper
     /// <returns></returns>
     public static ISparqlResultsReader GetSparqlParser(string contentType)
     {
-        return GetSparqlParser(contentType.AsEnumerable(), false);
+        return GetSparqlParser([contentType], false);
     }
 
     /// <summary>
@@ -1455,7 +1454,7 @@ public static class MimeTypesHelper
     /// <returns></returns>
     public static ISparqlResultsReader GetSparqlParser(string contentType, bool allowPlainTextResults)
     {
-        return GetSparqlParser(contentType.AsEnumerable(), allowPlainTextResults);
+        return GetSparqlParser([contentType], allowPlainTextResults);
     }
 
     /// <summary>
@@ -1553,7 +1552,7 @@ public static class MimeTypesHelper
         }
         else
         {
-            ctypes = new string[] { acceptHeader };
+            ctypes = [acceptHeader];
         }
 
         return GetSparqlWriter(ctypes, out contentType);
@@ -1642,7 +1641,7 @@ public static class MimeTypesHelper
     /// <returns></returns>
     public static IStoreReader GetStoreParser(string contentType, TokenQueueMode tokenQueueMode = TokenQueueMode.SynchronousBufferDuringParsing)
     {
-        return GetStoreParser(contentType.AsEnumerable(), tokenQueueMode);
+        return GetStoreParser([contentType], tokenQueueMode);
     }
 
     /// <summary>
@@ -1740,7 +1739,7 @@ public static class MimeTypesHelper
         }
         else
         {
-            ctypes = new string[] { acceptHeader };
+            ctypes = [acceptHeader];
         }
 
         return GetStoreWriter(ctypes, out contentType, compressionLevel, useDtd);
@@ -1798,52 +1797,6 @@ public static class MimeTypesHelper
 
         throw new RdfWriterSelectionException("Unable to select a RDF Dataset writer, no writers are associated with the file extension '" + fileExt + "'");
     }
-
-    /// <summary>
-    /// Selects the appropriate MIME Type for the given File Extension if the File Extension is a standard extension for an RDF format.
-    /// </summary>
-    /// <param name="fileExt">File Extension.</param>
-    /// <returns></returns>
-    [Obsolete("This method is deprecated, please use GetDefinitionsForExtension() to find relevant definitions and extract the MIME types from there", true)]
-    public static string GetMimeType(string fileExt)
-    {
-        if (!_init) Init();
-        foreach (MimeTypeDefinition definition in Definitions)
-        {
-            if (definition.SupportsFileExtension(fileExt))
-            {
-                return definition.CanonicalMimeType;
-            }
-        }
-
-        // Unknown File Extension
-        throw new RdfParserSelectionException("Unable to determine the appropriate MIME Type for the File Extension '" + fileExt + "' as this is not a standard extension for an RDF format");
-    }
-
-    /// <summary>
-    /// Gets all the MIME Types associated with a given File Extension.
-    /// </summary>
-    /// <param name="fileExt">File Extension.</param>
-    /// <returns></returns>
-    [Obsolete("This method is deprecated, please use GetDefinitionsForExtension() to find relevant definitions and extract the MIME types from there", true)]
-    public static IEnumerable<string> GetMimeTypes(string fileExt)
-    {
-        if (!_init) Init();
-        var types = new List<string>();
-        foreach (MimeTypeDefinition definition in Definitions)
-        {
-            if (definition.SupportsFileExtension(fileExt))
-            {
-                types.AddRange(definition.MimeTypes);
-            }
-        }
-
-        if (types.Count > 0) return types;
-
-        // Unknown File Extension
-        throw new RdfParserSelectionException("Unable to determine the appropriate MIME Type for the File Extension '" + fileExt + "' as this is not a standard extension for an RDF format");
-    }
-
 
     /// <summary>
     /// Gets the true file extension for a filename.

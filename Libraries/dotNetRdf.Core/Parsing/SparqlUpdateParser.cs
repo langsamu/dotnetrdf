@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ namespace VDS.RDF.Parsing;
 public class SparqlUpdateParser
     : ITraceableTokeniser, IObjectParser<SparqlUpdateCommandSet>
 {
-    private IEnumerable<ISparqlCustomExpressionFactory> _factories = Enumerable.Empty<ISparqlCustomExpressionFactory>();
+    private IEnumerable<ISparqlCustomExpressionFactory> _factories = [];
 
     /// <summary>
     /// Creates a new parser instance that parses SPARQL 1.1 syntax and uses the default (root) URI Factory.
@@ -125,18 +125,14 @@ public class SparqlUpdateParser
     /// <summary>
     /// Gets/Sets whether functions that can't be parsed into Expressions should be represented by the <see cref="VDS.RDF.Query.Expressions.Functions.UnknownFunction">UnknownFunction</see>.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public bool AllowUnknownFunctions { get; set; } = Options.QueryAllowUnknownFunctions; //= true;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public bool AllowUnknownFunctions { get; set; } = true;
 
 
     /// <summary>
     /// Get / set whether the update commands should be optimized at the end of the parsing process.
     /// </summary>
     /// <remarks>Defaults to true.</remarks>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public bool QueryOptimisation { get; set; } = Options.QueryOptimisation; //= true;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public bool QueryOptimisation { get; set; } = true;
 
     #region Events
 
@@ -813,7 +809,7 @@ public class SparqlUpdateParser
     private void TryParseLoadCommand(SparqlUpdateParserContext context)
     {
         LoadCommand cmd;
-        var baseUri = context.BaseUri.ToSafeString();
+        var baseUri = context.BaseUri?.AbsoluteUri ?? "";
 
         // May optionally have a SILENT keyword
         var silent = false;
@@ -872,18 +868,17 @@ public class SparqlUpdateParser
         else if (next.TokenType == Token.DELETE)
         {
             SparqlUpdateCommand deleteCmd = TryParseDeleteCommand(context, false);
-            if (deleteCmd is DeleteCommand)
+            if (deleteCmd is DeleteCommand delete)
             {
-                var delete = ((DeleteCommand)deleteCmd);
                 if (ReferenceEquals(delete.DeletePattern, delete.WherePattern))
                 {
                     throw new RdfParseException("The DELETE WHERE { } shorthand syntax cannot be used in conjunction with a WITH clause");
                 }
                 delete.WithGraphName = new UriNode(u);
             }
-            else if (deleteCmd is BaseModificationCommand)
+            else if (deleteCmd is BaseModificationCommand command)
             {
-                ((BaseModificationCommand) deleteCmd).WithGraphName = new UriNode(u);
+                command.WithGraphName = new UriNode(u);
             }
             else
             {
@@ -1092,7 +1087,7 @@ public class SparqlUpdateParser
         switch (next.TokenType)
         {
             case Token.URI:
-                return UriFactory.Create(Tools.ResolveUri(next.Value, context.BaseUri.ToSafeString()));
+                return UriFactory.Create(Tools.ResolveUri(next.Value, context.BaseUri?.AbsoluteUri ?? ""));
             case Token.QNAME:
                 return UriFactory.Create(Tools.ResolveQName(next.Value, context.NamespaceMap, context.BaseUri));
             default:

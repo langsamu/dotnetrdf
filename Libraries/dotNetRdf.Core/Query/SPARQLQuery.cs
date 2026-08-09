@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,16 +62,16 @@ public sealed class SparqlQuery
     private List<IRefNode> _namedGraphs;
     private SparqlSpecialQueryType _specialType = SparqlSpecialQueryType.Unknown;
     private List<SparqlVariable> _vars;
-    private List<IToken> _describeVars = new();
+    private List<IToken> _describeVars = [];
     private ISparqlOrderBy _orderBy;
     private int _limit = -1;
     private int _offset;
     private long _timeout;
     private TimeSpan? _executionTime;
     private bool? _optimisableOrdering;
-    private IEnumerable<IAlgebraOptimiser> _optimisers = Enumerable.Empty<IAlgebraOptimiser>();
-    private IEnumerable<ISparqlCustomExpressionFactory> _exprFactories = Enumerable.Empty<ISparqlCustomExpressionFactory>();
-    private IEnumerable<IPropertyFunctionFactory> _propFuncFactories = Enumerable.Empty<IPropertyFunctionFactory>();
+    private IEnumerable<IAlgebraOptimiser> _optimisers = [];
+    private IEnumerable<ISparqlCustomExpressionFactory> _exprFactories = [];
+    private IEnumerable<IPropertyFunctionFactory> _propFuncFactories = [];
 
     /// <summary>
     /// Creates a new SPARQL Query.
@@ -80,9 +80,9 @@ public sealed class SparqlQuery
     {
         BaseUri = baseUri;
         NamespaceMap = namespaceMapper ?? new NamespaceMapper(true);
-        _vars = new List<SparqlVariable>();
-        _defaultGraphs = new List<IRefNode>();
-        _namedGraphs = new List<IRefNode>();
+        _vars = [];
+        _defaultGraphs = [];
+        _namedGraphs = [];
         IsSubQuery = subquery;
     }
 
@@ -138,7 +138,7 @@ public sealed class SparqlQuery
     /// <summary>
     /// Gets the Default Graph URIs for the Query.
     /// </summary>
-    [Obsolete("Replaced by DefaultGraphNames")]
+    [Obsolete("Replaced by DefaultGraphNames", true)]
     public IEnumerable<Uri> DefaultGraphs => _defaultGraphs.Where(x=>x is null || x.NodeType == NodeType.Uri).Select(x=>(x as IUriNode)?.Uri);
 
     /// <summary>
@@ -149,7 +149,7 @@ public sealed class SparqlQuery
     /// <summary>
     /// Gets the Named Graph URIs for the Query.
     /// </summary>
-    [Obsolete("Replaced by NamedGraphNames")]
+    [Obsolete("Replaced by NamedGraphNames", true)]
     public IEnumerable<Uri> NamedGraphs => _namedGraphs.Where(x => x is null || x.NodeType == NodeType.Uri)
         .Select(x => (x as IUriNode)?.Uri);
 
@@ -274,7 +274,7 @@ public sealed class SparqlQuery
         get => _optimisers;
         set
         {
-            _optimisers = value ?? Enumerable.Empty<IAlgebraOptimiser>();
+            _optimisers = value ?? [];
         }
     }
 
@@ -286,7 +286,7 @@ public sealed class SparqlQuery
         get => _exprFactories;
         set
         {
-            _exprFactories = value ?? Enumerable.Empty<ISparqlCustomExpressionFactory>();
+            _exprFactories = value ?? [];
         }
     }
 
@@ -298,7 +298,7 @@ public sealed class SparqlQuery
         get => _propFuncFactories;
         set
         {
-            _propFuncFactories = value ?? Enumerable.Empty<IPropertyFunctionFactory>();
+            _propFuncFactories = value ?? [];
         }
     }
 
@@ -433,7 +433,7 @@ public sealed class SparqlQuery
     /// <summary>
     /// The number of results that would be returned without any limit clause to a query or -1 if not supported. Defaults to the same value as the Count member.
     /// </summary>
-    [Obsolete("This property is obsolete and is no longer set when a query is processed")]
+    [Obsolete("This property is obsolete and is no longer set when a query is processed", true)]
     public int VirtualCount { get; internal set; } = -1;
 
     #endregion
@@ -494,7 +494,7 @@ public sealed class SparqlQuery
     /// Adds a Default Graph URI.
     /// </summary>
     /// <param name="u">Graph URI.</param>
-    [Obsolete("Replaced by AddDefaultGraph(IRefNode)")]
+    [Obsolete("Replaced by AddDefaultGraph(IRefNode)", true)]
     public void AddDefaultGraph(Uri u)
     {
         AddDefaultGraph(new UriNode(u));
@@ -504,7 +504,7 @@ public sealed class SparqlQuery
     /// Adds a Named Graph URI.
     /// </summary>
     /// <param name="u">Graph URI.</param>
-    [Obsolete("Replaced by AddNamedGraph(IRefNode)")]
+    [Obsolete("Replaced by AddNamedGraph(IRefNode)", true)]
     public void AddNamedGraph(Uri u)
     {
         AddNamedGraph(new UriNode(u));
@@ -573,7 +573,7 @@ public sealed class SparqlQuery
         if (optimiser == null) throw new ArgumentNullException(nameof(optimiser), "Cannot optimise a Query using a null optimiser");
         if (RootGraphPattern != null)
         {
-            optimiser.Optimise(RootGraphPattern, Enumerable.Empty<string>());
+            optimiser.Optimise(RootGraphPattern, []);
         }
 
         IsOptimised = true;

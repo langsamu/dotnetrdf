@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -234,14 +234,14 @@ public class ConfigurationLoader : IConfigurationLoader
     /// <summary>
     /// Cache for loaded objects.
     /// </summary>
-    private static Dictionary<CachedObjectKey, object> _cache = new Dictionary<CachedObjectKey, object>();
+    private static Dictionary<CachedObjectKey, object> _cache = [];
 
-    private static readonly List<IConfigurationExtension> _extensions = new List<IConfigurationExtension>();
+    private static readonly List<IConfigurationExtension> _extensions = [];
     /// <summary>
     /// Set of built-in object factories that are automatically registered and used.
     /// </summary>
-    private static readonly List<IObjectFactory> _factories = new List<IObjectFactory>
-    {
+    private static readonly List<IObjectFactory> _factories =
+    [
         // Default Data Factories
         new GraphFactory(),
         new StoreFactory(),
@@ -256,11 +256,6 @@ public class ConfigurationLoader : IConfigurationLoader
         new DatasetFactory(),
         // Endpoint Factories
         new SparqlClientFactory(),
-
-#pragma warning disable 618
-        // To be removed when deprecated classes are removed
-        new SparqlEndpointFactory(),
-#pragma warning restore 618
 
         // Processor Factories
         new QueryProcessorFactory(),
@@ -286,12 +281,12 @@ public class ConfigurationLoader : IConfigurationLoader
         // Parser and Writer Factories
         new ParserFactory(),
         new WriterFactory(),
-    };
+    ];
 
-    private static readonly List<Assembly> _factoryAssemblies = new List<Assembly>
-    {
+    private static readonly List<Assembly> _factoryAssemblies =
+    [
         Assembly.GetAssembly(typeof(ConfigurationLoader)),
-    };
+    ];
 
     /// <summary>
     /// Path resolver.
@@ -310,13 +305,6 @@ public class ConfigurationLoader : IConfigurationLoader
     public static Loader Loader { get; } = new Loader();
 
     #endregion
-
-    static ConfigurationLoader()
-    {
-#if NET40
-        SettingsProvider = new ConfigurationManagerSettingsProvider();
-#endif
-    }
 
     #region Graph Loading and Auto-Configuration
 
@@ -363,7 +351,7 @@ public class ConfigurationLoader : IConfigurationLoader
     {
         var g = new Graph();
         FileLoader.Load(g, file);
-        return LoadCommon(g, new INode[] { g.CreateLiteralNode(file), g.CreateLiteralNode(Path.GetFileName(file)) }, autoConfigure);
+        return LoadCommon(g, [g.CreateLiteralNode(file), g.CreateLiteralNode(Path.GetFileName(file))], autoConfigure);
     }
 
     /// <summary>
@@ -398,7 +386,7 @@ public class ConfigurationLoader : IConfigurationLoader
     /// <returns></returns>
     private static IGraph LoadCommon(IGraph g, INode source, bool autoConfigure)
     {
-        return LoadCommon(g, source.AsEnumerable(), autoConfigure);
+        return LoadCommon(g, [source], autoConfigure);
     }
 
     /// <summary>
@@ -496,9 +484,9 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (INode objNode in g.GetTriplesWithPredicateObject(rdfType, objLoader).Select(t => t.Subject))
         {
             var temp = LoadObject(g, objNode);
-            if (temp is IObjectFactory)
+            if (temp is IObjectFactory factory)
             {
-                AddObjectFactory((IObjectFactory)temp);
+                AddObjectFactory(factory);
             }
             else
             {
@@ -577,11 +565,7 @@ public class ConfigurationLoader : IConfigurationLoader
                             Uri uriValue = (value.NodeType == NodeType.Uri ? ((IUriNode)value).Uri : g.UriFactory.Create(valueNode.AsString()));
                             property.SetValue(null, uriValue, null);
                         }
-#if NETCORE
-                        else if (valueType.IsEnum())
-#else
                         else if (valueType.IsEnum)
-#endif
                         {
                             if (value.NodeType != NodeType.Literal) throw new DotNetRdfConfigurationException("Malformed dnf:configure triple - " + t + " - the object must be a literal when the property being set has a enumeration type");
                             var enumVal = Enum.Parse(valueType, valueNode.AsString(), true);
@@ -624,7 +608,7 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (INode objNode in g.GetTriplesWithPredicateObject(rdfType, desiredType).Select(t => t.Subject))
         {
             temp = LoadObject(g, objNode);
-            if (temp is IRdfReader)
+            if (temp is IRdfReader reader)
             {
                 // Get the formats to associate this with
                 mimeTypes = GetConfigurationArray(g, objNode, formatMimeType);
@@ -632,7 +616,7 @@ public class ConfigurationLoader : IConfigurationLoader
                 extensions = GetConfigurationArray(g, objNode, formatExtension);
 
                 // Register
-                MimeTypesHelper.RegisterParser((IRdfReader)temp, mimeTypes, extensions);
+                MimeTypesHelper.RegisterParser(reader, mimeTypes, extensions);
             }
             else
             {
@@ -645,7 +629,7 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (INode objNode in g.GetTriplesWithPredicateObject(rdfType, desiredType).Select(t => t.Subject))
         {
             temp = LoadObject(g, objNode);
-            if (temp is IStoreReader)
+            if (temp is IStoreReader reader)
             {
                 // Get the formats to associate this with
                 mimeTypes = GetConfigurationArray(g, objNode, formatMimeType);
@@ -653,7 +637,7 @@ public class ConfigurationLoader : IConfigurationLoader
                 extensions = GetConfigurationArray(g, objNode, formatExtension);
 
                 // Register
-                MimeTypesHelper.RegisterParser((IStoreReader)temp, mimeTypes, extensions);
+                MimeTypesHelper.RegisterParser(reader, mimeTypes, extensions);
             }
             else
             {
@@ -666,7 +650,7 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (INode objNode in g.GetTriplesWithPredicateObject(rdfType, desiredType).Select(t => t.Subject))
         {
             temp = LoadObject(g, objNode);
-            if (temp is ISparqlResultsReader)
+            if (temp is ISparqlResultsReader reader)
             {
                 // Get the formats to associate this with
                 mimeTypes = GetConfigurationArray(g, objNode, formatMimeType);
@@ -674,7 +658,7 @@ public class ConfigurationLoader : IConfigurationLoader
                 extensions = GetConfigurationArray(g, objNode, formatExtension);
 
                 // Register
-                MimeTypesHelper.RegisterParser((ISparqlResultsReader)temp, mimeTypes, extensions);
+                MimeTypesHelper.RegisterParser(reader, mimeTypes, extensions);
             }
             else
             {
@@ -687,7 +671,7 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (INode objNode in g.GetTriplesWithPredicateObject(rdfType, desiredType).Select(t => t.Subject))
         {
             temp = LoadObject(g, objNode);
-            if (temp is IRdfWriter)
+            if (temp is IRdfWriter writer)
             {
                 // Get the formats to associate this with
                 mimeTypes = GetConfigurationArray(g, objNode, formatMimeType);
@@ -695,7 +679,7 @@ public class ConfigurationLoader : IConfigurationLoader
                 extensions = GetConfigurationArray(g, objNode, formatExtension);
 
                 // Register
-                MimeTypesHelper.RegisterWriter((IRdfWriter)temp, mimeTypes, extensions);
+                MimeTypesHelper.RegisterWriter(writer, mimeTypes, extensions);
             }
             else
             {
@@ -708,7 +692,7 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (INode objNode in g.GetTriplesWithPredicateObject(rdfType, desiredType).Select(t => t.Subject))
         {
             temp = LoadObject(g, objNode);
-            if (temp is IStoreWriter)
+            if (temp is IStoreWriter writer)
             {
                 // Get the formats to associate this with
                 mimeTypes = GetConfigurationArray(g, objNode, formatMimeType);
@@ -716,7 +700,7 @@ public class ConfigurationLoader : IConfigurationLoader
                 extensions = GetConfigurationArray(g, objNode, formatExtension);
 
                 // Register
-                MimeTypesHelper.RegisterWriter((IStoreWriter)temp, mimeTypes, extensions);
+                MimeTypesHelper.RegisterWriter(writer, mimeTypes, extensions);
             }
             else
             {
@@ -729,7 +713,7 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (INode objNode in g.GetTriplesWithPredicateObject(rdfType, desiredType).Select(t => t.Subject))
         {
             temp = LoadObject(g, objNode);
-            if (temp is ISparqlResultsWriter)
+            if (temp is ISparqlResultsWriter writer)
             {
                 // Get the formats to associate this with
                 mimeTypes = GetConfigurationArray(g, objNode, formatMimeType);
@@ -737,7 +721,7 @@ public class ConfigurationLoader : IConfigurationLoader
                 extensions = GetConfigurationArray(g, objNode, formatExtension);
 
                 // Register
-                MimeTypesHelper.RegisterWriter((ISparqlResultsWriter)temp, mimeTypes, extensions);
+                MimeTypesHelper.RegisterWriter(writer, mimeTypes, extensions);
             }
             else
             {
@@ -759,16 +743,16 @@ public class ConfigurationLoader : IConfigurationLoader
         foreach (Triple t in g.GetTriplesWithPredicateObject(rdfType, operatorClass))
         {
             var temp = ConfigurationLoader.LoadObject(g, t.Subject);
-            if (temp is ISparqlOperator)
+            if (temp is ISparqlOperator @operator)
             {
                 var enable = ConfigurationLoader.GetConfigurationBoolean(g, t.Subject, enabled, true);
                 if (enable)
                 {
-                    SparqlOperators.AddOperator((ISparqlOperator)temp);
+                    SparqlOperators.AddOperator(@operator);
                 }
                 else
                 {
-                    SparqlOperators.RemoveOperatorByType((ISparqlOperator)temp);
+                    SparqlOperators.RemoveOperatorByType(@operator);
                 }
             }
             else
@@ -803,26 +787,6 @@ public class ConfigurationLoader : IConfigurationLoader
             throw new DotNetRdfConfigurationException("Unable to load the Object identified by the Node '" + a.ToString() + "' as one of the values for the " + property + " property is a circular reference to the Object we are attempting to load");
         }
         return false;
-    }
-
-    /// <summary>
-    /// Creates a URI Node that refers to some Configuration property/type.
-    /// </summary>
-    /// <param name="g">Configuration Graph.</param>
-    /// <param name="qname">QName of the property/type.</param>
-    /// <returns></returns>
-    /// <remarks>
-    /// <para>
-    /// The QName provides should be of the form <strong>dnr:qname</strong> - the <strong>dnr</strong> prefix will be automatically be considered to be to the Configuration Namespace which is defined by the <see cref="ConfigurationLoader.ConfigurationNamespace">ConfigurationNamespace</see> constant.
-    /// </para>
-    /// <para>
-    /// This function uses caching to ensure that URI Nodes aren't needlessly recreated in order to save memory.
-    /// </para>
-    /// </remarks>
-    [Obsolete("This method is obsolete and should no longer be used, constants are now URIs so you should just create URI Nodes directly on your Configuration Graph", true)]
-    public static INode CreateConfigurationNode(IGraph g, string qname)
-    {
-        return g.CreateUriNode(g.UriFactory.Create(qname));
     }
 
     /// <summary>

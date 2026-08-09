@@ -280,7 +280,7 @@ public class WriterTests
     {
         var g = new Graph();
         var writer = new System.IO.StringWriter();
-        var rdfWriter = writerType.GetConstructor(new Type[0]).Invoke(new object[0]) as IRdfWriter;
+        var rdfWriter = writerType.GetConstructor([]).Invoke([]) as IRdfWriter;
         rdfWriter.Save(g, writer, true);
         writer.Write("\n"); // This should not throw because the writer is still open
         rdfWriter.Save(g, writer);
@@ -296,9 +296,9 @@ public class WriterTests
     {
         if (formats.HasFlag(Formats.Turtle))
         {
-            yield return new(new CompressingTurtleWriter(TurtleSyntax.Original), new TurtleParser(TurtleSyntax.Original));
-            yield return new(new CompressingTurtleWriter(TurtleSyntax.W3C), new TurtleParser(TurtleSyntax.W3C));
-            yield return new(new CompressingTurtleWriter(TurtleSyntax.Rdf11Star), new TurtleParser(TurtleSyntax.Rdf11Star));
+            yield return new(new CompressingTurtleWriter(TurtleSyntax.Original), new TurtleParser(TurtleSyntax.Original, false));
+            yield return new(new CompressingTurtleWriter(TurtleSyntax.W3C), new TurtleParser(TurtleSyntax.W3C, false));
+            yield return new(new CompressingTurtleWriter(TurtleSyntax.Rdf11Star), new TurtleParser(TurtleSyntax.Rdf11Star, false));
             yield return new(new Notation3Writer(), new Notation3Parser());
         }
 

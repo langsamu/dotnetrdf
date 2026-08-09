@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,11 +41,11 @@ public sealed class MimeTypeDefinition
 {
     private string _name, _canonicalType, _canonicalExt, _formatUri;
     private Encoding _encoding = Encoding.UTF8;
-    private List<string> _mimeTypes = new List<string>();
-    private List<string> _fileExtensions = new List<string>();
+    private List<string> _mimeTypes = [];
+    private List<string> _fileExtensions = [];
     private Type _rdfParserType, _rdfDatasetParserType, _sparqlResultsParserType;
     private Type _rdfWriterType, _rdfDatasetWriterType, _sparqlResultsWriterType;
-    private Dictionary<Type, Type> _objectParserTypes = new Dictionary<Type, Type>();
+    private Dictionary<Type, Type> _objectParserTypes = [];
     private decimal _preference = 1.0m;
 
     /// <summary>
@@ -257,19 +257,6 @@ public sealed class MimeTypeDefinition
     }
 
     /// <summary>
-    /// Determines whether the Definition supports a particular MIME type.
-    /// </summary>
-    /// <param name="mimeType">MIME Type.</param>
-    /// <returns></returns>
-    [Obsolete("Deprecated in favour of the alternative overload which takes a MimeTypeSelector", true)]
-    public bool SupportsMimeType(string mimeType)
-    {
-        var type = mimeType.ToLowerInvariant();
-        type = type.Contains(';') ? type.Substring(0, type.IndexOf(';')) : type;
-        return _mimeTypes.Contains(type) || mimeType.Equals(MimeTypesHelper.Any);
-    }
-
-    /// <summary>
     /// Determines whether the definition supports the MIME type specified by the selector.
     /// </summary>
     /// <param name="selector">MIME Type selector.</param>
@@ -409,11 +396,7 @@ public sealed class MimeTypeDefinition
         var ok = false;
         foreach (Type i in t.GetInterfaces())
         {
-#if NETCORE
-            if(i.IsGenericType())
-#else
             if (i.IsGenericType)
-#endif
             {
                 if (i.GetGenericArguments().First().Equals(obj))
                 {

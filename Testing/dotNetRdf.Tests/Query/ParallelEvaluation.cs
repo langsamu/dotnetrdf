@@ -95,14 +95,13 @@ public class ParallelEvaluation
         _output.WriteLine("Normal Evaluation took " + timer.Elapsed);
         timer.Reset();
 
-        if (normResults is SparqlResultSet)
+        if (normResults is SparqlResultSet rsetNorm)
         {
-            var rsetNorm = (SparqlResultSet)normResults;
             _output.WriteLine("Normal Evaluation returned " + rsetNorm.Count + " Result(s)");
             _output.WriteLine(string.Empty);
 
             //Evaluate parallelised
-            q.AlgebraOptimisers = new IAlgebraOptimiser[] { new ParallelEvaluationOptimiser() };
+            q.AlgebraOptimisers = [new ParallelEvaluationOptimiser()];
             _output.WriteLine("Parallel Algebra:");
             _output.WriteLine(q.ToAlgebra().ToString());
             _output.WriteLine(string.Empty);

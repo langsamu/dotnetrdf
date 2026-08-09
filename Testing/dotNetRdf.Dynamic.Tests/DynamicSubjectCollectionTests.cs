@@ -119,9 +119,10 @@ public class DynamicSubjectCollectionTests
         var p = g.CreateUriNode(UriFactory.Root.Create("urn:p"));
         var o = g.CreateUriNode(UriFactory.Root.Create("urn:o"));
         var d = new DynamicNode(o, g);
-        var c = new DynamicSubjectCollection(p, d);
-
-        c.Add(s);
+        var c = new DynamicSubjectCollection(p, d)
+        {
+            s,
+        };
 
         Assert.Equal(expected, g);
     }
@@ -336,16 +337,14 @@ public class DynamicSubjectCollectionTests
         var c = new DynamicSubjectCollection(p, d);
 
         var expected = new[] { s, p, o }.GetEnumerator();
-        using (var actual = c.GetEnumerator())
+        using var actual = c.GetEnumerator();
+        while (expected.MoveNext())
         {
-            while (expected.MoveNext())
-            {
-                actual.MoveNext();
+            actual.MoveNext();
 
-                Assert.Equal(
-                    expected.Current,
-                    actual.Current);
-            }
+            Assert.Equal(
+                expected.Current,
+                actual.Current);
         }
     }
 

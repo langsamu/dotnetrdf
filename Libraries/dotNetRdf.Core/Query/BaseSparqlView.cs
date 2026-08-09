@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -109,14 +109,14 @@ public abstract class BaseSparqlView
         // Does this Query operate over specific Graphs?
         if (_q.DefaultGraphNames.Any() || _q.NamedGraphNames.Any())
         {
-            _graphs = new HashSet<string>();
+            _graphs = [];
             foreach (IRefNode graphName in _q.DefaultGraphNames)
             {
-                _graphs.Add(graphName.ToSafeString());
+                _graphs.Add($"{graphName}");
             }
             foreach (IRefNode graphName in _q.NamedGraphNames)
             {
-                _graphs.Add(graphName.ToSafeString());
+                _graphs.Add($"{graphName}");
             }
         }
 
@@ -194,7 +194,7 @@ public abstract class BaseSparqlView
                 else
                 {
                     // If specific Graphs only invalidate when those Graphs change
-                    if (_graphs.Contains(g.BaseUri.ToSafeString()))
+                    if (_graphs.Contains(g.BaseUri?.AbsoluteUri ?? ""))
                     {
                         InvalidateView();
                     }
@@ -221,7 +221,7 @@ public abstract class BaseSparqlView
                 else
                 {
                     // If specific Graphs only invalidate when those Graphs change
-                    if (_graphs.Contains(g.BaseUri.ToSafeString()))
+                    if (_graphs.Contains(g.BaseUri?.AbsoluteUri ?? ""))
                     {
                         InvalidateView();
                     }
@@ -248,7 +248,7 @@ public abstract class BaseSparqlView
                 else
                 {
                     // If specific Graphs only invalidate when those Graphs change
-                    if (_graphs.Contains(g.BaseUri.ToSafeString()))
+                    if (_graphs.Contains(g.BaseUri?.AbsoluteUri ?? ""))
                     {
                         InvalidateView();
                     }
@@ -275,12 +275,25 @@ public abstract class BaseSparqlView
                 else
                 {
                     // If specific Graphs only invalidate when those Graphs change
-                    if (_graphs.Contains(g.BaseUri.ToSafeString()))
+                    if (_graphs.Contains(g.BaseUri?.AbsoluteUri ?? ""))
                     {
                         InvalidateView();
                     }
                 }
             }
         }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _store.GraphChanged -= OnGraphChanged;
+            _store.GraphAdded -= OnGraphAdded;
+            _store.GraphRemoved -= OnGraphRemoved;
+            _store.GraphMerged -= OnGraphMerged;
+        }
+
+        base.Dispose(disposing);
     }
 }

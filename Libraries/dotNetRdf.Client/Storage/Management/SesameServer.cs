@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -81,12 +81,12 @@ public class SesameServer
     /// <summary>
     /// Available Sesame template types.
     /// </summary>
-    protected List<Type> TemplateTypes = new List<Type>
-    {
+    protected List<Type> TemplateTypes =
+    [
         typeof(SesameMemTemplate),
         typeof(SesameNativeTemplate),
         typeof(SesameHttpTemplate),
-    };
+    ];
 
     /// <summary>
     /// Creates a new connection to a Sesame HTTP Protocol supporting Store.
@@ -154,7 +154,7 @@ public class SesameServer
     public virtual IEnumerable<IStoreTemplate> GetAvailableTemplates(string id)
     {
         var templates = new List<IStoreTemplate>();
-        object[] args = { id };
+        object[] args = [id];
         foreach (Type t in TemplateTypes)
         {
             try
@@ -184,7 +184,7 @@ public class SesameServer
     /// </remarks>
     public virtual bool CreateStore(IStoreTemplate template)
     {
-        if (!(template is BaseSesameTemplate sesameTemplate))
+        if (template is not BaseSesameTemplate sesameTemplate)
         {
             throw new RdfStorageException("Invalid template, templates must derive from BaseSesameTemplate");
         }
@@ -217,7 +217,7 @@ public class SesameServer
             var repoType = new Triple(sesameTemplate.ContextNode, g.CreateUriNode("rdf:type"),
                 g.CreateUriNode("rep:RepositoryContext"));
             EnsureSystemConnection();
-            _sysConnection.UpdateGraph(string.Empty, repoType.AsEnumerable(), null);
+            _sysConnection.UpdateGraph(string.Empty, [repoType], null);
 
             return true;
         }
@@ -255,14 +255,12 @@ public class SesameServer
     {
         try
         {
-            HttpRequestMessage request = CreateRequest(_repositoriesPrefix + storeID, MimeTypesHelper.Any, HttpMethod.Delete, new Dictionary<string, string>());
+            HttpRequestMessage request = CreateRequest(_repositoriesPrefix + storeID, MimeTypesHelper.Any, HttpMethod.Delete, []);
 
-            using (var response = HttpClient.SendAsync(request).Result)
+            using var response = HttpClient.SendAsync(request).Result;
+            if (!response.IsSuccessStatusCode)
             {
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw StorageHelper.HandleHttpError(response, "deleting the Store '" + storeID + "' from");
-                }
+                throw StorageHelper.HandleHttpError(response, "deleting the Store '" + storeID + "' from");
             }
         }
         catch (Exception ex)
@@ -274,7 +272,7 @@ public class SesameServer
     /// <inheritdoc />
     public virtual async Task DeleteStoreAsync(string storeId, CancellationToken cancellationToken)
     {
-        HttpRequestMessage request = CreateRequest(_repositoriesPrefix + storeId, MimeTypesHelper.Any, HttpMethod.Delete, new Dictionary<string, string>());
+        HttpRequestMessage request = CreateRequest(_repositoriesPrefix + storeId, MimeTypesHelper.Any, HttpMethod.Delete, []);
 
         using HttpResponseMessage response = await HttpClient.SendAsync(request, cancellationToken);
         if (!response.IsSuccessStatusCode)
@@ -291,7 +289,7 @@ public class SesameServer
     {
         try
         {
-            HttpRequestMessage request = CreateRequest("repositories", MimeTypesHelper.SparqlResultsXml[0], HttpMethod.Get, new Dictionary<string, string>());
+            HttpRequestMessage request = CreateRequest("repositories", MimeTypesHelper.SparqlResultsXml[0], HttpMethod.Get, []);
 
             var handler = new ListStringsHandler("id");
             using HttpResponseMessage response = HttpClient.SendAsync(request).Result;
@@ -338,7 +336,7 @@ public class SesameServer
     public virtual void GetAvailableTemplates(string id, AsyncStorageCallback callback, object state)
     {
         var templates = new List<IStoreTemplate>();
-        object[] args = { id };
+        object[] args = [id];
         foreach (Type t in TemplateTypes)
         {
             try
@@ -397,7 +395,7 @@ public class SesameServer
                 {
                     // Then we need to declare that said Context is of type rep:RepositoryContext
                     var repoType = new Triple(sesameTemplate.ContextNode, g.CreateUriNode("rdf:type"), g.CreateUriNode("rep:RepositoryContext"));
-                    _sysConnection.UpdateGraph(string.Empty, repoType.AsEnumerable(), null, (sender2, args2, st2) =>
+                    _sysConnection.UpdateGraph(string.Empty, [repoType], null, (sender2, args2, st2) =>
                     {
                         if (args.WasSuccessful)
                         {
@@ -424,7 +422,7 @@ public class SesameServer
     /// <inheritdoc />
     public async Task<string> CreateStoreAsync(IStoreTemplate template, CancellationToken cancellationToken)
     {
-        if (!(template is BaseSesameTemplate sesameTemplate))
+        if (template is not BaseSesameTemplate sesameTemplate)
         {
             throw new RdfStorageException("Invalid template. Templates must derive from BaseSesameTemplate.");
         }
@@ -446,7 +444,7 @@ public class SesameServer
             await _sysConnection.SaveGraphAsync(request, cancellationToken);
             var repoType = new Triple(sesameTemplate.ContextNode, g.CreateUriNode("rdf:type"),
                 g.CreateUriNode("rep:RepositoryContext"));
-            await _sysConnection.UpdateGraphAsync(string.Empty, repoType.AsEnumerable(), null, cancellationToken);
+            await _sysConnection.UpdateGraphAsync(string.Empty, [repoType], null, cancellationToken);
             return template.ID;
         }
         catch (Exception ex)
@@ -494,7 +492,7 @@ public class SesameServer
     {
         try
         {
-            HttpRequestMessage request = CreateRequest(_repositoriesPrefix + storeID, MimeTypesHelper.Any, HttpMethod.Delete, new Dictionary<string, string>());
+            HttpRequestMessage request = CreateRequest(_repositoriesPrefix + storeID, MimeTypesHelper.Any, HttpMethod.Delete, []);
             HttpClient.SendAsync(request).ContinueWith(requestTask =>
             {
                 if (requestTask.IsCanceled || requestTask.IsFaulted)
@@ -537,7 +535,7 @@ public class SesameServer
         try
         {
             HttpRequestMessage request = CreateRequest("repositories", MimeTypesHelper.SparqlResultsXml[0],
-                HttpMethod.Get, new Dictionary<string, string>());
+                HttpMethod.Get, []);
             var handler = new ListStringsHandler("id");
             HttpResponseMessage response = await HttpClient.SendAsync(request, cancellationToken);
             if (!response.IsSuccessStatusCode)
@@ -561,10 +559,10 @@ public class SesameServer
     /// </summary>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("This method is obsolete and will be removed in a future release. Replaced by ListStoresAsync")]
+    [Obsolete("This method is obsolete and will be removed in a future release. Replaced by ListStoresAsync", true)]
     public virtual void ListStores(AsyncStorageCallback callback, object state)
     {
-        HttpRequestMessage request = CreateRequest("repositories", MimeTypesHelper.SparqlResultsXml[0], HttpMethod.Get, new Dictionary<string, string>());
+        HttpRequestMessage request = CreateRequest("repositories", MimeTypesHelper.SparqlResultsXml[0], HttpMethod.Get, []);
         var handler = new ListStringsHandler("id");
         try
         {
@@ -629,7 +627,7 @@ public class SesameServer
     /// <param name="method">HTTP Method.</param>
     /// <param name="queryParams">Querystring Parameters.</param>
     /// <returns></returns>
-    [Obsolete("This method is obsolete and will be removed in a future release.")]
+    [Obsolete("This method is obsolete and will be removed in a future release.", true)]
     protected virtual HttpWebRequest CreateRequest(string servicePath, string accept, string method, Dictionary<string, string> queryParams)
     {
         // Build the Request Uri

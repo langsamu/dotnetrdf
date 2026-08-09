@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -87,7 +87,7 @@ public class SparqlHttpProtocolConnector
     /// </summary>
     /// <param name="serviceUri">URI of the Protocol Server.</param>
     public SparqlHttpProtocolConnector(Uri serviceUri)
-        : this(serviceUri.ToSafeString()) { }
+        : this(serviceUri?.AbsoluteUri ?? "") { }
 
     /// <summary>
     /// Creates a new SPARQL Graph Store HTTP Protocol Connector.
@@ -106,7 +106,7 @@ public class SparqlHttpProtocolConnector
     /// <param name="serviceUri">URI of the Protocol Server.</param>
     /// <param name="proxy">Proxy Server.</param>
     public SparqlHttpProtocolConnector(Uri serviceUri, IWebProxy proxy)
-        : this(serviceUri.ToSafeString(), proxy) { }
+        : this(serviceUri?.AbsoluteUri ?? "", proxy) { }
 
     /// <summary>
     /// Gets the IO Behaviour of SPARQL Graph Store protocol based stores.
@@ -181,7 +181,7 @@ public class SparqlHttpProtocolConnector
     /// <param name="graphUri">URI of the Graph to load.</param>
     public virtual void LoadGraph(IGraph g, Uri graphUri)
     {
-        LoadGraph(g, graphUri.ToSafeString());
+        LoadGraph(g, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -191,7 +191,7 @@ public class SparqlHttpProtocolConnector
     /// <param name="graphUri">URI of the Graph to load.</param>
     public virtual void LoadGraph(IRdfHandler handler, Uri graphUri)
     {
-        LoadGraph(handler, graphUri.ToSafeString());
+        LoadGraph(handler, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -257,7 +257,7 @@ public class SparqlHttpProtocolConnector
     /// <param name="graphUri">URI of the Graph to check for.</param>
     public virtual bool HasGraph(Uri graphUri)
     {
-        return HasGraph(graphUri.ToSafeString());
+        return HasGraph(graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -337,7 +337,7 @@ public class SparqlHttpProtocolConnector
     /// </remarks>
     public virtual void UpdateGraph(Uri graphUri, IEnumerable<Triple> additions, IEnumerable<Triple> removals)
     {
-        UpdateGraph(graphUri.ToSafeString(), additions, removals);
+        UpdateGraph(graphUri?.AbsoluteUri ?? "", additions, removals);
     }
 
     /// <summary>
@@ -385,7 +385,7 @@ public class SparqlHttpProtocolConnector
     /// <inheritdoc />
     public virtual void UpdateGraph(IRefNode graphName, IEnumerable<Triple> additions, IEnumerable<Triple> removals)
     {
-        UpdateGraph(graphName.ToSafeString(), additions, removals);
+        UpdateGraph($"{graphName}", additions, removals);
     }
 
     /// <summary>
@@ -394,7 +394,7 @@ public class SparqlHttpProtocolConnector
     /// <param name="graphUri">URI of the Graph to delete.</param>
     public virtual void DeleteGraph(Uri graphUri)
     {
-        DeleteGraph(graphUri.ToSafeString());
+        DeleteGraph(graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -432,7 +432,7 @@ public class SparqlHttpProtocolConnector
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotSupportedException">Thrown since SPARQL Graph Store HTTP Protocol does not support listing graphs.</exception>
-    [Obsolete("Replaced by ListGraphNames")]
+    [Obsolete("Replaced by ListGraphNames", true)]
     public virtual IEnumerable<Uri> ListGraphs()
     {
         throw new NotSupportedException("SPARQL HTTP Protocol Connector does not support listing Graphs");
@@ -625,7 +625,7 @@ public class SparqlHttpProtocolConnector
     /// </summary>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("Replaced with ListGraphsAsync(CancellationToken)")]
+    [Obsolete("Replaced with ListGraphsAsync(CancellationToken)", true)]
     public override void ListGraphs(AsyncStorageCallback callback, object state)
     {
         callback(this, new AsyncStorageCallbackArgs(AsyncStorageOperation.ListGraphs, new NotSupportedException("SPARQL HTTP Protocol Connector does not support listing graphs")), state);

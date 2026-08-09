@@ -70,9 +70,9 @@ namespace VDS.RDF.Parsing;
     private void TestRdfXmlSequence(IRdfReader parser, String file)
     {
         var g = new Graph();
-        if (parser is ITraceableParser)
+        if (parser is ITraceableParser traceableParser)
         {
-            ((ITraceableParser)parser).TraceParsing = true;
+            traceableParser.TraceParsing = true;
         }
         parser.Load(g, file);
 
@@ -149,7 +149,7 @@ namespace VDS.RDF.Parsing;
         var graphHandler = new GraphHandler(g);
         var paging = new PagingHandler(graphHandler, 1000);
         var counter = new CountHandler();
-        var handler = new ChainedHandler(new IRdfHandler[] { paging, counter });
+        var handler = new ChainedHandler([paging, counter]);
 
         var parser = new GZippedRdfXmlParser(RdfXmlParserMode.Streaming);
         parser.Load(handler, Path.Combine("resources", "oom.rdf.gz"));

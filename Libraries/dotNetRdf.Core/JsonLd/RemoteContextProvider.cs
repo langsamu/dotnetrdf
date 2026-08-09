@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ public class RemoteContextProvider: IRemoteContextProvider
     public RemoteContextProvider(JsonLdProcessorOptions options)
     {
         _options = options;
-        _remoteContextCache = new Dictionary<Uri, JsonLdRemoteContext>();
+        _remoteContextCache = [];
     }
 
     /// <inheritdoc />
@@ -59,7 +59,7 @@ public class RemoteContextProvider: IRemoteContextProvider
                 new JsonLdLoaderOptions
                     { Profile = JsonLdVocabulary.Context, RequestProfile = JsonLdVocabulary.Context }, _options);
             JToken jsonRepresentation = GetJsonRepresentation(remoteDoc);
-            if (!(jsonRepresentation is JObject remoteJsonObject))
+            if (jsonRepresentation is not JObject remoteJsonObject)
             {
                 throw new JsonLdProcessorException(JsonLdErrorCode.InvalidRemoteContext,
                     $"Remote document at {reference} could not be parsed as a JSON object.");

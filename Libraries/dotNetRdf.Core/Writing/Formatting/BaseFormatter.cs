@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -197,17 +197,6 @@ public abstract class BaseFormatter
     protected virtual string FormatGraphLiteralNode(IGraphLiteralNode glit, TripleSegment? segment)
     {
         throw new RdfOutputException(WriterErrorMessages.GraphLiteralsUnserializable(_format));
-    }
-
-    /// <summary>
-    /// Formats a Character for the given Format.
-    /// </summary>
-    /// <param name="c">Character.</param>
-    /// <returns></returns>
-    [Obsolete("This form of the FormatChar() method is considered obsolete as it is inefficient", true)]
-    public virtual string FormatChar(char c)
-    {
-        return c.ToString();
     }
 
     /// <summary>

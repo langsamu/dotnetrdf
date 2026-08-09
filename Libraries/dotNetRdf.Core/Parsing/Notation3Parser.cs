@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -103,9 +103,7 @@ public class Notation3Parser
     /// <summary>
     /// Gets/Sets the token queue mode used.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public TokenQueueMode TokenQueueMode { get; set; } = Options.DefaultTokenQueueMode; // TokenQueueMode.SynchronousBufferDuringParsing
-#pragma warning restore CS0618 // Type or member is obsolete
+    public TokenQueueMode TokenQueueMode { get; set; } = TokenQueueMode.SynchronousBufferDuringParsing;
 
     /// <summary>
     /// Loads a Graph by reading Notation 3 syntax from the given input.
@@ -138,10 +136,8 @@ public class Notation3Parser
     {
         if (g == null) throw new RdfParseException("Cannot read RDF into a null Graph");
         if (filename == null) throw new RdfParseException("Cannot read RDF from a null File");
-        using (var reader = new StreamReader(File.OpenRead(filename), Encoding.UTF8))
-        {
-            Load(g, reader);
-        }
+        using var reader = new StreamReader(File.OpenRead(filename), Encoding.UTF8);
+        Load(g, reader);
     }
 
     /// <summary>
@@ -247,10 +243,8 @@ public class Notation3Parser
         if (handler == null) throw new RdfParseException("Cannot read RDF into a null RDF Handler");
         if (filename == null) throw new RdfParseException("Cannot read RDF from a null File");
         if (uriFactory == null) throw new ArgumentNullException(nameof(uriFactory));
-        using (var reader = new StreamReader(File.OpenRead(filename), Encoding.UTF8))
-        {
-            Load(handler, reader, uriFactory);
-        }
+        using var reader = new StreamReader(File.OpenRead(filename), Encoding.UTF8);
+        Load(handler, reader, uriFactory);
     }
 
     /// <summary>
@@ -1268,7 +1262,7 @@ public class Notation3Parser
                     secondItem = TryParseLiteral(context, next);
                     break;
                 case Token.URI:
-                    secondItem = context.Handler.CreateUriNode(context.UriFactory.Create(Tools.ResolveUri(next.Value, context.BaseUri.ToSafeString())));
+                    secondItem = context.Handler.CreateUriNode(context.UriFactory.Create(Tools.ResolveUri(next.Value, context.BaseUri?.AbsoluteUri ?? "")));
                     break;
 
                 default:
@@ -1342,7 +1336,7 @@ public class Notation3Parser
                             if (next.Value.StartsWith("<"))
                             {
                                 dturi = next.Value.Substring(1, next.Value.Length - 2);
-                                return context.Handler.CreateLiteralNode(lit.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri.ToSafeString())));
+                                return context.Handler.CreateLiteralNode(lit.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri?.AbsoluteUri ?? "")));
                             }
                             else
                             {
@@ -1373,7 +1367,7 @@ public class Notation3Parser
                     if (litdt.DataType.StartsWith("<"))
                     {
                         dturi = litdt.DataType.Substring(1, litdt.DataType.Length - 2);
-                        return context.Handler.CreateLiteralNode(litdt.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri.ToSafeString())));
+                        return context.Handler.CreateLiteralNode(litdt.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri?.AbsoluteUri ?? "")));
                     }
                     else
                     {

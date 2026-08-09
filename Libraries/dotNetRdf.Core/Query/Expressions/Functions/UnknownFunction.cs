@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ public class UnknownFunction
     : ISparqlExpression
 {
     private readonly Uri _funcUri;
-    private readonly List<ISparqlExpression> _args = new();
+    private readonly List<ISparqlExpression> _args = [];
 
     /// <summary>
     /// Creates a new Unknown Function that has no Arguments.

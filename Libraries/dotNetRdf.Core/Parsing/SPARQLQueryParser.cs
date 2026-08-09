@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ public class SparqlQueryParser
     : ITraceableTokeniser, IObjectParser<SparqlQuery>
 {
     private readonly TokenQueueMode _queuemode;
-    private IEnumerable<ISparqlCustomExpressionFactory> _factories = Enumerable.Empty<ISparqlCustomExpressionFactory>();
+    private IEnumerable<ISparqlCustomExpressionFactory> _factories = [];
 
     #region Constructors and Properties
 
@@ -139,7 +139,7 @@ public class SparqlQueryParser
     public IEnumerable<ISparqlCustomExpressionFactory> ExpressionFactories
     {
         get => _factories;
-        set => _factories = value ?? Enumerable.Empty<ISparqlCustomExpressionFactory>();
+        set => _factories = value ?? [];
     }
 
     /// <summary>
@@ -156,16 +156,12 @@ public class SparqlQueryParser
     /// Get/set whether query optimization should be used.
     /// </summary>
     /// <remarks>Defaults to true.</remarks>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public bool QueryOptimisation { get; set; } = Options.QueryOptimisation; // = true;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public bool QueryOptimisation { get; set; }  = true;
 
     /// <summary>
     /// Gets/Sets whether functions that can't be parsed into Expressions should be represented by the <see cref="VDS.RDF.Query.Expressions.Functions.UnknownFunction">UnknownFunction</see>.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public bool AllowUnknownFunctions { get; set; } = Options.QueryAllowUnknownFunctions; //= true;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public bool AllowUnknownFunctions { get; set; } = true;
 
     #endregion
 
@@ -505,7 +501,7 @@ public class SparqlQueryParser
                 case SparqlQueryType.Describe:
                     // Check Variable Usage
                     var projectedSoFar = new List<string>();
-                    var mainBodyVars = (context.Query.RootGraphPattern != null ? context.Query.RootGraphPattern.Variables : Enumerable.Empty<string>()).Distinct().ToList();
+                    var mainBodyVars = (context.Query.RootGraphPattern != null ? context.Query.RootGraphPattern.Variables : []).Distinct().ToList();
                     foreach (SparqlVariable var in context.Query.Variables)
                     {
                         if (!var.IsResultVariable) continue;
@@ -1048,9 +1044,9 @@ public class SparqlQueryParser
         ISparqlExpression aggExpr = context.ExpressionParser.Parse(tokens);
         context.ExpressionParser.AllowAggregates = false;
 
-        if (aggExpr is AggregateTerm)
+        if (aggExpr is AggregateTerm term)
         {
-            aggregate = ((AggregateTerm)aggExpr).Aggregate;
+            aggregate = term.Aggregate;
         }
         else
         {
@@ -2916,7 +2912,7 @@ public class SparqlQueryParser
                 case Token.MIN:
                 case Token.SUM:
                 case Token.SAMPLE:
-                    if (context.SyntaxMode == SparqlQuerySyntax.Sparql_1_0) throw ParserHelper.Error("Unexpected Token '" + next.GetType().ToSafeString() + "' encountered, aggregates are not permitted in an ORDER BY in SPARQL 1.0", next);
+                    if (context.SyntaxMode == SparqlQuerySyntax.Sparql_1_0) throw ParserHelper.Error($"Unexpected Token '{next.GetType()}' encountered, aggregates are not permitted in an ORDER BY in SPARQL 1.0", next);
 
                     // Built-in/Extension Function Call Order By
                     ISparqlExpression aggExpr = TryParseFunctionExpression(context);
@@ -3827,7 +3823,7 @@ public class SparqlQueryParser
                 }
                 else
                 {
-                    var uri = Tools.ResolveUri(t.Value, context.Query.BaseUri.ToSafeString());
+                    var uri = Tools.ResolveUri(t.Value, context.Query.BaseUri?.AbsoluteUri ?? "");
                     u = UriFactory.Create(uri);
                     return new NodeMatchPattern(new UriNode(u));
                 }

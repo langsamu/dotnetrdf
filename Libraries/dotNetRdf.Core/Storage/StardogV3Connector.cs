@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -111,7 +111,7 @@ public class StardogV3Connector
     /// Adds Stardog specific request headers.
     /// </summary>
     /// <param name="request"></param>
-    [Obsolete("This method is obsolete and will be removed in a future release")]
+    [Obsolete("This method is obsolete and will be removed in a future release", true)]
     protected override void AddStardogHeaders(HttpWebRequest request)
     {
         // No special headers needed for V3

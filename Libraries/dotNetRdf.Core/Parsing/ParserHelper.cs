@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,7 @@ public static class ParserHelper
             case Token.URI:
                 try
                 {
-                    var uri = Tools.ResolveUri(t.Value, context.BaseUri.ToSafeString(), context.UriFactory);
+                    var uri = Tools.ResolveUri(t.Value, context.BaseUri?.AbsoluteUri ?? "", context.UriFactory);
                     return context.Handler.CreateUriNode(context.UriFactory.Create(uri));
                 }
                 catch (UriFormatException formatEx)
@@ -133,7 +133,7 @@ public static class ParserHelper
             case Token.URI:
                 try
                 {
-                    var uri = Tools.ResolveUri(t.Value, context.BaseUri.ToSafeString(), context.UriFactory);
+                    var uri = Tools.ResolveUri(t.Value, context.BaseUri?.AbsoluteUri ?? "", context.UriFactory);
                     return context.Handler.CreateUriNode(context.UriFactory.Create(uri));
                 }
                 catch (UriFormatException formatEx)
@@ -262,7 +262,7 @@ public static class ParserHelper
             case Token.URI:
                 try
                 {
-                    var uri = Tools.ResolveUri(t.Value, g.BaseUri.ToSafeString(), g.UriFactory);
+                    var uri = Tools.ResolveUri(t.Value, g.BaseUri?.AbsoluteUri ?? "", g.UriFactory);
                     return g.CreateUriNode(g.UriFactory.Create(uri));
                 }
                 catch (UriFormatException formatEx)

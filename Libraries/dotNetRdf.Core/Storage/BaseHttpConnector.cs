@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -233,7 +233,7 @@ public abstract class BaseHttpConnector : IDisposable
         context.Graph.Assert(new Triple(proxy, rdfType, proxyType));
         context.Graph.Assert(new Triple(proxy, server, context.Graph.CreateLiteralNode((Proxy as WebProxy).Address.AbsoluteUri)));
 
-        if (!(Proxy.Credentials is NetworkCredential)) return;
+        if (Proxy.Credentials is not NetworkCredential) return;
         var cred = (NetworkCredential)Proxy.Credentials;
         context.Graph.Assert(new Triple(proxy, user, context.Graph.CreateLiteralNode(cred.UserName)));
         context.Graph.Assert(new Triple(proxy, pwd, context.Graph.CreateLiteralNode(cred.Password)));

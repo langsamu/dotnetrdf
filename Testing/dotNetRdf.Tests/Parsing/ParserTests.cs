@@ -31,6 +31,8 @@ using System.Net;
 using Xunit;
 using VDS.RDF.Query;
 using VDS.RDF.Writing;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace VDS.RDF.Parsing;
 
@@ -39,16 +41,16 @@ public class ParserTests
     [Fact]
     public void ParsingStringParser()
     {
-            String[] someRDF = { "<http://example.org/subject> <http://example.org/predicate> <http://example.org/object>.",
+            String[] someRDF = [ "<http://example.org/subject> <http://example.org/predicate> <http://example.org/object>.",
                                  "@prefix : <http://example.org/>.:subject :predicate :object.",
                                  "@prefix : <http://example.org/>.@keywords.subject predicate object.",
                                  "@prefix : <http://example.org/>. {:subject :predicate :object}.",
                                  "<?xml version=\"1.0\"?><rdf:RDF xmlns=\"http://example.org/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><rdf:Description rdf:about=\"http://example.org/subject\"><predicate rdf:resource=\"http://example.org/object\" /></rdf:Description></rdf:RDF>",
                                  "{ \"http://example.org/subject\" : { \"http://example.org/predicate\" : [ { \"type\" : \"uri\", \"value\" : \"http://example.org/object\" } ] } }",
                                  "some random junk which isn't RDF at all",
-                               };
+                               ];
 
-            bool[] parseExpected = { true, true, true, false, true, true, false };
+            bool[] parseExpected = [true, true, true, false, true, true, false];
 
             Console.WriteLine("Testing the StringParser with a bunch of strings which are either invalid RDF or all express the one same simple Triple");
             Console.WriteLine();
@@ -104,19 +106,18 @@ public class ParserTests
     }
 
     [Fact]
-    public void ParsingRdfXmlNamespaceAttributes()
+    public async Task ParsingRdfXmlNamespaceAttributes()
     {
         Assert.SkipUnless(TestConfigManager.GetSettingAsBoolean(TestConfigManager.UseRemoteParsing),
             "Test Config marks Remote Parsing as unavailable, test cannot be run");
 
         var g = new Graph();
-        var request = (HttpWebRequest)WebRequest.Create("http://dbpedia.org/resource/Southampton");
-        request.Method = "GET";
-        request.Accept = MimeTypesHelper.HttpAcceptHeader;
-
-        var response = (HttpWebResponse)request.GetResponse();
-        IRdfReader parser = MimeTypesHelper.GetParser(response.ContentType);
-        parser.Load(g, new StreamReader(response.GetResponseStream()));
+        var client = new HttpClient();
+        client.DefaultRequestHeaders.Accept.ParseAdd(MimeTypesHelper.HttpAcceptHeader);
+        using HttpResponseMessage response = await client.GetAsync("http://dbpedia.org/resource/Southampton", TestContext.Current.CancellationToken);
+        var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/rdf+xml";
+        IRdfReader parser = MimeTypesHelper.GetParser(contentType);
+        parser.Load(g, new StreamReader(await response.Content.ReadAsStreamAsync(TestContext.Current.CancellationToken)));
 
         foreach (Triple t in g.Triples)
         {

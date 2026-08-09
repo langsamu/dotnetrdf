@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,7 +69,7 @@ public class InsertDataCommand
         if (p.IsGraph)
         {
             // If a GRAPH clause then all triple patterns must be constructable and have no Child Graph Patterns
-            return !p.HasChildGraphPatterns && p.TriplePatterns.All(tp => tp is IConstructTriplePattern && ((IConstructTriplePattern)tp).HasNoExplicitVariables);
+            return !p.HasChildGraphPatterns && p.TriplePatterns.All(tp => tp is IConstructTriplePattern { HasNoExplicitVariables: true });
         }
         if (p.IsExists || p.IsMinus || p.IsNotExists || p.IsOptional || p.IsService || p.IsSubQuery || p.IsUnion)
         {
@@ -79,7 +79,7 @@ public class InsertDataCommand
         // For other patterns all Triple patterns must be constructable with no explicit variables
         // If top level then any Child Graph Patterns must be valid
         // Otherwise must have no Child Graph Patterns
-        return p.TriplePatterns.All(tp => tp is IConstructTriplePattern && ((IConstructTriplePattern)tp).HasNoExplicitVariables) && ((top && p.ChildGraphPatterns.All(gp => IsValidDataPattern(gp, false))) || !p.HasChildGraphPatterns);
+        return p.TriplePatterns.All(tp => tp is IConstructTriplePattern { HasNoExplicitVariables: true }) && ((top && p.ChildGraphPatterns.All(gp => IsValidDataPattern(gp, false))) || !p.HasChildGraphPatterns);
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public class InsertDataCommand
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by AffectsGraph(IRefNode)")]
+    [Obsolete("Replaced by AffectsGraph(IRefNode)", true)]
     public override bool AffectsGraph(Uri graphUri)
     {
         var affectedUris = new List<string> {DataPattern.IsGraph ? DataPattern.GraphSpecifier.Value : string.Empty};
@@ -125,7 +125,7 @@ public class InsertDataCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphUri.ToSafeString());
+        return affectedUris.Contains($"{graphUri}");
     }
 
     /// <summary>
@@ -144,7 +144,7 @@ public class InsertDataCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphName.ToSafeString());
+        return affectedUris.Contains($"{graphName}");
     }
 
 

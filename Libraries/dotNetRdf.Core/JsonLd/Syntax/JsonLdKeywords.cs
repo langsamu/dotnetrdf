@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ public static class JsonLdKeywords
     /// The list of JSON-LD keywords defined by the API and Processing specification.
     /// </summary>
     public static readonly string[] CoreKeywords =
-    {
+    [
         "@base",
         "@container",
         "@context",
@@ -60,25 +60,25 @@ public static class JsonLdKeywords
         "@value",
         "@version",
         "@vocab",
-    };
+    ];
 
     /// <summary>
     /// The list of JSON-LD keywords added by the Framing specification.
     /// </summary>
     public static readonly string[] FramingKeywords =
-    {
+    [
         "@default",
         "@embed",
         "@explicit",
         "@omitDefault",
         "@requireAll",
-    };
+    ];
 
     /// <summary>
     /// Keywords that are valid in a term definition.
     /// </summary>
     public static readonly string[] TermDefinitionKeys =
-    {
+    [
         "@id",
         "@reverse",
         "@container",
@@ -90,35 +90,35 @@ public static class JsonLdKeywords
         "@prefix",
         "@protected",
         "@type",
-    };
+    ];
 
     /// <summary>
     /// Keywords that are valid properties of a value object.
     /// </summary>
     public static readonly string[] ValueObjectKeys =
-    {
+    [
         "@direction",
         "@value",
         "@language",
         "@type",
         "@index",
-    };
+    ];
 
     /// <summary>
     /// Keywords that are valid properties of a graph object.
     /// </summary>
     public static readonly string[] GraphObjectKeys =
-    {
+    [
         "@graph",
         "@id",
         "@index",
-    };
+    ];
 
     /// <summary>
     /// Keywords that are valid top-level properties of a context object.
     /// </summary>
     public static readonly string[] JsonLdContextKeywords =
-    {
+    [
         "@base",
         "@direction",
         "@import",
@@ -127,5 +127,5 @@ public static class JsonLdKeywords
         "@protected",
         "@version",
         "@vocab",
-    };
+    ];
 }

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -74,11 +74,7 @@ public class UnicodeSpecsHelper
 
     private static UnicodeCategory GetUnicodeCategory(char c)
     {
-#if NETCORE
-        return CharUnicodeInfo.GetUnicodeCategory(c);
-#else
         return char.GetUnicodeCategory(c);
-#endif
     }
     /// <summary>
     /// Checks whether a given Character is considered a Letter or Digit.
@@ -210,7 +206,7 @@ public class UnicodeSpecsHelper
             else
             {
                 // Within single character range
-                return new char[] { (char)i };
+                return [(char)i];
             }
         }
         catch (Exception ex)

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ internal class AsyncSumAggregate : IAsyncAggregation
         VariableName = varName;
         _expression = valueExpression;
         _context = context;
-        if (distinct) _values = new HashSet<INode>();
+        if (distinct) _values = [];
         _distinct = distinct;
     }
     public string VariableName { get; }

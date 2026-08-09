@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,11 +36,11 @@ namespace VDS.RDF.Configuration;
 public class ParserFactory 
     : IObjectFactory
 {
-    private readonly Type[] _parserTypes = {
+    private readonly Type[] _parserTypes = [
         typeof(IRdfReader),
         typeof(IStoreReader),
         typeof(ISparqlResultsReader),
-    };
+    ];
 
     /// <summary>
     /// Tries to load a Parser based on information from the Configuration Graph.
@@ -75,7 +75,7 @@ public class ParserFactory
         // We can load any object which implements any parser interface and has a public unparameterized constructor
         if (t.GetInterfaces().Any(i => _parserTypes.Contains(i)))
         {
-            ConstructorInfo c = t.GetConstructor(new Type[0]);
+            ConstructorInfo c = t.GetConstructor([]);
             if (c != null)
             {
                 return c.IsPublic;
@@ -94,11 +94,11 @@ public class ParserFactory
 /// </summary>
 public class WriterFactory : IObjectFactory
 {
-    private readonly Type[] _writerTypes = {
+    private readonly Type[] _writerTypes = [
         typeof(IRdfWriter),
         typeof(IStoreWriter),
         typeof(ISparqlResultsWriter),
-    };
+    ];
 
     /// <summary>
     /// Tries to load a Writer based on information from the Configuration Graph.
@@ -133,7 +133,7 @@ public class WriterFactory : IObjectFactory
         // We can load any object which implements any writer interface and has a public unparameterized constructor
         if (t.GetInterfaces().Any(i => _writerTypes.Contains(i)))
         {
-            ConstructorInfo c = t.GetConstructor(new Type[0]);
+            ConstructorInfo c = t.GetConstructor([]);
             if (c != null)
             {
                 return c.IsPublic;

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,20 +89,20 @@ internal class SelectImpl : QueryImpl, ISelect
             for (IEnumerator<IResource> vit = vars.GetEnumerator(); vit.MoveNext(); )
             {
                 IResource var = vit.Current;
-                if (var is IVariable)
+                if (var is IVariable variable)
                 {
                     if (getModel().ContainsTriple(var, SP.PropertyExpression, null))
                     {
-                        printProjectExpression(p, (IVariable)var);
+                        printProjectExpression(p, variable);
                     }
                     else
                     {
-                        ((IVariable)var).Print(p);
+                        variable.Print(p);
                     }
                 }
-                else if (var is IAggregation)
+                else if (var is IAggregation aggregation)
                 {
-                    ((IPrintable)var).Print(p);
+                    aggregation.Print(p);
                 }
                 else
                 {

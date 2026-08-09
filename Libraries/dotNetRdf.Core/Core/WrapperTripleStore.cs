@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -192,7 +192,7 @@ public class WrapperTripleStore
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by Remove(IRefNode)")]
+    [Obsolete("Replaced by Remove(IRefNode)", true)]
     public virtual bool Remove(Uri? graphUri)
     {
         return _store.Remove(graphUri);
@@ -213,7 +213,7 @@ public class WrapperTripleStore
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by HasGraph(IRefNode)")]
+    [Obsolete("Replaced by HasGraph(IRefNode)", true)]
     public virtual bool HasGraph(Uri graphUri)
     {
         return _store.HasGraph(graphUri);
@@ -235,7 +235,7 @@ public class WrapperTripleStore
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by this[IRefNode]")]
+    [Obsolete("Replaced by this[IRefNode]", true)]
     public virtual IGraph this[Uri graphUri]
     {
         get
@@ -410,6 +410,11 @@ public class WrapperTripleStore
     /// </summary>
     public virtual void Dispose()
     {
+        _store.GraphRemoved -= GraphRemovedHandler;
+        _store.GraphMerged -= GraphMergedHandler;
+        _store.GraphCleared -= GraphClearedHandler;
+        _store.GraphChanged -= GraphChangedHandler;
+        _store.GraphAdded -= GraphAddedHandler;
         _store.Dispose();
     }
 }

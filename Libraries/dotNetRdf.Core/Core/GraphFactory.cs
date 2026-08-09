@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ namespace VDS.RDF;
 /// The main usage for this class is scenarios where consistent graph references matter such as returning node references from out of memory datasets (like SQL backed ones) particularly with regards to blank nodes since blank node equality is predicated upon Graph reference.
 /// </para>
 /// </remarks>
-[Obsolete("This class is obsolete and will be removed in a future release. There is no replacement for this class.")]
+[Obsolete("This class is obsolete and will be removed in a future release. There is no replacement for this class.", true)]
 public class GraphFactory
 {
     private TripleStore _store = new TripleStore();

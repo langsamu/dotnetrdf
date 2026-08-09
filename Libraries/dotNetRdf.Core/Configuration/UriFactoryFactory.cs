@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ public class UriFactoryFactory : IObjectFactory
         Type iUriFactory = typeof(IUriFactory);
         if (t.GetInterfaces().Any(i => i == iUriFactory))
         {
-            ConstructorInfo ctor = t.GetConstructor(new[] { typeof(IUriFactory) });
+            ConstructorInfo ctor = t.GetConstructor([typeof(IUriFactory)]);
             return ctor != null && ctor.IsPublic;
         }
 

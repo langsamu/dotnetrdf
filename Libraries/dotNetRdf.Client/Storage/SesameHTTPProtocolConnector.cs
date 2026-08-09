@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -333,56 +333,54 @@ public abstract class BaseSesameHttpProtocolConnector
 
             // Build the Post Data and add to the Request Body
             KeyValuePair<string, string>[]
-                formData = {new KeyValuePair<string, string>("query", sparqlQuery)};
+                formData = [new KeyValuePair<string, string>("query", sparqlQuery)];
             request.Content = new FormUrlEncodedContent(formData);
 
             // Get the Response and process based on the Content Type
-            using (HttpResponseMessage response = HttpClient.SendAsync(request).Result)
+            using var response = HttpClient.SendAsync(request).Result;
+            if (!response.IsSuccessStatusCode)
             {
-                if (!response.IsSuccessStatusCode)
+                throw StorageHelper.HandleHttpQueryError(response);
+            }
+
+            var data = new StreamReader(response.Content.ReadAsStreamAsync().Result);
+            var ctype = response.Content.Headers.ContentType.MediaType;
+            try
+            {
+                // Is the Content Type referring to a Sparql Result Set format?
+                ISparqlResultsReader resreader = MimeTypesHelper.GetSparqlParser(ctype, isAsk);
+                resreader.Load(resultsHandler, data);
+            }
+            catch (RdfParserSelectionException)
+            {
+                // If we get a Parser Selection exception then the Content Type isn't valid for a SPARQL Result Set
+                // HACK: As this is Sesame this may be it being buggy and sending application/xml instead of application/sparql-results+xml
+                if (ctype.StartsWith("application/xml"))
                 {
-                    throw StorageHelper.HandleHttpQueryError(response);
+                    try
+                    {
+                        ISparqlResultsReader resreader =
+                            MimeTypesHelper.GetSparqlParser("application/sparql-results+xml");
+                        resreader.Load(resultsHandler, data);
+
+                    }
+                    catch (RdfParserSelectionException)
+                    {
+                        // Ignore this and fall back to trying as an RDF format instead
+                    }
                 }
 
-                var data = new StreamReader(response.Content.ReadAsStreamAsync().Result);
-                var ctype = response.Content.Headers.ContentType.MediaType;
-                try
+                // Is the Content Type referring to a RDF format?
+                IRdfReader rdfreader = MimeTypesHelper.GetParser(ctype);
+                if (q != null && (SparqlSpecsHelper.IsSelectQuery(q.QueryType) ||
+                                  q.QueryType == SparqlQueryType.Ask))
                 {
-                    // Is the Content Type referring to a Sparql Result Set format?
-                    ISparqlResultsReader resreader = MimeTypesHelper.GetSparqlParser(ctype, isAsk);
+                    var resreader = new SparqlRdfParser(rdfreader);
                     resreader.Load(resultsHandler, data);
                 }
-                catch (RdfParserSelectionException)
+                else
                 {
-                    // If we get a Parser Selection exception then the Content Type isn't valid for a SPARQL Result Set
-                    // HACK: As this is Sesame this may be it being buggy and sending application/xml instead of application/sparql-results+xml
-                    if (ctype.StartsWith("application/xml"))
-                    {
-                        try
-                        {
-                            ISparqlResultsReader resreader =
-                                MimeTypesHelper.GetSparqlParser("application/sparql-results+xml");
-                            resreader.Load(resultsHandler, data);
-
-                        }
-                        catch (RdfParserSelectionException)
-                        {
-                            // Ignore this and fall back to trying as an RDF format instead
-                        }
-                    }
-
-                    // Is the Content Type referring to a RDF format?
-                    IRdfReader rdfreader = MimeTypesHelper.GetParser(ctype);
-                    if (q != null && (SparqlSpecsHelper.IsSelectQuery(q.QueryType) ||
-                                      q.QueryType == SparqlQueryType.Ask))
-                    {
-                        var resreader = new SparqlRdfParser(rdfreader);
-                        resreader.Load(resultsHandler, data);
-                    }
-                    else
-                    {
-                        rdfreader.Load(rdfHandler, data);
-                    }
+                    rdfreader.Load(rdfHandler, data);
                 }
             }
         }
@@ -444,7 +442,7 @@ public abstract class BaseSesameHttpProtocolConnector
     /// <remarks>If a Null Uri is specified then the default graph (statements with no context in Sesame parlance) will be loaded.</remarks>
     public virtual void LoadGraph(IGraph g, Uri graphUri)
     {
-        LoadGraph(g, graphUri.ToSafeString());
+        LoadGraph(g, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -455,7 +453,7 @@ public abstract class BaseSesameHttpProtocolConnector
     /// <remarks>If a Null Uri is specified then the default graph (statements with no context in Sesame parlance) will be loaded.</remarks>
     public virtual void LoadGraph(IRdfHandler handler, Uri graphUri)
     {
-        LoadGraph(handler, graphUri.ToSafeString());
+        LoadGraph(handler, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -565,13 +563,13 @@ public abstract class BaseSesameHttpProtocolConnector
     /// <param name="removals">Triples to be removed.</param>
     public virtual void UpdateGraph(Uri graphUri, IEnumerable<Triple> additions, IEnumerable<Triple> removals)
     {
-        UpdateGraph(graphUri.ToSafeString(), additions, removals);
+        UpdateGraph(graphUri?.AbsoluteUri ?? "", additions, removals);
     }
 
     /// <inheritdoc />
     public virtual void UpdateGraph(IRefNode graphName, IEnumerable<Triple> additions, IEnumerable<Triple> removals)
     {
-        UpdateGraph(graphName.ToSafeString(), additions, removals);
+        UpdateGraph($"{graphName}", additions, removals);
     }
 
     /// <summary>
@@ -669,7 +667,7 @@ public abstract class BaseSesameHttpProtocolConnector
     /// <param name="graphUri">URI of the Graph to delete.</param>
     public virtual void DeleteGraph(Uri graphUri)
     {
-        DeleteGraph(graphUri.ToSafeString());
+        DeleteGraph(graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -721,7 +719,7 @@ public abstract class BaseSesameHttpProtocolConnector
                 return graphs;
             }
 
-            return Enumerable.Empty<Uri>();
+            return [];
         }
         catch (Exception ex)
         {
@@ -762,7 +760,7 @@ public abstract class BaseSesameHttpProtocolConnector
                 return graphs;
             }
 
-            return Enumerable.Empty<string>();
+            return [];
         }
         catch (Exception ex)
         {
@@ -797,7 +795,7 @@ public abstract class BaseSesameHttpProtocolConnector
                 return graphs;
             }
 
-            return Enumerable.Empty<string>();
+            return [];
         }
         catch (RdfStorageException)
         {
@@ -951,7 +949,7 @@ public abstract class BaseSesameHttpProtocolConnector
                 foreach (Triple t in removals.Distinct())
                 {
                     // Prep Service Params
-                    serviceParams = new Dictionary<string, string>();
+                    serviceParams = [];
                     if (!graphUri.Equals(string.Empty))
                     {
                         serviceParams.Add("context", "<" + graphUri + ">");
@@ -985,7 +983,7 @@ public abstract class BaseSesameHttpProtocolConnector
                                 if (additions.Any())
                                 {
                                     // Prep Service Params
-                                    serviceParams = new Dictionary<string, string>();
+                                    serviceParams = [];
                                     if (!graphUri.Equals(string.Empty))
                                     {
                                         serviceParams.Add("context", "<" + graphUri + ">");
@@ -1022,7 +1020,7 @@ public abstract class BaseSesameHttpProtocolConnector
             if (additions.Any())
             {
                 // Prep Service Params
-                serviceParams = new Dictionary<string, string>();
+                serviceParams = [];
                 if (!graphUri.Equals(string.Empty))
                 {
                     serviceParams.Add("context", "<" + graphUri + ">");
@@ -1253,7 +1251,7 @@ public abstract class BaseSesameHttpProtocolConnector
 
         // Build the Post Data and add to the Request Body
         request.Content =
-            new FormUrlEncodedContent(new[] {new KeyValuePair<string, string>("query", sparqlQuery)});
+            new FormUrlEncodedContent([new KeyValuePair<string, string>("query", sparqlQuery)]);
         return request;
     }
 
@@ -1327,7 +1325,7 @@ public abstract class BaseSesameHttpProtocolConnector
     /// <param name="method">HTTP Method.</param>
     /// <param name="queryParams">Querystring Parameters.</param>
     /// <returns></returns>
-    [Obsolete("This method is obsolete and will be removed in a future release. Use the overload that returns an HttpRequestMessage instead.")]
+    [Obsolete("This method is obsolete and will be removed in a future release. Use the overload that returns an HttpRequestMessage instead.", true)]
     protected virtual HttpWebRequest CreateRequest(string servicePath, string accept, string method, Dictionary<string, string> queryParams)
     {
         // Build the Request Uri
@@ -1574,11 +1572,11 @@ public class SesameHttpProtocolVersion6Connector
         {
             // Create the Request
             HttpRequestMessage request = CreateRequest(_repositoriesPrefix + _store + _updatePath,
-                MimeTypesHelper.Any, HttpMethod.Post, new Dictionary<string, string>());
+                MimeTypesHelper.Any, HttpMethod.Post, []);
 
             // Build the Post Data and add to the Request Body
             request.Content =
-                new FormUrlEncodedContent(new[] {new KeyValuePair<string, string>("update", sparqlUpdate)});
+                new FormUrlEncodedContent([new KeyValuePair<string, string>("update", sparqlUpdate)]);
 
             // Get the Response and process based on the Content Type
             using HttpResponseMessage response = HttpClient.SendAsync(request).Result;
@@ -1605,11 +1603,11 @@ public class SesameHttpProtocolVersion6Connector
         {
             // Create the Request
             HttpRequestMessage request = CreateRequest(_repositoriesPrefix + _store + _updatePath,
-                MimeTypesHelper.Any, HttpMethod.Post, new Dictionary<string, string>());
+                MimeTypesHelper.Any, HttpMethod.Post, []);
 
             // Build the Post Data and add to the Request Body
             request.Content =
-                new FormUrlEncodedContent(new[] {new KeyValuePair<string, string>("update", sparqlUpdate)});
+                new FormUrlEncodedContent([new KeyValuePair<string, string>("update", sparqlUpdate)]);
             HttpClient.SendAsync(request).ContinueWith(requestTask =>
             {
                 if (requestTask.IsCanceled || requestTask.IsFaulted)

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -98,8 +98,8 @@ public class NamespaceMapper : INamespaceMapper
     public NamespaceMapper(IUriFactory uriFactory, bool empty = false)
     {
         _uriFactory = uriFactory ?? UriFactory.Root;
-        _uris = new Dictionary<string, Uri>();
-        _prefixes = new Dictionary<int, List<string>>();
+        _uris = [];
+        _prefixes = [];
 
         if (!empty)
         {
@@ -170,7 +170,7 @@ public class NamespaceMapper : INamespaceMapper
             _uris.Add(prefix, uri);
             if (!_prefixes.ContainsKey(hash))
             {
-                _prefixes[hash] = new List<string> {prefix};
+                _prefixes[hash] = [prefix];
             }
             else
             {
@@ -223,7 +223,7 @@ public class NamespaceMapper : INamespaceMapper
                 }
                 else
                 {
-                    _prefixes[hash] = new List<string> {prefix};
+                    _prefixes[hash] = [prefix];
                 }
 
                 // Raise the modified event
@@ -460,7 +460,7 @@ public class QNameOutputMapper
     /// <summary>
     /// Mapping of URIs to QNames.
     /// </summary>
-    protected readonly MultiDictionary<string, QNameMapping> Mapping = new();
+    protected readonly MultiDictionary<string, QNameMapping> Mapping = [];
 
     /// <summary>
     /// Next available Temporary Namespace ID.

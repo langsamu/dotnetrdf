@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -71,9 +71,7 @@ public class NQuadsWriter
     /// <summary>
     /// Gets/Sets whether Multi-Threaded Writing.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public bool UseMultiThreadedWriting { get; set; } = Options.AllowMultiThreadedWriting; // = false;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public bool UseMultiThreadedWriting { get; set; }
 
     /// <summary>
     /// Gets the type of the Triple Formatter used by this writer.

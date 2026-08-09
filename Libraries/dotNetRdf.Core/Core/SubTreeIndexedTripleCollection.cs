@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -102,7 +102,7 @@ public class SubTreeIndexedTripleCollection
             {
                 if (ts == null)
                 {
-                    subtree[t] = new HashSet<Triple> { t };
+                    subtree[t] = [t];
                 }
                 else
                 {
@@ -111,13 +111,15 @@ public class SubTreeIndexedTripleCollection
             }
             else
             {
-                subtree.Add(t, new HashSet<Triple> { t });
+                subtree.Add(t, [t]);
             }
         }
         else
         {
-            subtree = new MultiDictionary<Triple, HashSet<Triple>>(hashFunc, false, comparer, MultiDictionaryMode.Avl);
-            subtree.Add(t, new HashSet<Triple> { t });
+            subtree = new MultiDictionary<Triple, HashSet<Triple>>(hashFunc, false, comparer, MultiDictionaryMode.Avl)
+            {
+                [t] = [t],
+            };
             index.Add(n, subtree);
         }
     }
@@ -186,7 +188,7 @@ public class SubTreeIndexedTripleCollection
                     from t in ts
                     select t);
         }
-        return Enumerable.Empty<Triple>();
+        return [];
     }
 
     private IEnumerable<Triple> WithNodeAndTriple(INode key, Triple subkey, MultiDictionary<INode, MultiDictionary<Triple, HashSet<Triple>>> index)
@@ -198,7 +200,7 @@ public class SubTreeIndexedTripleCollection
                 return triples ?? Enumerable.Empty<Triple>();
             }
         }
-        return Enumerable.Empty<Triple>();
+        return [];
     }
 
     /// <summary>

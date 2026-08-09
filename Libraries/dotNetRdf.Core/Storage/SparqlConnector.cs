@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -55,13 +54,6 @@ public class SparqlConnector
     : IQueryableStorage, IConfigurationSerializable
 {
     /// <summary>
-    /// Underlying SPARQL query endpoint.
-    /// </summary>
-#pragma warning disable 618
-    protected SparqlRemoteEndpoint _endpoint;
-#pragma warning restore 618
-
-    /// <summary>
     /// Method for loading graphs.
     /// </summary>
     protected SparqlConnectorLoadMethod _mode = SparqlConnectorLoadMethod.Construct;
@@ -75,11 +67,10 @@ public class SparqlConnector
     /// Creates a new SPARQL Connector which uses the given SPARQL Endpoint.
     /// </summary>
     /// <param name="endpoint">Endpoint.</param>
-    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient)")]
+    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient)", true)]
     public SparqlConnector(SparqlRemoteEndpoint endpoint)
     {
-        _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint), "A valid Endpoint must be specified");
-        _timeout = endpoint.Timeout;
+        throw new NotImplementedException("This constructor has been deprecated and is no longer supported. Please use the SparqlConnector(SparqlQueryClient) constructor instead.");
     }
 
     /// <summary>
@@ -87,11 +78,10 @@ public class SparqlConnector
     /// </summary>
     /// <param name="endpoint">Endpoint.</param>
     /// <param name="mode">Load Method to use.</param>
-    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient, SparqlConnectorLoadMethod)")]
+    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient, SparqlConnectorLoadMethod)", true)]
     public SparqlConnector(SparqlRemoteEndpoint endpoint, SparqlConnectorLoadMethod mode)
         : this(endpoint)
     {
-        _mode = mode;
     }
 
     /// <summary>
@@ -118,7 +108,7 @@ public class SparqlConnector
     /// Creates a new SPARQL Connector which uses the given SPARQL Endpoint.
     /// </summary>
     /// <param name="endpointUri">Endpoint URI.</param>
-    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient)")]
+    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient)", true)]
     public SparqlConnector(Uri endpointUri)
         : this(new SparqlRemoteEndpoint(endpointUri)) { }
 
@@ -127,7 +117,7 @@ public class SparqlConnector
     /// </summary>
     /// <param name="endpointUri">Endpoint URI.</param>
     /// <param name="mode">Load Method to use.</param>
-    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient, SparqlConnectorLoadMethod)")]
+    [Obsolete("Replaced by SparqlConnector(SparqlQueryClient, SparqlConnectorLoadMethod)", true)]
     public SparqlConnector(Uri endpointUri, SparqlConnectorLoadMethod mode)
         : this(new SparqlRemoteEndpoint(endpointUri), mode) { }
 
@@ -148,7 +138,7 @@ public class SparqlConnector
     /// <remarks>
     /// If the endpoint you are connecting to provides extensions to SPARQL syntax which are not permitted by the libraries parser then you may wish to enable this option as otherwise you will not be able to execute such queries.
     /// </remarks>
-    [Obsolete("This property is no longer supported as local query parsing is not supported by this implementation. Clients wishing to ensure that only valid SPARQL is sent to a remote server should apply query parsing before invoking this class.")]
+    [Obsolete("This property is no longer supported as local query parsing is not supported by this implementation. Clients wishing to ensure that only valid SPARQL is sent to a remote server should apply query parsing before invoking this class.", true)]
     [Description("Determines whether queries are parsed locally before being sent to the remote endpoint.  Should be disabled if the remote endpoint supports non-standard extensions that won't parse locally.")]
     public bool SkipLocalParsing
     {
@@ -167,32 +157,15 @@ public class SparqlConnector
     /// Gets/Sets the HTTP Timeout in milliseconds used for communicating with the SPARQL Endpoint.
     /// </summary>
     /// <remarks>This property is only used when using the obsolete <see cref="SparqlRemoteEndpoint"/>-backed implementation. When using the replacement <see cref="SparqlQueryClient"/>-backed implementation, timeout is controlled by the <see cref="HttpClient"/> used by the SparqlQueryClient.</remarks>
-    [Obsolete("This property is only used by the obsolete SparqlRemoteEndpoint-backed implementation.")]
-    public virtual int Timeout
-    {
-        get 
-        {
-            return _timeout;
-        }
-        set 
-        {
-            _timeout = value;
-            _endpoint.Timeout = value;
-        }
-    }
+    [Obsolete("This property is only used by the obsolete SparqlRemoteEndpoint-backed implementation.", true)]
+    public virtual int Timeout {get; set;}
 
     /// <summary>
     /// Gets the underlying <see cref="SparqlRemoteEndpoint">SparqlRemoteEndpoint</see> which this class is a wrapper around.
     /// </summary>
     [Description("The Remote Endpoint to which queries are sent using HTTP."),TypeConverter(typeof(ExpandableObjectConverter))]
     [Obsolete]
-    public SparqlRemoteEndpoint Endpoint 
-    {
-        get 
-        {
-            return _endpoint;
-        }
-    }
+    public SparqlRemoteEndpoint Endpoint {get;}
     
     /// <summary>
     /// Gets the underlying <see cref="SparqlQueryClient"/> which this class is a wrapper around.
@@ -229,43 +202,16 @@ public class SparqlConnector
     /// <returns></returns>
     public void Query(IRdfHandler rdfHandler, ISparqlResultsHandler resultsHandler, string sparqlQuery)
     {
-        if (QueryClient != null)
+        if (QueryClient == null)
         {
-            QueryWithQueryClient(rdfHandler, resultsHandler, sparqlQuery);
+            throw new InvalidOperationException("This method cannot be used when the SparqlConnector is configured to use a SparqlRemoteEndpoint. Please use a SparqlQueryClient instead.");
         }
-        else
-        {
-            QueryWithRemoteEndpoint(rdfHandler, resultsHandler, sparqlQuery);
-        }
+        QueryWithQueryClient(rdfHandler, resultsHandler, sparqlQuery);
     }
     
     private void QueryWithQueryClient(IRdfHandler rdfHandler, ISparqlResultsHandler resultsHandler, string sparqlQuery)
     {
         QueryClient.QueryAsync(sparqlQuery, rdfHandler, resultsHandler, CancellationToken.None).Wait();
-    }
-
-    private void QueryWithRemoteEndpoint(IRdfHandler rdfHandler, ISparqlResultsHandler resultsHandler, string sparqlQuery)
-    {
-        // If we're skipping local parsing then we'll need to just make a raw query and process the response
-        using (HttpWebResponse response = _endpoint.QueryRaw(sparqlQuery))
-        {
-            try
-            {
-                // Is the Content Type referring to a Sparql Result Set format?
-                ISparqlResultsReader sparqlParser = MimeTypesHelper.GetSparqlParser(response.ContentType);
-                sparqlParser.Load(resultsHandler, new StreamReader(response.GetResponseStream()));
-                response.Close();
-            }
-            catch (RdfParserSelectionException)
-            {
-                // If we get a Parser Selection exception then the Content Type isn't valid for a Sparql Result Set
-
-                // Is the Content Type referring to a RDF format?
-                IRdfReader rdfParser = MimeTypesHelper.GetParser(response.ContentType);
-                rdfParser.Load(rdfHandler, new StreamReader(response.GetResponseStream()));
-                response.Close();
-            }
-        }
     }
 
     /// <summary>
@@ -275,7 +221,7 @@ public class SparqlConnector
     /// <param name="graphUri">URI of the Graph to load.</param>
     public virtual void LoadGraph(IGraph g, Uri graphUri)
     {
-        LoadGraph(g, graphUri.ToSafeString());
+        LoadGraph(g, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -285,7 +231,7 @@ public class SparqlConnector
     /// <param name="graphUri">URI of the Graph to load.</param>
     public virtual void LoadGraph(IRdfHandler handler, Uri graphUri)
     {
-        LoadGraph(handler, graphUri.ToSafeString());
+        LoadGraph(handler, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -299,7 +245,7 @@ public class SparqlConnector
         {
             g.BaseUri = g.UriFactory.Create(graphUri);
         }
-        LoadGraph(new GraphHandler(g), graphUri.ToSafeString());
+        LoadGraph(new GraphHandler(g), graphUri ?? "");
     }
 
     /// <summary>
@@ -440,7 +386,7 @@ public class SparqlConnector
     /// Lists the Graphs in the Store.
     /// </summary>
     /// <returns></returns>
-    [Obsolete("Replaced by ListGraphNames()")]
+    [Obsolete("Replaced by ListGraphNames()", true)]
     public virtual IEnumerable<Uri> ListGraphs()
     {
         try
@@ -466,7 +412,7 @@ public class SparqlConnector
             }
             else
             {
-                return Enumerable.Empty<Uri>();
+                return [];
             }
         }
         catch (Exception ex)
@@ -504,7 +450,7 @@ public class SparqlConnector
                 return graphs;
             }
 
-            return Enumerable.Empty<string>();
+            return [];
         }
         catch (Exception ex)
         {
@@ -558,7 +504,7 @@ public class SparqlConnector
     /// <returns></returns>
     public override string ToString()
     {
-        return "[SPARQL Query] " + _endpoint.Uri.AbsoluteUri;
+        return "[SPARQL Query] " + QueryClient.EndpointUri.AbsoluteUri;
     }
 
     /// <summary>
@@ -584,20 +530,7 @@ public class SparqlConnector
         context.Graph.Assert(new Triple(manager, loadMode, context.Graph.CreateLiteralNode(_mode.ToString())));
 
         // Query Endpoint
-        if (_endpoint != null)
-        {
-            // Use the indirect serialization method
-
-            // Serialize the Endpoints Configuration
-            INode endpoint = context.Graph.CreateUriNode(context.UriFactory.Create(ConfigurationLoader.PropertyQueryEndpoint));
-            INode endpointObj = context.Graph.CreateBlankNode();
-            context.NextSubject = endpointObj;
-            ((IConfigurationSerializable)_endpoint).SerializeConfiguration(context);
-
-            // Link that serialization to our serialization
-            context.Graph.Assert(new Triple(manager, endpoint, endpointObj));
-        }
-        else if (QueryClient != null)
+        if (QueryClient != null)
         {
             // Use the indirect serialization method
 
@@ -616,30 +549,6 @@ public class SparqlConnector
             INode endpointUri = context.Graph.CreateUriNode(context.UriFactory.Create(ConfigurationLoader.PropertyQueryEndpointUri));
             INode defGraphUri = context.Graph.CreateUriNode(context.UriFactory.Create(ConfigurationLoader.PropertyDefaultGraphUri));
             INode namedGraphUri = context.Graph.CreateUriNode(context.UriFactory.Create(ConfigurationLoader.PropertyNamedGraphUri));
-
-            if (_endpoint != null)
-            {
-                context.Graph.Assert(new Triple(manager, endpointUri, context.Graph.CreateLiteralNode(_endpoint.Uri.AbsoluteUri)));
-                foreach (var u in _endpoint.DefaultGraphs)
-                {
-                    context.Graph.Assert(new Triple(manager, defGraphUri, context.Graph.CreateUriNode(context.UriFactory.Create(u))));
-                }
-                foreach (var u in _endpoint.NamedGraphs)
-                {
-                    context.Graph.Assert(new Triple(manager, namedGraphUri, context.Graph.CreateUriNode(context.UriFactory.Create(u))));
-                }
-            } else if (QueryClient != null)
-            {
-                context.Graph.Assert(new Triple(manager, endpointUri, context.Graph.CreateLiteralNode(QueryClient.EndpointUri.AbsoluteUri)));
-                foreach (var u in QueryClient.DefaultGraphs)
-                {
-                    context.Graph.Assert(new Triple(manager, defGraphUri, context.Graph.CreateUriNode(context.UriFactory.Create(u))));
-                }
-                foreach (var u in QueryClient.NamedGraphs)
-                {
-                    context.Graph.Assert(new Triple(manager, namedGraphUri, context.Graph.CreateUriNode(context.UriFactory.Create(u))));
-                }
-            }
         }
     }
 }

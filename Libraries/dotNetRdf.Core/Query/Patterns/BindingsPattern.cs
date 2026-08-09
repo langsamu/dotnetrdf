@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,8 @@ namespace VDS.RDF.Query.Patterns;
 /// </summary>
 public class BindingsPattern
 {
-    private readonly List<string> _vars = new List<string>();
-    private readonly List<BindingTuple> _tuples = new List<BindingTuple>();
+    private readonly List<string> _vars = [];
+    private readonly List<BindingTuple> _tuples = [];
 
     /// <summary>
     /// Creates a new Empty Bindings Pattern.
@@ -125,7 +125,7 @@ public class BindingsPattern
 /// </summary>
 public class BindingTuple
 {
-    private readonly Dictionary<string, PatternItem> _values = new Dictionary<string, PatternItem>();
+    private readonly Dictionary<string, PatternItem> _values = [];
 
     /// <summary>
     /// Creates a new Binding Tuple.
@@ -162,9 +162,9 @@ public class BindingTuple
         {
             if (!_values.ContainsKey(var)) throw new IndexOutOfRangeException();
             PatternItem temp = _values[var];
-            if (temp is NodeMatchPattern)
+            if (temp is NodeMatchPattern pattern)
             {
-                return ((NodeMatchPattern)temp).Node;
+                return pattern.Node;
             }
             else
             {

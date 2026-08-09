@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,10 +40,10 @@ namespace VDS.RDF.Query.Builder;
 /// </summary>
 public sealed class GraphPatternBuilder : IGraphPatternBuilder, IDescribeGraphPatternBuilder
 {
-    private readonly IList<InlineDataBuilder> _inlineDataBuilders = new List<InlineDataBuilder>();
-    private readonly IList<GraphPatternBuilder> _childGraphPatternBuilders = new List<GraphPatternBuilder>();
-    private readonly IList<Func<INamespaceMapper, ISparqlExpression>> _filterBuilders = new List<Func<INamespaceMapper, ISparqlExpression>>();
-    private readonly IList<Func<INamespaceMapper, ITriplePattern[]>> _triplePatterns = new List<Func<INamespaceMapper, ITriplePattern[]>>();
+    private readonly IList<InlineDataBuilder> _inlineDataBuilders = [];
+    private readonly IList<GraphPatternBuilder> _childGraphPatternBuilders = [];
+    private readonly IList<Func<INamespaceMapper, ISparqlExpression>> _filterBuilders = [];
+    private readonly IList<Func<INamespaceMapper, ITriplePattern[]>> _triplePatterns = [];
     private readonly GraphPatternType _graphPatternType;
     private readonly IToken _graphSpecifier;
 

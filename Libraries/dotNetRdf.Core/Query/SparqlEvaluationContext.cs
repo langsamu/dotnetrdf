@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ namespace VDS.RDF.Query;
 public class SparqlEvaluationContext : IPatternEvaluationContext, ISparqlDescribeContext
 {
     private readonly Stopwatch _timer = new Stopwatch();
-    private readonly Dictionary<string, object> _functionContexts = new Dictionary<string, object>();
+    private readonly Dictionary<string, object> _functionContexts = [];
     private HttpClient _defaultHttpClient;
 
     /// <summary>
@@ -370,7 +370,7 @@ public class SparqlEvaluationContext : IPatternEvaluationContext, ISparqlDescrib
                     {
                         valuePairs = (from set in InputMultiset.Sets
                                       where set.ContainsVariable(predVar) && set.ContainsVariable(objVar)
-                                      select set).Distinct(new SetDistinctnessComparer(new string[] { predVar, objVar }));
+                                      select set).Distinct(new SetDistinctnessComparer([predVar, objVar]));
                         return (from set in valuePairs
                                 where set[predVar] != null && set[objVar] != null
                                 select new Triple(subj, set[predVar], set[objVar])).Where(t => Data.ContainsTriple(t));
@@ -445,7 +445,7 @@ public class SparqlEvaluationContext : IPatternEvaluationContext, ISparqlDescrib
                     {
                         valuePairs = (from set in InputMultiset.Sets
                                       where set.ContainsVariable(subjVar) && set.ContainsVariable(objVar)
-                                      select set).Distinct(new SetDistinctnessComparer(new string[] { subjVar, objVar }));
+                                      select set).Distinct(new SetDistinctnessComparer([subjVar, objVar]));
                         return (from set in valuePairs
                                 where set[subjVar] != null && set[objVar] != null
                                 select new Triple(set[subjVar], pred, set[objVar])).Where(t => Data.ContainsTriple(t));
@@ -502,7 +502,7 @@ public class SparqlEvaluationContext : IPatternEvaluationContext, ISparqlDescrib
                     {
                         valuePairs = (from set in InputMultiset.Sets
                                       where set.ContainsVariable(subjVar) && set.ContainsVariable(predVar)
-                                      select set).Distinct(new SetDistinctnessComparer(new string[] { subjVar, predVar }));
+                                      select set).Distinct(new SetDistinctnessComparer([subjVar, predVar]));
                         return (from set in valuePairs
                                 where set[subjVar] != null && set[predVar] != null
                                 select new Triple(set[subjVar], set[predVar], obj)).Where(t => Data.ContainsTriple(t));
@@ -541,11 +541,11 @@ public class SparqlEvaluationContext : IPatternEvaluationContext, ISparqlDescrib
                 o = ((NodeMatchPattern)triplePattern.Object).Node;
                 if (Data.ContainsTriple(new Triple(s, p, o)))
                 {
-                    return new Triple(s, p, o).AsEnumerable();
+                    return [new Triple(s, p, o)];
                 }
                 else
                 {
-                    return Enumerable.Empty<Triple>();
+                    return [];
                 }
 
             case TripleIndexType.None:
@@ -655,17 +655,17 @@ public class SparqlEvaluationContext : IPatternEvaluationContext, ISparqlDescrib
                 var t = new Triple(s, p, o);
                 if (Data.ContainsQuotedTriple(t))
                 {
-                    return new[] { new TripleNode(t) };
+                    return [new TripleNode(t)];
                 }
                 else
                 {
-                    return Enumerable.Empty<ITripleNode>();
+                    return [];
                 }
             case TripleIndexType.None:
                 return Data.QuotedTriples.Select(t => new TripleNode(t));
 
         }
-        return Enumerable.Empty<ITripleNode>();
+        return [];
     }
 
     /// <summary>

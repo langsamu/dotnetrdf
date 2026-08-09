@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -130,7 +130,7 @@ public abstract class ParsingTextReader
     /// <returns></returns>
     public static BlockingTextReader CreateBlocking(TextReader input, int bufferSize)
     {
-        if (input is BlockingTextReader) return (BlockingTextReader)input;
+        if (input is BlockingTextReader reader) return reader;
         return new BlockingTextReader(input, bufferSize);
     }
 
@@ -141,7 +141,7 @@ public abstract class ParsingTextReader
     /// <returns></returns>
     public static NonBlockingTextReader CreateNonBlocking(TextReader input)
     {
-        if (input is NonBlockingTextReader) return (NonBlockingTextReader)input;
+        if (input is NonBlockingTextReader reader) return reader;
         return new NonBlockingTextReader(input);
     }
 
@@ -153,7 +153,7 @@ public abstract class ParsingTextReader
     /// <returns></returns>
     public static NonBlockingTextReader CreateNonBlocking(TextReader input, int bufferSize)
     {
-        if (input is NonBlockingTextReader) return (NonBlockingTextReader)input;
+        if (input is NonBlockingTextReader reader) return reader;
         return new NonBlockingTextReader(input, bufferSize);
     }
 }
@@ -353,15 +353,6 @@ public abstract class BufferedTextReader
         }
     }
 
-#if NETCORE
-    /// <summary>
-    /// Closes the reader and the underlying reader
-    /// </summary>
-    public void Close()
-    {
-        // No-op as .NET Standard library version of TextReader has no Close() method
-    }
-#else
     /// <summary>
     /// Closes the reader and the underlying reader.
     /// </summary>
@@ -369,7 +360,6 @@ public abstract class BufferedTextReader
     {
         _reader.Close();
     }
-#endif
 
     /// <summary>
     /// Disposes of the reader and the underlying reader.

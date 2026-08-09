@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,9 +66,9 @@ public class PartitionedMultiset
         int baseID;
         lock (_partitions)
         {
-            _partitions.Add(new Dictionary<int, ISet>());
+            _partitions.Add([]);
             // We don't always need to create a new variable partition as in some cases there may be one already (if AddVariable() got called first)
-            if (_variables.Count < _partitions.Count) _variables.Add(new HashSet<string>());
+            if (_variables.Count < _partitions.Count) _variables.Add([]);
             _counter += _partitionSize;
             baseID = _counter;
         }
@@ -111,7 +111,7 @@ public class PartitionedMultiset
             // Create the Cache if necessary and reset it when necessary
             if (_containsCache == null || _cacheInvalid)
             {
-                _containsCache = new Dictionary<string, HashSet<INode>>();
+                _containsCache = [];
                 _cacheInvalid = false;
             }
             if (!_containsCache.ContainsKey(var))
@@ -184,7 +184,7 @@ public class PartitionedMultiset
     /// <param name="variable">Variable.</param>
     public override void AddVariable(string variable)
     {
-        if (_variables.Count == 0) _variables.Add(new HashSet<string>());
+        if (_variables.Count == 0) _variables.Add([]);
         _variables[0].Add(variable);
         if (_orderedVariables == null) _orderedVariables = new List<string>(Variables);
         if (!_orderedVariables.Contains(variable)) _orderedVariables.Add(variable);

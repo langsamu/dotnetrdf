@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -109,13 +109,13 @@ internal class PatternItemFactory : IPatternItemFactory
     private static string GetLiteralString(object literal)
     {
         var literalString = literal.ToString();
-        if (literal is DateTimeOffset)
+        if (literal is DateTimeOffset offset)
         {
-            literalString = GetDatetimeString((DateTimeOffset) literal);
+            literalString = GetDatetimeString(offset);
         }
-        else if (literal is DateTime)
+        else if (literal is DateTime dateTime)
         {
-            literalString = GetDatetimeString((DateTime) literal);
+            literalString = GetDatetimeString(dateTime);
         }
         return literalString;
     }

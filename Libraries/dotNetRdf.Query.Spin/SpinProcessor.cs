@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -198,9 +198,9 @@ internal class SpinProcessor //: IInferenceEngine
 
     private INode GetSourceNode(INode resource)
     {
-        if (resource is IResource)
+        if (resource is IResource r)
         {
-            return ((IResource)resource).getSource();
+            return r.getSource();
         }
         return resource;
     }
@@ -286,7 +286,7 @@ internal class SpinProcessor //: IInferenceEngine
 
     #region Dataset utilities
 
-    private Dictionary<IGraph, IGraph> _inferenceGraphs = new Dictionary<IGraph, IGraph>();
+    private Dictionary<IGraph, IGraph> _inferenceGraphs = [];
 
     internal IGraph ApplyInference(IGraph g)
     {
@@ -347,7 +347,7 @@ internal class SpinProcessor //: IInferenceEngine
     #region SPIN user's queries wrapping
 
     // TODO make the cache dynamic and set limits on the queryCache
-    private Dictionary<String, ICommand> queryCache = new Dictionary<String, ICommand>();
+    private Dictionary<String, ICommand> queryCache = [];
 
     internal IQuery BuildQuery(String sparqlQuery)
     {

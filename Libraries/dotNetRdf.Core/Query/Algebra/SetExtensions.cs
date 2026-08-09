@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ public static class SetExtensions
     /// </summary>
     /// <param name="set"></param>
     /// <returns></returns>
-    [Obsolete("Replaced by the ISparqlResultFactory interface and its implementation.")]
+    [Obsolete("Replaced by the ISparqlResultFactory interface and its implementation.", true)]
     public static SparqlResult AsSparqlResult(this ISet set)
     {
         return new SparqlResult(set.Variables.Select(var => new KeyValuePair<string, INode>(var, set[var])));

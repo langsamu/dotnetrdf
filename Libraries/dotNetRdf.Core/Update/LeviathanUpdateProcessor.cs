@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -379,7 +379,7 @@ public class LeviathanUpdateProcessor
 
         // Then if possible attempt to get the lock and determine whether it needs releasing
         ReaderWriterLockSlim currLock =
-            (_dataset is IThreadSafeDataset) ? ((IThreadSafeDataset) _dataset).Lock : _lock;
+            _dataset is IThreadSafeDataset dataset ? dataset.Lock : _lock;
         var mustRelease = false;
         try
         {
@@ -473,7 +473,7 @@ public class LeviathanUpdateProcessor
 
         // Remember to handle the Thread Safety
         // If the Dataset is Thread Safe use its own lock otherwise use our local lock
-        ReaderWriterLockSlim currLock = (_dataset is IThreadSafeDataset) ? ((IThreadSafeDataset)_dataset).Lock : _lock;
+        ReaderWriterLockSlim currLock = _dataset is IThreadSafeDataset dataset ? dataset.Lock : _lock;
         try
         {
             currLock.EnterWriteLock();
@@ -1068,7 +1068,7 @@ public class LeviathanUpdateProcessor
                                         }
                                         if (temp.NodeType == NodeType.Uri)
                                         {
-                                            graphUri = temp.ToSafeString();
+                                            graphUri = $"{temp}";
                                         }
                                         else
                                         {
@@ -1441,7 +1441,7 @@ public class LeviathanUpdateProcessor
                                     }
                                     else if (temp.NodeType == NodeType.Uri)
                                     {
-                                        graphUri = temp.ToSafeString();
+                                        graphUri = $"{temp}";
                                     }
                                     else
                                     {
@@ -1547,7 +1547,7 @@ public class LeviathanUpdateProcessor
                                     }
                                     else if (temp.NodeType == NodeType.Uri)
                                     {
-                                        graphUri = temp.ToSafeString();
+                                        graphUri = $"{temp}";
                                     }
                                     else
                                     {

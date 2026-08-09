@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -96,7 +96,7 @@ public class ModifyCommand
             var affectedUris = new List<string>();
             if (TargetGraph != null)
             {
-                affectedUris.Add(TargetGraph.ToSafeString());
+                affectedUris.Add(TargetGraph.ToString());
             }
             if (_deletePattern.IsGraph) affectedUris.Add(_deletePattern.GraphSpecifier.Value);
             if (_deletePattern.HasChildGraphPatterns)
@@ -122,11 +122,13 @@ public class ModifyCommand
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by AffectsGraph(IRefNode)")]
+    [Obsolete("Replaced by AffectsGraph(IRefNode)", true)]
     public override bool AffectsGraph(Uri graphUri)
     {
-        var affectedUris = new List<string>();
-        affectedUris.Add(TargetUri != null ? TargetUri.AbsoluteUri : string.Empty);
+        var affectedUris = new List<string>
+        {
+            TargetUri != null ? TargetUri.AbsoluteUri : string.Empty,
+        };
         if (_deletePattern.IsGraph) affectedUris.Add(_deletePattern.GraphSpecifier.Value);
         if (_deletePattern.HasChildGraphPatterns)
         {
@@ -143,7 +145,7 @@ public class ModifyCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphUri.ToSafeString());
+        return affectedUris.Contains(graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -153,7 +155,7 @@ public class ModifyCommand
     /// <returns></returns>
     public override bool AffectsGraph(IRefNode graphName)
     {
-        var affectedUris = new List<string>() {TargetGraph.ToSafeString()};
+        var affectedUris = new List<string>() {$"{TargetGraph}" };
         if (_deletePattern.IsGraph) affectedUris.Add(_deletePattern.GraphSpecifier.Value);
         if (_deletePattern.HasChildGraphPatterns)
         {
@@ -170,13 +172,13 @@ public class ModifyCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphName.ToSafeString());
+        return affectedUris.Contains($"{graphName}");
     }
 
     /// <summary>
     /// Gets the URI of the Graph the insertions are made to.
     /// </summary>
-    [Obsolete("Replaced by TargetGraph")]
+    [Obsolete("Replaced by TargetGraph", true)]
     public Uri TargetUri
     {
         get

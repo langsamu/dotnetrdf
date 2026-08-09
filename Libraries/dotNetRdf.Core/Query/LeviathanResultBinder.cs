@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -106,9 +106,8 @@ public class LeviathanResultBinder
     /// <returns></returns>
     public override BindingGroup Group(int groupID)
     {
-        if (_context.InputMultiset is GroupMultiset)
+        if (_context.InputMultiset is GroupMultiset groupSet)
         {
-            var groupSet = (GroupMultiset)_context.InputMultiset;
             return groupSet.Group(groupID);
         }
         else if (_groupSet != null)
@@ -129,9 +128,9 @@ public class LeviathanResultBinder
     {
         if (accessContents)
         {
-            if (_context.InputMultiset is GroupMultiset)
+            if (_context.InputMultiset is GroupMultiset multiset)
             {
-                _groupSet = (GroupMultiset)_context.InputMultiset;
+                _groupSet = multiset;
                 _context.InputMultiset = _groupSet.Contents;
 
             }

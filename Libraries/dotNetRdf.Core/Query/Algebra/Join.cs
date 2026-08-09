@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -56,46 +56,16 @@ public class Join
     /// <param name="lhs">Left Hand Side.</param>
     /// <param name="rhs">Right Hand Side.</param>
     /// <returns></returns>
-    public static ISparqlAlgebra CreateJoin(ISparqlAlgebra lhs, ISparqlAlgebra rhs)
-    {
-        if (lhs is Bgp)
+    public static ISparqlAlgebra CreateJoin(ISparqlAlgebra lhs, ISparqlAlgebra rhs) =>
+        lhs switch
         {
-            if (((Bgp)lhs).IsEmpty)
+            Bgp { IsEmpty: true } => rhs,
+            _ => rhs switch
             {
-                return rhs;
+                Bgp { IsEmpty: true } => lhs,
+                _ => new Join(lhs, rhs)
             }
-            else if (rhs is Bgp)
-            {
-                if (((Bgp)rhs).IsEmpty)
-                {
-                    return lhs;
-                }
-                else
-                {
-                    return new Join(lhs, rhs);
-                }
-            }
-            else
-            {
-                return new Join(lhs, rhs);
-            }
-        }
-        else if (rhs is Bgp)
-        {
-            if (((Bgp)rhs).IsEmpty)
-            {
-                return lhs;
-            }
-            else
-            {
-                return new Join(lhs, rhs);
-            }
-        }
-        else
-        {
-            return new Join(lhs, rhs);
-        }
-    }
+        };
 
 
     /// <summary>

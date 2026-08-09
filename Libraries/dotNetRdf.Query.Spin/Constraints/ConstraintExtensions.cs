@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ internal static class ConstraintsExtensions
     /// <returns>a List of ConstraintViolations (empty if all is OK)</returns>
     public static List<ConstraintViolation> CheckConstraints(this SpinWrappedDataset dataset, IEnumerable<INode> resources, IProgressMonitor monitor)
     {
-        return CheckConstraints(dataset, resources, new List<SPINStatistics>(), monitor);
+        return CheckConstraints(dataset, resources, [], monitor);
     }
 
     /// <summary>

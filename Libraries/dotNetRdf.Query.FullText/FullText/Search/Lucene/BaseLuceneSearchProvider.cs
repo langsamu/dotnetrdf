@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -173,7 +173,7 @@ public abstract class BaseLuceneSearchProvider
     /// <param name="scoreThreshold">Score Threshold.</param>
     /// <param name="limit">Result Limit.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string, double, int)")]
+    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string, double, int)", true)]
     public virtual IEnumerable<IFullTextSearchResult> Match(IEnumerable<Uri> graphUris, string text, double scoreThreshold, int limit)
     {
         EnsureCurrent();
@@ -194,7 +194,7 @@ public abstract class BaseLuceneSearchProvider
     /// <param name="text">Search Query.</param>
     /// <param name="scoreThreshold">Score Threshold.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string, double)")]
+    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string, double)", true)]
     public virtual IEnumerable<IFullTextSearchResult> Match(IEnumerable<Uri> graphUris, string text, double scoreThreshold)
     {
         EnsureCurrent();
@@ -213,7 +213,7 @@ public abstract class BaseLuceneSearchProvider
     /// <param name="text">Search Query.</param>
     /// <param name="limit">Result Limit.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string, int)")]
+    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string, int)", true)]
     public virtual IEnumerable<IFullTextSearchResult> Match(IEnumerable<Uri> graphUris, string text, int limit)
     {
         EnsureCurrent();
@@ -232,7 +232,7 @@ public abstract class BaseLuceneSearchProvider
     /// <param name="graphUris">Graph URIs.</param>
     /// <param name="text">Search Query.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string)")]
+    [Obsolete("Replaced by Match(IEnumerable<IRefNode>, string)", true)]
     public virtual IEnumerable<IFullTextSearchResult> Match(IEnumerable<Uri> graphUris, string text)
     {
         EnsureCurrent();
@@ -322,7 +322,7 @@ public abstract class BaseLuceneSearchProvider
     /// <param name="graphUris">Graph URIs.</param>
     /// <param name="results">Results.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by FilterByGraph(IEnumerable<IRefNode>, IEnumerable<IFullTextSearchResult>")]
+    [Obsolete("Replaced by FilterByGraph(IEnumerable<IRefNode>, IEnumerable<IFullTextSearchResult>", true)]
     private IEnumerable<IFullTextSearchResult> FilterByGraph(IEnumerable<Uri> graphUris, IEnumerable<IFullTextSearchResult> results)
     {
         if (graphUris == null)
@@ -424,9 +424,9 @@ public abstract class BaseLuceneSearchProvider
         //Serialize and link the Schema
         INode schemaObj = context.Graph.CreateBlankNode();
         context.NextSubject = schemaObj;
-        if (_schema is IConfigurationSerializable)
+        if (_schema is IConfigurationSerializable serializable)
         {
-            ((IConfigurationSerializable)_schema).SerializeConfiguration(context);
+            serializable.SerializeConfiguration(context);
         }
         else
         {

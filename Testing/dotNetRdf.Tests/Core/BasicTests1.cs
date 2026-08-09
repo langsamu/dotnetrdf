@@ -67,7 +67,7 @@ public class BasicTests1 : BaseTest
             g.CreateUriNode("rdf:type"),
             null,
             g.CreateUriNode(new Uri("http://example.org#test")),
-            g.CreateUriNode(new Uri("http://example.org"))
+            g.CreateUriNode(new Uri("http://example.org")),
         };
 
         foreach (INode n in test.Distinct())
@@ -205,7 +205,7 @@ public class BasicTests1 : BaseTest
     [Fact]
     public void UriResolution()
     {
-        String[] baseUris = { "http://www.bbc.co.uk",
+        String[] baseUris = [ "http://www.bbc.co.uk",
                               "http://www.bbc.co.uk/",
                               "http://www.bbc.co.uk/test.txt",
                               "http://www.bbc.co.uk/test",
@@ -214,25 +214,25 @@ public class BasicTests1 : BaseTest
                               "http://www.bbc.co.uk/really/really/long/path",
                               "http://www.bbc.co.uk#fragment",
                               "http://www.bbc.co.uk/test.txt#fragment"//,
-                            };
-        String[] uriRefs = { "test2.txt",
+                            ];
+        String[] uriRefs = [ "test2.txt",
                              "test2",
                              "/test2",
                              "test2/subdir",
                              "/test2/subdir",
                              "../test2",
                              "#fragment2"
-                            };
-        String[][] expected = { new String[] {"http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test.txt#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/test/test2.txt","http://www.bbc.co.uk/test/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/test/test2.txt","http://www.bbc.co.uk/test/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/subdir#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/really/really/long/test2.txt","http://www.bbc.co.uk/really/really/long/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/really/really/long/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/really/really/test2","http://www.bbc.co.uk/really/really/long/path#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/#fragment2"},
-                                new String[] {"http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test.txt#fragment2"}
-                              };
+                            ];
+        String[][] expected = [ ["http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/#fragment2"],
+                                ["http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/#fragment2"],
+                                ["http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test.txt#fragment2"],
+                                ["http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test#fragment2"],
+                                ["http://www.bbc.co.uk/test/test2.txt","http://www.bbc.co.uk/test/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/#fragment2"],
+                                ["http://www.bbc.co.uk/test/test2.txt","http://www.bbc.co.uk/test/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test/subdir#fragment2"],
+                                ["http://www.bbc.co.uk/really/really/long/test2.txt","http://www.bbc.co.uk/really/really/long/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/really/really/long/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/really/really/test2","http://www.bbc.co.uk/really/really/long/path#fragment2"],
+                                ["http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/#fragment2"],
+                                ["http://www.bbc.co.uk/test2.txt","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2/subdir","http://www.bbc.co.uk/test2","http://www.bbc.co.uk/test.txt#fragment2"]
+                              ];
 
         for (var i = 0; i < baseUris.Length; i++)
         {
@@ -575,39 +575,41 @@ public class BasicTests1 : BaseTest
         g.NamespaceMap.AddNamespace("", new Uri("http://example.org/"));
 
         //Create a list of various Nodes
-        var nodes = new List<INode>();
-        nodes.Add(g.CreateUriNode(":someUri"));
-        nodes.Add(g.CreateBlankNode());
-        nodes.Add(null);
-        nodes.Add(g.CreateBlankNode());
-        nodes.Add(g.CreateLiteralNode("cheese"));
-        nodes.Add(g.CreateLiteralNode("aardvark"));
-        nodes.Add(g.CreateLiteralNode(DateTime.Now.AddDays(-25).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)));
-        nodes.Add(g.CreateLiteralNode("duck"));
-        nodes.Add(g.CreateUriNode(":otherUri"));
-        nodes.Add(g.CreateLiteralNode("1.5", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)));
-        nodes.Add(g.CreateUriNode(new Uri("http://www.google.com")));
-        nodes.Add(g.CreateLiteralNode(DateTime.Now.AddYears(3).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)));
-        nodes.Add(g.CreateLiteralNode("23", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateLiteralNode("M43d", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)));
-        nodes.Add(g.CreateUriNode(new Uri("http://www.dotnetrdf.org")));
-        nodes.Add(g.CreateLiteralNode("12", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateBlankNode("monkey"));
-        nodes.Add(g.CreateBlankNode());
-        nodes.Add(g.CreateLiteralNode("chaese"));
-        nodes.Add(g.CreateLiteralNode("1.0456345", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)));
-        nodes.Add(g.CreateLiteralNode("cheese"));
-        nodes.Add(g.CreateLiteralNode(Convert.ToBase64String(new byte[] { Byte.Parse("32") }), new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)));
-        nodes.Add(g.CreateLiteralNode("TA==", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)));
-        nodes.Add(g.CreateLiteralNode("-45454", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateLiteralNode(DateTime.Now.ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)));
-        nodes.Add(g.CreateLiteralNode("-3", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateLiteralNode("242344.3456435", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)));
-        nodes.Add(g.CreateLiteralNode("true", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)));
-        nodes.Add(g.CreateUriNode(":what"));
-        nodes.Add(null);
-        nodes.Add(g.CreateLiteralNode("false", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)));
-        nodes.Add(g.CreateLiteralNode("invalid-value", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
+        var nodes = new List<INode>
+        {
+            g.CreateUriNode(":someUri"),
+            g.CreateBlankNode(),
+            null,
+            g.CreateBlankNode(),
+            g.CreateLiteralNode("cheese"),
+            g.CreateLiteralNode("aardvark"),
+            g.CreateLiteralNode(DateTime.Now.AddDays(-25).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)),
+            g.CreateLiteralNode("duck"),
+            g.CreateUriNode(":otherUri"),
+            g.CreateLiteralNode("1.5", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)),
+            g.CreateUriNode(new Uri("http://www.google.com")),
+            g.CreateLiteralNode(DateTime.Now.AddYears(3).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)),
+            g.CreateLiteralNode("23", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateLiteralNode("M43d", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)),
+            g.CreateUriNode(new Uri("http://www.dotnetrdf.org")),
+            g.CreateLiteralNode("12", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateBlankNode("monkey"),
+            g.CreateBlankNode(),
+            g.CreateLiteralNode("chaese"),
+            g.CreateLiteralNode("1.0456345", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)),
+            g.CreateLiteralNode("cheese"),
+            g.CreateLiteralNode(Convert.ToBase64String(new byte[] { Byte.Parse("32") }), new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)),
+            g.CreateLiteralNode("TA==", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)),
+            g.CreateLiteralNode("-45454", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateLiteralNode(DateTime.Now.ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)),
+            g.CreateLiteralNode("-3", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateLiteralNode("242344.3456435", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)),
+            g.CreateLiteralNode("true", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)),
+            g.CreateUriNode(":what"),
+            null,
+            g.CreateLiteralNode("false", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)),
+            g.CreateLiteralNode("invalid-value", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger))
+        };
 
         for (var i = 0; i < 32; i++)
         {
@@ -672,39 +674,41 @@ public class BasicTests1 : BaseTest
         g.NamespaceMap.AddNamespace("", new Uri("http://example.org/"));
 
         //Create a list of various Nodes
-        var nodes = new List<INode>();
-        nodes.Add(g.CreateUriNode(":someUri"));
-        nodes.Add(g.CreateBlankNode());
-        nodes.Add(null);
-        nodes.Add(g.CreateBlankNode());
-        nodes.Add(g.CreateLiteralNode("cheese"));
-        nodes.Add(g.CreateLiteralNode("aardvark"));
-        nodes.Add(g.CreateLiteralNode(DateTime.Now.AddDays(-25).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)));
-        nodes.Add(g.CreateLiteralNode("duck"));
-        nodes.Add(g.CreateUriNode(":otherUri"));
-        nodes.Add(g.CreateLiteralNode("1.5", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)));
-        nodes.Add(g.CreateUriNode(new Uri("http://www.google.com")));
-        nodes.Add(g.CreateLiteralNode(DateTime.Now.AddYears(3).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)));
-        nodes.Add(g.CreateLiteralNode("23", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateLiteralNode("M43d", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)));
-        nodes.Add(g.CreateUriNode(new Uri("http://www.dotnetrdf.org")));
-        nodes.Add(g.CreateLiteralNode("12", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateBlankNode("monkey"));
-        nodes.Add(g.CreateBlankNode());
-        nodes.Add(g.CreateLiteralNode("chaese"));
-        nodes.Add(g.CreateLiteralNode("1.0456345", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)));
-        nodes.Add(g.CreateLiteralNode("cheese"));
-        nodes.Add(g.CreateLiteralNode(Convert.ToBase64String(new byte[] { Byte.Parse("32") }), new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)));
-        nodes.Add(g.CreateLiteralNode("TA==", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)));
-        nodes.Add(g.CreateLiteralNode("-45454", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateLiteralNode(DateTime.Now.ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)));
-        nodes.Add(g.CreateLiteralNode("-3", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
-        nodes.Add(g.CreateLiteralNode("242344.3456435", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)));
-        nodes.Add(g.CreateLiteralNode("true", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)));
-        nodes.Add(g.CreateUriNode(":what"));
-        nodes.Add(null);
-        nodes.Add(g.CreateLiteralNode("false", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)));
-        nodes.Add(g.CreateLiteralNode("invalid-value", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)));
+        var nodes = new List<INode>
+        {
+            g.CreateUriNode(":someUri"),
+            g.CreateBlankNode(),
+            null,
+            g.CreateBlankNode(),
+            g.CreateLiteralNode("cheese"),
+            g.CreateLiteralNode("aardvark"),
+            g.CreateLiteralNode(DateTime.Now.AddDays(-25).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)),
+            g.CreateLiteralNode("duck"),
+            g.CreateUriNode(":otherUri"),
+            g.CreateLiteralNode("1.5", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)),
+            g.CreateUriNode(new Uri("http://www.google.com")),
+            g.CreateLiteralNode(DateTime.Now.AddYears(3).ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)),
+            g.CreateLiteralNode("23", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateLiteralNode("M43d", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)),
+            g.CreateUriNode(new Uri("http://www.dotnetrdf.org")),
+            g.CreateLiteralNode("12", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateBlankNode("monkey"),
+            g.CreateBlankNode(),
+            g.CreateLiteralNode("chaese"),
+            g.CreateLiteralNode("1.0456345", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)),
+            g.CreateLiteralNode("cheese"),
+            g.CreateLiteralNode(Convert.ToBase64String([32]), new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)),
+            g.CreateLiteralNode("TA==", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBase64Binary)),
+            g.CreateLiteralNode("-45454", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateLiteralNode(DateTime.Now.ToString(XmlSpecsHelper.XmlSchemaDateTimeFormat), new Uri(XmlSpecsHelper.XmlSchemaDataTypeDateTime)),
+            g.CreateLiteralNode("-3", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+            g.CreateLiteralNode("242344.3456435", new Uri(XmlSpecsHelper.XmlSchemaDataTypeDouble)),
+            g.CreateLiteralNode("true", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)),
+            g.CreateUriNode(":what"),
+            null,
+            g.CreateLiteralNode("false", new Uri(XmlSpecsHelper.XmlSchemaDataTypeBoolean)),
+            g.CreateLiteralNode("invalid-value", new Uri(XmlSpecsHelper.XmlSchemaDataTypeInteger)),
+        };
 
         nodes.Sort(comparer);
 

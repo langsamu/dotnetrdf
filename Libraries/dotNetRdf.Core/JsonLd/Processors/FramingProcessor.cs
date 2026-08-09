@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -125,7 +125,7 @@ internal static class FramingProcessor
                 if (!frame.ContainsKey("@graph"))
                 {
                     recurse = !state.GraphName.Equals("@merged");
-                    subframe = new JObject();
+                    subframe = [];
                 }
                 // 4.5.2 - Otherwise, set subframe to the first entry for @graph in frame, or a new empty dictionary, if it does not exist, and set recurse to true, unless id is @merged or @default.
                 else
@@ -147,7 +147,7 @@ internal static class FramingProcessor
                     }
                     else
                     {
-                        subframe = new JObject();
+                        subframe = [];
                     }
 
                     recurse = !(id.Equals("@merged") || id.Equals("@default"));
@@ -235,7 +235,7 @@ internal static class FramingProcessor
                                 var oldEmbedded = state.Embedded;
                                 state.Embedded = true;
                                 ProcessFrame(state,
-                                    new List<string> {listItem["@id"].Value<string>()},
+                                    [listItem["@id"].Value<string>()],
                                     listFrame,
                                     list,
                                     "@list",
@@ -268,7 +268,7 @@ internal static class FramingProcessor
                         var oldEmbedded = state.Embedded;
                         state.Embedded = true;
                         ProcessFrame(state,
-                            new List<string> {item["@id"].Value<string>()},
+                            [item["@id"].Value<string>()],
                             newFrame,
                             output,
                             property,
@@ -358,7 +358,7 @@ internal static class FramingProcessor
                             var oldEmbedded = state.Embedded;
                             state.Embedded = true;
                             ProcessFrame(state,
-                                new List<string> {reverseId},
+                                [reverseId],
                                 subFrame,
                                 reverseDict[reverseProperty],
                                 null,
@@ -655,15 +655,15 @@ internal static class FramingProcessor
 
     private static bool NodePatternMatch(FramingState state, JObject frame, JToken value, bool requireAll)
     {
-        if (!(value is JObject valueObject) || !valueObject.ContainsKey("@id")) return false;
-        Dictionary<string, JObject> matches = MatchFrame(state, new[] {valueObject["@id"].Value<string>()}, frame, requireAll);
+        if (value is not JObject valueObject || !valueObject.ContainsKey("@id")) return false;
+        Dictionary<string, JObject> matches = MatchFrame(state, [valueObject["@id"].Value<string>()], frame, requireAll);
         return matches.Any();
 
     }
 
     private static bool ValuePatternMatch(JToken valuePattern, JToken value)
     {
-        if (valuePattern is JArray) valuePattern = ((JArray)valuePattern)[0];
+        if (valuePattern is JArray array) valuePattern = array[0];
         var valuePatternObject = valuePattern as JObject;
         var valueObject = value as JObject;
         if (valuePatternObject == null || valueObject == null) return false;
@@ -765,7 +765,7 @@ internal static class FramingProcessor
     private static void ValidateFrame(JToken value)
     {
         // 1.1 - Frame MUST be a map.
-        if (!(value is JObject obj))
+        if (value is not JObject obj)
         {
             throw new JsonLdProcessorException(JsonLdErrorCode.InvalidFrame,
                 $"Invalid frame. The frame must be a map.");
@@ -824,7 +824,7 @@ internal static class FramingProcessor
             var array = parentObject[activeProperty] as JArray;
             if (array == null)
             {
-                parent[activeProperty] = array = new JArray();
+                parent[activeProperty] = array = [];
             }
             array.Add(child);
         }

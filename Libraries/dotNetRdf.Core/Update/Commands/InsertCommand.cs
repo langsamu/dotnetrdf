@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -63,7 +63,7 @@ public class InsertCommand
     /// <param name="insertions">Pattern to construct Triples to insert.</param>
     /// <param name="where">Pattern to select data which is then used in evaluating the insertions.</param>
     /// <param name="graphUri">URI of the affected Graph.</param>
-    [Obsolete("Replaced by InsertCommand(GraphPattern, GraphPattern, IRefNode)")]
+    [Obsolete("Replaced by InsertCommand(GraphPattern, GraphPattern, IRefNode)", true)]
     public InsertCommand(GraphPattern insertions, GraphPattern where, Uri graphUri)
         : this(insertions, where, graphUri == null ? null : new UriNode(graphUri)) { }
 
@@ -85,7 +85,7 @@ public class InsertCommand
             var affectedUris = new List<string>();
             if (TargetGraph != null)
             {
-                affectedUris.Add(TargetGraph.ToSafeString());
+                affectedUris.Add(TargetGraph.ToString());
             }
             if (InsertPattern.IsGraph) affectedUris.Add(InsertPattern.GraphSpecifier.Value);
             if (InsertPattern.HasChildGraphPatterns)
@@ -104,7 +104,7 @@ public class InsertCommand
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by AffectsGraph(IRefNode)")]
+    [Obsolete("Replaced by AffectsGraph(IRefNode)", true)]
     public override bool AffectsGraph(Uri graphUri)
     {
         var affectedUris = new List<string>();
@@ -125,7 +125,7 @@ public class InsertCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphUri.ToSafeString());
+        return affectedUris.Contains($"{graphUri}");
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public class InsertCommand
     /// <returns></returns>
     public override bool AffectsGraph(IRefNode graphName)
     {
-        var affectedUris = new List<string> {TargetGraph.ToSafeString()};
+        var affectedUris = new List<string> {$"{TargetGraph}" };
         if (InsertPattern.IsGraph) affectedUris.Add(InsertPattern.GraphSpecifier.Value);
         if (InsertPattern.HasChildGraphPatterns)
         {
@@ -144,13 +144,13 @@ public class InsertCommand
                 select p.GraphSpecifier.Value);
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
-        return affectedUris.Contains(graphName.ToSafeString());
+        return affectedUris.Contains($"{graphName}");
     }
 
     /// <summary>
     /// Gets the URI of the Graph the insertions are made to.
     /// </summary>
-    [Obsolete("Replaced by TargetGraph")]
+    [Obsolete("Replaced by TargetGraph", true)]
     public Uri TargetUri
     {
         get

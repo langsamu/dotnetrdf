@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,11 +45,11 @@ namespace VDS.RDF.Query;
 /// Queries are federated by executing multiple requesting simultaneously and asynchronously against the endpoints in question with the data then merged locally.  The merging process does not attempt to remove duplicate data it just naively merges the data.
 /// </para>
 /// </remarks>
-[Obsolete("Replaced by VDS.RDF.Query.FederatedSparqlQueryClient")]
+[Obsolete("Replaced by VDS.RDF.Query.FederatedSparqlQueryClient", true)]
 public class FederatedSparqlRemoteEndpoint 
     : SparqlRemoteEndpoint
 {
-    private readonly List<SparqlRemoteEndpoint> _endpoints = new List<SparqlRemoteEndpoint>();
+    private readonly List<SparqlRemoteEndpoint> _endpoints = [];
     private bool _ignoreFailedRequests = false;
     private int _maxSimultaneousRequests = 4;
 

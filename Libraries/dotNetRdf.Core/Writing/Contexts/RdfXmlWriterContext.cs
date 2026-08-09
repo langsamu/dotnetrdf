@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ namespace VDS.RDF.Writing.Contexts;
 public class RdfXmlWriterContext 
     : IWriterContext, ICollectionCompressingWriterContext
 {
-    private readonly TripleCollection _triplesDone = new TripleCollection();
+    private readonly TripleCollection _triplesDone = [];
 
     /// <summary>
     /// Creates a new RDF/XML Writer Context.
@@ -173,7 +173,7 @@ public class RdfXmlWriterContext
     /// <summary>
     /// Represents the mapping from Blank Nodes to Collections.
     /// </summary>
-    public Dictionary<INode, OutputRdfCollection> Collections { get; } = new Dictionary<INode, OutputRdfCollection>();
+    public Dictionary<INode, OutputRdfCollection> Collections { get; } = [];
 
     /// <summary>
     /// Stores the Triples that should be excluded from standard output as they are part of collections.

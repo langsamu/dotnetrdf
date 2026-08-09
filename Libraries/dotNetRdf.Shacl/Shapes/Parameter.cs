@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,12 +42,16 @@ internal class Parameter : Property
     {
         get
         {
-            return Vocabulary.Optional.ObjectsOf(this).SingleOrDefault()?.AsValuedNode().AsBoolean() ?? false;
+            var optionalNodes = Vocabulary.Optional.ObjectsOf(this).ToList();
+            if (optionalNodes.Count > 1) {
+                throw new ShaclProcessorException("A sh:Parameter must not have multiple sh:optional properties.");
+            }
+            return optionalNodes.SingleOrDefault()?.AsValuedNode().AsBoolean() ?? false;
         }
     }
 
     internal bool Matches(Shape shape)
     {
-        return !Equals((INode)shape) && ValidateInternal(Graph, shape, shape.AsEnumerable(), null);
+        return !Equals((INode)shape) && ValidateInternal(Graph, shape, [shape], null);
     }
 }

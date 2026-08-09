@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ namespace VDS.RDF.Query.Expressions.Functions.Arq;
 public class StringJoinFunction 
     : ISparqlExpression
 {
-    private readonly List<ISparqlExpression> _exprs = new List<ISparqlExpression>();
+    private readonly List<ISparqlExpression> _exprs = [];
 
     /// <summary>
     /// Get the fixed separator string to use.
@@ -155,7 +155,7 @@ public class StringJoinFunction
     {
         get
         {
-            return SeparatorExpression.AsEnumerable().Concat(_exprs);
+            return [SeparatorExpression, .. _exprs];
         }
     }
 

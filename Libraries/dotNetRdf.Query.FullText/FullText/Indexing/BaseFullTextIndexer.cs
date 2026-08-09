@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,13 +58,6 @@ public abstract class BaseFullTextIndexer
     /// <param name="t">Triple.</param>
     protected abstract void Index(String graphUri, Triple t);
 
-    /// <inheritdoc/>
-    [Obsolete("Replaced by Index(IGraph, Triple)", true)]
-    public virtual void Index(Triple t)
-    {
-        Index((IGraph)null, t);
-    }
-
     /// <summary>
     /// Indexes a Triple.
     /// </summary>
@@ -107,16 +100,6 @@ public abstract class BaseFullTextIndexer
     /// <param name="graphUri">Graph URI.</param>
     /// <param name="t">Triple.</param>
     protected abstract void Unindex(String graphUri, Triple t);
-
-    /// <summary>
-    /// Unindexes a Triple.
-    /// </summary>
-    /// <param name="t">Triple.</param>
-    [Obsolete("Replaced by Unindex(IGraph, Triple). As triples no longer have a reference to a parent graph, this method should no longer be used.", true)]
-    public virtual void Unindex(Triple t)
-    {
-        Unindex(string.Empty, t);
-    }
 
     /// <inheritdoc />
     public virtual void Unindex(IGraph g, Triple t)

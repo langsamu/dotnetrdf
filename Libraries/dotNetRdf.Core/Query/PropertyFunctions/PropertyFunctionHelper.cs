@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ public static class PropertyFunctionHelper
     /// <returns></returns>
     public static List<IPropertyFunctionPattern> ExtractPatterns(IEnumerable<ITriplePattern> patterns)
     {
-        return ExtractPatterns(patterns, Enumerable.Empty<IPropertyFunctionFactory>());
+        return ExtractPatterns(patterns, []);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public static class PropertyFunctionHelper
         // Do a first pass which simply looks to find any 'magic' properties
         var funcInfo = new Dictionary<PatternItem, PropertyFunctionInfo>();
         var ps = patterns.OfType<IMatchTriplePattern>().ToList();
-        if (ps.Count == 0) return new List<IPropertyFunctionPattern>();
+        if (ps.Count == 0) return [];
         foreach (IMatchTriplePattern tp in ps)
         {
             var predItem = tp.Predicate as NodeMatchPattern;
@@ -77,7 +77,7 @@ public static class PropertyFunctionHelper
             info.Patterns.ForEach(tp => ps.Remove(tp));
         }
 
-        if (funcInfo.Count == 0) return new List<IPropertyFunctionPattern>();
+        if (funcInfo.Count == 0) return [];
 
         // Now for each 'magic' property we found do a further search to see if we are using
         // the collection forms to provide extended arguments

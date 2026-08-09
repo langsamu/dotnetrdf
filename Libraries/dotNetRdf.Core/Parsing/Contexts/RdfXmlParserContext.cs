@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ namespace VDS.RDF.Parsing.Contexts;
 public class RdfXmlParserContext : BaseParserContext, IEventParserContext<IRdfXmlEvent>
 {
     private IEventQueue<IRdfXmlEvent> _queue;
-    private Dictionary<string, List<INode>> _usedIDs = new Dictionary<string, List<INode>>();
+    private Dictionary<string, List<INode>> _usedIDs = [];
 
     /// <summary>
     /// Creates a new Parser Context.
@@ -84,9 +84,9 @@ public class RdfXmlParserContext : BaseParserContext, IEventParserContext<IRdfXm
         : base(handler, traceParsing, uriFactory ?? RDF.UriFactory.Root)
     {
         _queue = new EventQueue<IRdfXmlEvent>(new DomBasedEventGenerator(document));
-        if (_queue.EventGenerator is IRdfXmlPreProcessingEventGenerator)
+        if (_queue.EventGenerator is IRdfXmlPreProcessingEventGenerator generator)
         {
-            ((IRdfXmlPreProcessingEventGenerator)_queue.EventGenerator).GetAllEvents(this);
+            generator.GetAllEvents(this);
         }
     }
 
@@ -98,7 +98,7 @@ public class RdfXmlParserContext : BaseParserContext, IEventParserContext<IRdfXm
     public RdfXmlParserContext(IGraph g, Stream stream)
         : base(g)
     {
-        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(stream, g.BaseUri.ToSafeString()));
+        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(stream, g.BaseUri?.AbsoluteUri ?? ""));
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ public class RdfXmlParserContext : BaseParserContext, IEventParserContext<IRdfXm
     public RdfXmlParserContext(IRdfHandler handler, Stream stream)
         : base(handler)
     {
-        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(stream, handler.GetBaseUri().ToSafeString()));
+        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(stream, handler.GetBaseUri()?.AbsoluteUri ?? ""));
     }
 
     /// <summary>
@@ -120,7 +120,7 @@ public class RdfXmlParserContext : BaseParserContext, IEventParserContext<IRdfXm
     public RdfXmlParserContext(IGraph g, TextReader input)
         : base(g)
     {
-        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(input, g.BaseUri.ToSafeString()));
+        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(input, g.BaseUri?.AbsoluteUri ?? ""));
     }
 
     /// <summary>
@@ -133,7 +133,7 @@ public class RdfXmlParserContext : BaseParserContext, IEventParserContext<IRdfXm
     public RdfXmlParserContext(IRdfHandler handler, TextReader input, IUriFactory uriFactory= null, XmlReaderSettings xmlReaderSettings = null)
         : base(handler, false, uriFactory ?? RDF.UriFactory.Root)
     {
-        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(input, handler.GetBaseUri().ToSafeString(), xmlReaderSettings));
+        _queue = new StreamingEventQueue<IRdfXmlEvent>(new StreamingEventGenerator(input, handler.GetBaseUri()?.AbsoluteUri ?? "", xmlReaderSettings));
     }
 
     /// <summary>

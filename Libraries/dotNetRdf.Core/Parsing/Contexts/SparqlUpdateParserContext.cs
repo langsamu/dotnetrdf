@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 using VDS.RDF.Parsing.Handlers;
 using VDS.RDF.Parsing.Tokens;
 using VDS.RDF.Query;
@@ -40,7 +39,7 @@ namespace VDS.RDF.Parsing.Contexts;
 public class SparqlUpdateParserContext
     : TokenisingParserContext
 {
-    private IEnumerable<ISparqlCustomExpressionFactory> _factories = Enumerable.Empty<ISparqlCustomExpressionFactory>();
+    private IEnumerable<ISparqlCustomExpressionFactory> _factories = [];
 
     /// <summary>
     /// Creates a new SPARQL Update Parser Context.
@@ -144,12 +143,10 @@ public class SparqlUpdateParserContext
     /// <summary>
     /// Gets/Sets whether functions that can't be parsed into Expressions should be represented by the <see cref="VDS.RDF.Query.Expressions.Functions.UnknownFunction">UnknownFunction</see>.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public bool AllowUnknownFunctions { get; set; } = Options.QueryAllowUnknownFunctions; //= true;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public bool AllowUnknownFunctions { get; set; } = true;
 
     /// <summary>
     /// Gets the set of BNodes used in INSERT DATA commands so far.
     /// </summary>
-    public HashSet<string> DataBNodes { get; } = new HashSet<string>();
+    public HashSet<string> DataBNodes { get; } = [];
 }

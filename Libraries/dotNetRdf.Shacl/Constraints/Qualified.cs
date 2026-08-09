@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -81,13 +81,13 @@ internal abstract class Qualified : Numeric
             select disjoint)
             .Any();
 
-        IEnumerable<Shape> siblingShapes = isDisjoint ? selectSiblingShapes() : Enumerable.Empty<Shape>();
+        IEnumerable<Shape> siblingShapes = isDisjoint ? selectSiblingShapes() : [];
 
         return
             from qualified in Vocabulary.QualifiedValueShape.ObjectsOf(Shape)
             let qualifiedShape = Shape.Parse(qualified, Graph)
             from valueNode in valueNodes
-            let v = valueNode.AsEnumerable()
+            let v = (IEnumerable<INode>)[valueNode]
             let conformsToQualifiedShape = qualifiedShape.Validate(dataGraph, focusNode, v)
             let doesNotConformToSiblingShapes = !siblingShapes.Any(siblingShape => siblingShape.Validate(dataGraph, focusNode, v))
             where conformsToQualifiedShape && doesNotConformToSiblingShapes

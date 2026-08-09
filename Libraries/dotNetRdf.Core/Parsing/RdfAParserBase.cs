@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -540,7 +540,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
             var prefix = GetAttributeName(attr).Substring(GetAttributeName(attr).IndexOf(':') + 1);
             if (evalContext.NamespaceMap.HasNamespace(prefix))
             {
-                hiddenPrefixes ??= new Dictionary<string, Uri>();
+                hiddenPrefixes ??= [];
                 hiddenPrefixes.Add(prefix, evalContext.NamespaceMap.GetNamespaceUri(prefix));
             }
             evalContext.NamespaceMap.AddNamespace(prefix, context.UriFactory.Create(uri));
@@ -651,7 +651,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
                                 var uri = Tools.ResolveUri(evalContext.NamespaceMap.GetNamespaceUri(prefix).ToString(), baseUri);
                                 if (evalContext.NamespaceMap.HasNamespace(prefix))
                                 {
-                                    hiddenPrefixes ??= new Dictionary<string, Uri>();
+                                    hiddenPrefixes ??= [];
                                     hiddenPrefixes.Add(prefix, evalContext.NamespaceMap.GetNamespaceUri(prefix));
                                 }
                                 evalContext.NamespaceMap.AddNamespace(prefix, context.UriFactory.Create(uri));
@@ -905,7 +905,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
         #region Step 8
         if (newSubj != null && !newSubj.Equals(evalContext.ParentSubject))
         {
-            listMapping = new Dictionary<INode, List<INode>>();
+            listMapping = [];
         }
         #endregion
 
@@ -923,13 +923,13 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
                     {
                         if (explicitNewSubj)
                         {
-                            EmitList(context, newSubj, predicateNode, new []{currentObj});
+                            EmitList(context, newSubj, predicateNode, [currentObj]);
                         }
                         else
                         {
                             if (!listMapping.ContainsKey(predicateNode))
                             {
-                                listMapping[predicateNode] = new List<INode>();
+                                listMapping[predicateNode] = [];
                             }
 
                             listMapping[predicateNode].Add(currentObj);
@@ -965,7 +965,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
                     {
                         if (!listMapping.ContainsKey(predicateNode))
                         {
-                            listMapping[predicateNode] = new List<INode>();
+                            listMapping[predicateNode] = [];
                         }
                         incomplete.Add(new IncompleteTriple(listMapping[predicateNode], IncompleteTripleDirection.None));
                     }
@@ -1090,7 +1090,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
                     {
                         if (!listMapping.ContainsKey(predicateNode))
                         {
-                            listMapping[predicateNode] = new List<INode>();
+                            listMapping[predicateNode] = [];
                         }
                         listMapping[predicateNode].Add(currentPropertyValue);
                     }
@@ -1406,7 +1406,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
     private static string ResolveQName(RdfAParserContext<THtmlDocument> context, RdfAEvaluationContext evalContext,
         string curie)
     {
-        var parts = curie.Split(new[] { ':' }, 2);
+        var parts = curie.Split([':'], 2);
         if (parts.Length == 1) return evalContext.BaseUri + parts[0];
         if (evalContext.NamespaceMap.HasNamespace(parts[0]))
         {
@@ -1451,7 +1451,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
             }
 
             // URI
-            return context.Handler.CreateUriNode(context.UriFactory.Create(Tools.ResolveUri(uriRef, evalContext.BaseUri.ToSafeString())));
+            return context.Handler.CreateUriNode(context.UriFactory.Create(Tools.ResolveUri(uriRef, evalContext.BaseUri?.AbsoluteUri ?? "")));
         }
         catch (RdfException)
         {
@@ -1635,7 +1635,7 @@ public abstract class RdfAParserBase<THtmlDocument, TElement, TNode, TAttribute>
             var uri = Tools.ResolveUri(u, baseUri);
             if (evalContext.NamespaceMap.HasNamespace(prefix))
             {
-                hiddenPrefixes ??= new Dictionary<string, Uri>();
+                hiddenPrefixes ??= [];
                 if (!hiddenPrefixes.ContainsKey(prefix))
                 {
                     // If hiddenPrefixes already has a mapping, leave it intact as it records the original prefix mapping before processing xmlns: attributes on this element

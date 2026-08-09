@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ internal abstract class Shape : GraphWrapperNode
     {
         get
         {
-            return (ILiteralNode)Vocabulary.Message.ObjectsOf(this).SingleOrDefault();
+            return (ILiteralNode)Vocabulary.Message.ObjectsOf(this).FirstOrDefault();
         }
     }
 
@@ -105,7 +105,7 @@ internal abstract class Shape : GraphWrapperNode
             IEnumerable<Target> targets = Vocabulary.Targets.SelectMany(selectTargets);
 
             IEnumerable<Target> implicitClassTargets =
-                from shape in this.AsEnumerable()
+                from shape in (IEnumerable<GraphWrapperNode>)[this]
                 where isClass(shape) && isShape(shape)
                 select Target.Parse(Vocabulary.TargetClass, shape);
 
@@ -133,13 +133,13 @@ internal abstract class Shape : GraphWrapperNode
     internal bool Validate(IGraph dataGraph, Report report)
     {
         return SelectFocusNodes(dataGraph)
-            .Select(focusNode => Validate(dataGraph, focusNode, focusNode.AsEnumerable(), report))
+            .Select(focusNode => Validate(dataGraph, focusNode, [focusNode], report))
             .Aggregate(true, (a, b) => a && b);
     }
 
     internal bool Validate(IGraph dataGraph, INode focusNode)
     {
-        return Validate(dataGraph, focusNode, focusNode.AsEnumerable());
+        return Validate(dataGraph, focusNode, [focusNode]);
     }
 
     internal bool Validate(IGraph dataGraph, INode focusNode, IEnumerable<INode> valueNodes, Report report = null)

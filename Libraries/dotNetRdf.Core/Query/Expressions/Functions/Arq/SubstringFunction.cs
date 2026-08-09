@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -148,11 +148,11 @@ public class SubstringFunction
         {
             if (EndExpression != null)
             {
-                return new ISparqlExpression[] { StringExpression, StartExpression, EndExpression };
+                return [StringExpression, StartExpression, EndExpression];
             }
             else
             {
-                return new ISparqlExpression[] { EndExpression, StartExpression };
+                return [EndExpression, StartExpression];
             }
         }
     }

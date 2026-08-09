@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,12 +41,12 @@ namespace VDS.RDF.Query;
 /// <summary>
 /// A Class for connecting to a remote SPARQL Endpoint and executing Queries against it.
 /// </summary>
-[Obsolete("This class is obsolete and will be removed in a future release. Replaced by VDS.RDF.Query.SparqlQueryClient.")]
+[Obsolete("This class is obsolete and will be removed in a future release. Replaced by VDS.RDF.Query.SparqlQueryClient.", true)]
 public class SparqlRemoteEndpoint 
     : BaseEndpoint
 {
-    private readonly List<string> _defaultGraphUris = new List<string>();
-    private readonly List<string> _namedGraphUris = new List<string>();
+    private readonly List<string> _defaultGraphUris = [];
+    private readonly List<string> _namedGraphUris = [];
     private string _resultsAccept, _rdfAccept;
 
     const int LongQueryLength = 2048;
@@ -346,14 +346,12 @@ public class SparqlRemoteEndpoint
         try
         {
             // Make the Query
-            using (HttpWebResponse httpResponse = QueryInternal(sparqlQuery, RdfAcceptHeader))
-            {
-                // Parse into a Graph based on Content Type
-                var ctype = httpResponse.ContentType;
-                IRdfReader parser = MimeTypesHelper.GetParser(ctype);
-                parser.Load(handler, new StreamReader(httpResponse.GetResponseStream()));
-                httpResponse.Close();
-            }
+            using HttpWebResponse httpResponse = QueryInternal(sparqlQuery, RdfAcceptHeader);
+            // Parse into a Graph based on Content Type
+            var ctype = httpResponse.ContentType;
+            IRdfReader parser = MimeTypesHelper.GetParser(ctype);
+            parser.Load(handler, new StreamReader(httpResponse.GetResponseStream()));
+            httpResponse.Close();
         }
         catch (WebException webEx)
         {
@@ -545,11 +543,9 @@ public class SparqlRemoteEndpoint
         {
             httpRequest.Method = "POST";
             httpRequest.ContentType = MimeTypesHelper.Utf8WWWFormURLEncoded;
-            using (var writer = new StreamWriter(httpRequest.GetRequestStream(), new UTF8Encoding(false)))
-            {
-                writer.Write(postData);
-                writer.Close();
-            }
+            using var writer = new StreamWriter(httpRequest.GetRequestStream(), new UTF8Encoding(false));
+            writer.Write(postData);
+            writer.Close();
         }
         else
         {
@@ -613,15 +609,13 @@ public class SparqlRemoteEndpoint
                             {
                                 try
                                 {
-                                    using (var response = (HttpWebResponse) request.EndGetResponse(innerResult))
-                                    {
-                                        ISparqlResultsReader parser = MimeTypesHelper.GetSparqlParser(response.ContentType, false);
-                                        var rset = new SparqlResultSet();
-                                        parser.Load(rset, new StreamReader(response.GetResponseStream()));
+                                    using var response = (HttpWebResponse)request.EndGetResponse(innerResult);
+                                    ISparqlResultsReader parser = MimeTypesHelper.GetSparqlParser(response.ContentType, false);
+                                    var rset = new SparqlResultSet();
+                                    parser.Load(rset, new StreamReader(response.GetResponseStream()));
 
-                                        response.Close();
-                                        callback(rset, state);
-                                    }
+                                    response.Close();
+                                    callback(rset, state);
                                 }
                                 catch (SecurityException secEx)
                                 {
@@ -710,14 +704,12 @@ public class SparqlRemoteEndpoint
                             {
                                 try
                                 {
-                                    using (var response = (HttpWebResponse) request.EndGetResponse(innerResult))
-                                    {
-                                        ISparqlResultsReader parser = MimeTypesHelper.GetSparqlParser(response.ContentType, false);
-                                        parser.Load(handler, new StreamReader(response.GetResponseStream()));
+                                    using var response = (HttpWebResponse)request.EndGetResponse(innerResult);
+                                    ISparqlResultsReader parser = MimeTypesHelper.GetSparqlParser(response.ContentType, false);
+                                    parser.Load(handler, new StreamReader(response.GetResponseStream()));
 
-                                        response.Close();
-                                        callback(null, handler, state);
-                                    }
+                                    response.Close();
+                                    callback(null, handler, state);
                                 }
                                 catch (SecurityException secEx)
                                 {

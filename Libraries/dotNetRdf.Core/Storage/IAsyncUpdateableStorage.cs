@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,7 @@ public interface IAsyncUpdateableStorage
     /// <param name="sparqlUpdates">SPARQL Update.</param>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("This method is obsolete and will be removed in a future version. Replaced by UpdateAsync(string, CancellationToken).")]
+    [Obsolete("This method is obsolete and will be removed in a future version. Replaced by UpdateAsync(string, CancellationToken).", true)]
     void Update(string sparqlUpdates, AsyncStorageCallback callback, object state);
 
     /// <summary>

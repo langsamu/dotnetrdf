@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -312,7 +312,7 @@ public static class IriSpecsHelper
             }
             else if (cs[i] == '%')
             {
-                if (!IsPctEncoded(new string(new char[] { cs[i], cs[i + 1], cs[i + 2] }))) return false;
+                if (!IsPctEncoded(new string([cs[i], cs[i + 1], cs[i + 2]]))) return false;
                 i += 2;
             }
             else if (!IsUnreserved(cs[i]) && !IsSubDelims(cs[i]))
@@ -347,7 +347,7 @@ public static class IriSpecsHelper
         {
             if (cs[i] == '%')
             {
-                if (!IsPctEncoded(new string(new char[] { cs[i], cs[i + 1], cs[i + 2] }))) return false;
+                if (!IsPctEncoded(new string([cs[i], cs[i + 1], cs[i + 2]]))) return false;
                 i += 2;
             }
             else if (!IsUnreserved(cs[i]) && !IsSubDelims(cs[i]))
@@ -489,7 +489,7 @@ public static class IriSpecsHelper
         {
             if (cs[i] == '%')
             {
-                if (!IsIpChar(new string(new char[] { cs[i], cs[i + 1], cs[i + 2] }))) return false;
+                if (!IsIpChar(new string([cs[i], cs[i + 1], cs[i + 2]]))) return false;
                 i += 2;
             }
             else
@@ -516,7 +516,7 @@ public static class IriSpecsHelper
         {
             if (cs[i] == '%')
             {
-                if (!IsIpChar(new string(new char[] { cs[i], cs[i + 1], cs[i + 2] }))) return false;
+                if (!IsIpChar(new string([cs[i], cs[i + 1], cs[i + 2]]))) return false;
                 i += 2;
             }
             else
@@ -578,7 +578,7 @@ public static class IriSpecsHelper
             }
             else if (cs[i] == '%')
             {
-                if (!IsPctEncoded(new string(new char[] { cs[i], cs[i + 1], cs[i + 2] }))) return false;
+                if (!IsPctEncoded(new string([cs[i], cs[i + 1], cs[i + 2]]))) return false;
                 i += 2;
             }
             else if (!IsIpChar(new string(cs[i], 1)))
@@ -607,7 +607,7 @@ public static class IriSpecsHelper
             }
             else if (cs[i] == '%')
             {
-                if (!IsPctEncoded(new string(new char[] {cs[i], cs[i + 1], cs[i + 2]}))) return false;
+                if (!IsPctEncoded(new string([cs[i], cs[i + 1], cs[i + 2]]))) return false;
                 i += 2;
             }
             else if (!IsIpChar(new string(cs[i],1)))
@@ -738,7 +738,7 @@ public static class IriSpecsHelper
                 case 1:
                 case 2:
                 case 3:
-                    var restChunks = rest.Split(new char[] { ':' }, 6 - startChunks.Length);
+                    var restChunks = rest.Split([':'], 6 - startChunks.Length);
                     return restChunks.Take(restChunks.Length - 1).All(c => IsH16(c)) && IsLs32(restChunks[restChunks.Length - 1]);
                 case 4:
                     if (!rest.Contains(':')) return false;
@@ -755,7 +755,7 @@ public static class IriSpecsHelper
         }
         else
         {
-            var chunks = value.Split(new char[] { ':' }, 7);
+            var chunks = value.Split([':'], 7);
             if (chunks.Length < 7) return false;
             return chunks.Take(6).All(c => IsH16(c)) && IsLs32(chunks[6]);
         }

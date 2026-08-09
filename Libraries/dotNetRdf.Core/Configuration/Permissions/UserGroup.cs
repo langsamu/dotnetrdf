@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,9 +35,9 @@ namespace VDS.RDF.Configuration.Permissions;
 /// </summary>
 public class UserGroup
 {
-    private List<NetworkCredential> _users = new List<NetworkCredential>();
-    private List<IPermission> _allowedActions = new List<IPermission>();
-    private List<IPermission> _deniedActions = new List<IPermission>();
+    private List<NetworkCredential> _users = [];
+    private List<IPermission> _allowedActions = [];
+    private List<IPermission> _deniedActions = [];
     private PermissionModel _mode = PermissionModel.DenyAllow;
     private bool _guest = false;
 

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,8 +41,8 @@ class PersistentGraphCollection
     private readonly IStorageProvider _manager;
     private readonly TripleEventHandler _tripleAddedHandler;
     private readonly TripleEventHandler _tripleRemovedHandler;
-    private readonly List<TripleStorePersistenceAction> _actions = new List<TripleStorePersistenceAction>();
-    private readonly HashSet<string> _removedGraphs = new HashSet<string>();
+    private readonly List<TripleStorePersistenceAction> _actions = [];
+    private readonly HashSet<string> _removedGraphs = [];
     private bool _persisting;
 
     public PersistentGraphCollection(IStorageProvider manager)
@@ -55,12 +55,12 @@ class PersistentGraphCollection
 
     protected override void RaiseGraphAdded(IGraph g)
     {
-        if (!_persisting)
+        if (!_persisting  && g != null)
         {
             if (_manager.UpdateSupported)
             {
                 AttachHandlers(g);
-                if (_removedGraphs.Contains(g.Name.ToSafeString()) || !ContainsInternal(g.Name))
+                if (_removedGraphs.Contains($"{g.Name}") || !ContainsInternal(g.Name))
                 {
                     // When a new graph is introduced that does not exist in the underlying store
                     // be sure to persist the initial triples
@@ -81,9 +81,9 @@ class PersistentGraphCollection
 
     protected override void RaiseGraphRemoved(IGraph g)
     {
-        if (!_persisting)
+        if (!_persisting && g != null)
         {
-            var uri = g.Name.ToSafeString();
+            var uri = $"{g.Name}";
             _removedGraphs.Add(uri);
             if (_manager.UpdateSupported)
             {
@@ -104,7 +104,7 @@ class PersistentGraphCollection
     /// </summary>
     /// <param name="graphUri">Graph Uri to test.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by Contains(IRefNode)")]
+    [Obsolete("Replaced by Contains(IRefNode)", true)]
     public override bool Contains(Uri graphUri)
     {
         return Contains(graphUri == null ? null : new UriNode(graphUri));
@@ -117,18 +117,19 @@ class PersistentGraphCollection
     /// <returns></returns>
     public override bool Contains(IRefNode graphName)
     {
-        var uri = graphName.ToSafeString();
+        var uri = $"{graphName}";
         if (base.Contains(graphName))
         {
             return true;
         }
-        else if (!_removedGraphs.Contains(uri))
+
+        if (!_removedGraphs.Contains(uri))
         {
             // Try and load the Graph and return true if anything is returned
             var g = new Graph(graphName);
             try
             {
-                _manager.LoadGraph(g, graphName.ToSafeString());
+                _manager.LoadGraph(g, $"{graphName}");
                 if (g.Triples.Count > 0)
                 {
                     // If we're going to return true we must also store the Graph in the collection
@@ -136,10 +137,8 @@ class PersistentGraphCollection
                     Add(g, true);
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
             catch
             {
@@ -147,13 +146,11 @@ class PersistentGraphCollection
                 return false;
             }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
-    [Obsolete("Replaced by Remove(IRefNode)")]
+    [Obsolete("Replaced by Remove(IRefNode)", true)]
     public override bool Remove(Uri graphUri)
     {
         if (Contains(graphUri))
@@ -178,7 +175,7 @@ class PersistentGraphCollection
     /// <summary>
     /// Provides access to the Graph URIs of Graphs in the Collection.
     /// </summary>
-    [Obsolete("Replaced by GraphNames")]
+    [Obsolete("Replaced by GraphNames", true)]
     public override IEnumerable<Uri> GraphUris
     {
         get
@@ -220,7 +217,7 @@ class PersistentGraphCollection
     /// </summary>
     /// <param name="graphUri">Graph Uri.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by this[IRefNode]")]
+    [Obsolete("Replaced by this[IRefNode]", true)]
     public override IGraph this[Uri graphUri]
     {
         get
@@ -259,7 +256,7 @@ class PersistentGraphCollection
         var handler = new AnyHandler();
         try
         {
-            _manager.LoadGraph(handler, graphName.ToSafeString());
+            _manager.LoadGraph(handler, $"{graphName}");
             return handler.Any;
         }
         catch

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -49,7 +49,7 @@ namespace VDS.RDF.Query;
 /// </remarks>
 public class FederatedSparqlQueryClient : ISparqlQueryClient, IConfigurationSerializable
 {
-    private readonly List<SparqlQueryClient> _endpoints = new();
+    private readonly List<SparqlQueryClient> _endpoints = [];
 
     /// <summary>
     /// Get or set whether a failed request on one endpoint should cause the entire request to fail.

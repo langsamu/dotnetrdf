@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -328,7 +328,7 @@ public class OutputRdfCollection
 {
     private bool _explicit;
     private bool _written = false;
-    private List<Triple> _triples = new List<Triple>();
+    private List<Triple> _triples = [];
 
     /// <summary>
     /// Creates a new Instance of a Collection.
@@ -834,12 +834,12 @@ public static class WriterHelper
         {
             if (!sortHelperDictionary.ContainsKey(triple.Subject))
             {
-                sortHelperDictionary.Add(triple.Subject, new Dictionary<INode, List<Triple>>());
+                sortHelperDictionary.Add(triple.Subject, []);
             }
 
             if (!sortHelperDictionary[triple.Subject].ContainsKey(triple.Predicate))
             {
-                sortHelperDictionary[triple.Subject].Add(triple.Predicate, new List<Triple>());
+                sortHelperDictionary[triple.Subject].Add(triple.Predicate, []);
             }
 
             sortHelperDictionary[triple.Subject][triple.Predicate].Add(triple);

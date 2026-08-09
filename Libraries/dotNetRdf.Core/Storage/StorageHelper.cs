@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -174,7 +174,7 @@ public static class StorageHelper
             {
                 return "(HTTP " + (int)httpResponse.StatusCode + " " + httpResponse.StatusDescription + ")";
             }
-            return webEx.Status.ToSafeString();
+            return webEx.Status.ToString();
         }
         return string.Empty;
     }
@@ -191,9 +191,9 @@ public static class StorageHelper
     /// <returns></returns>
     public static RdfQueryException HandleQueryError(Exception ex)
     {
-        if (ex is WebException)
+        if (ex is WebException exception)
         {
-            return HandleHttpQueryError((WebException)ex);
+            return HandleHttpQueryError(exception);
         }
         else
         {
@@ -209,9 +209,9 @@ public static class StorageHelper
     /// <returns></returns>
     public static RdfStorageException HandleError(Exception ex, string action)
     {
-        if (ex is WebException)
+        if (ex is WebException exception)
         {
-            return HandleHttpError((WebException)ex, action);
+            return HandleHttpError(exception, action);
         }
         else
         {

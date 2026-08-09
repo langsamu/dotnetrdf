@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ public class CopyCommand
     /// <param name="sourceUri">Source Graph URI.</param>
     /// <param name="destUri">Destination Graph URI.</param>
     /// <param name="silent">Whether errors should be suppressed.</param>
-    [Obsolete("Replaced by CopyCommand(IRefNode, IRefNode, bool)")]
+    [Obsolete("Replaced by CopyCommand(IRefNode, IRefNode, bool)", true)]
     public CopyCommand(Uri sourceUri, Uri destUri, bool silent)
         : base(SparqlUpdateCommandType.Copy, sourceUri, destUri, silent) { }
 
@@ -49,7 +49,7 @@ public class CopyCommand
     /// </summary>
     /// <param name="sourceUri">Source Graph URI.</param>
     /// <param name="destUri">Destination Graph URI.</param>
-    [Obsolete("Replaced by CopyCommand(IRefNode, IRefNode, bool)")]
+    [Obsolete("Replaced by CopyCommand(IRefNode, IRefNode, bool)", true)]
     public CopyCommand(Uri sourceUri, Uri destUri)
         : base(SparqlUpdateCommandType.Copy, sourceUri, destUri) { }
 

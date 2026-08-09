@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using VDS.RDF.Parsing.Handlers;
 using VDS.RDF.Parsing.Tokens;
 using VDS.RDF.Query;
@@ -40,12 +39,12 @@ namespace VDS.RDF.Parsing.Contexts;
 public class SparqlQueryParserContext : TokenisingParserContext
 {
     private bool _verbSeen = false;
-    private Dictionary<string, int> _bnodeLabelUsages = new Dictionary<string, int>();
+    private Dictionary<string, int> _bnodeLabelUsages = [];
     private int _blankNodeID = 1;
     private Uri _defaultBaseUri = null;
     private SparqlQuerySyntax _syntax = SparqlQuerySyntax.Sparql_1_1;
     private int _nextAliasID = 0;
-    private IEnumerable<ISparqlCustomExpressionFactory> _factories = Enumerable.Empty<ISparqlCustomExpressionFactory>();
+    private IEnumerable<ISparqlCustomExpressionFactory> _factories = [];
     private bool _checkBNodeScope = true;
 
     /// <summary>

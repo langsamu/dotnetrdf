@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,6 @@
 
 using System;
 using System.Linq;
-#if NETCORE
-using System.Reflection;
-#endif
 
 namespace VDS.RDF.Configuration;
 
@@ -76,7 +73,7 @@ public class CollectionFactory
                 if (wrappedCollection == null) throw new DotNetRdfConfigurationException("Unable to load the Triple Collection identified by the Node '" + objNode.ToString() + "' as the dnr:usingTripleCollection points to an object which cannot be loaded as an instance of the required type BaseTripleCollection for this collection to wrap");
                 try
                 {
-                    obj = (BaseTripleCollection)Activator.CreateInstance(targetType, new object[] { wrappedCollection });
+                    obj = (BaseTripleCollection)Activator.CreateInstance(targetType, [wrappedCollection]);
                 }
                 catch
                 {
@@ -106,7 +103,7 @@ public class CollectionFactory
                 if (wrappedCollection == null) throw new DotNetRdfConfigurationException("Unable to load the Graph Collection identified by the Node '" + objNode.ToString() + "' as the dnr:usingGraphCollection points to an object which cannot be loaded as an instance of the required type BaseGraphCollection for this collection to wrap");
                 try
                 {
-                    obj = (BaseGraphCollection)Activator.CreateInstance(targetType, new object[] { wrappedCollection });
+                    obj = (BaseGraphCollection)Activator.CreateInstance(targetType, [wrappedCollection]);
                 }
                 catch
                 {

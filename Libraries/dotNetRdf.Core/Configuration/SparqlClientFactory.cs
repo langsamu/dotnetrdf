@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ public class SparqlClientFactory : IObjectFactory
         switch (targetType.FullName)
         {
             case SparqlQueryClient:
-                var queryEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, new INode[] { g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyQueryEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri)) });
+                var queryEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, [g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyQueryEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri))]);
                 if (queryEndpointUri == null) return false;
 
                 // Get Default/Named Graphs if specified
@@ -65,7 +65,7 @@ public class SparqlClientFactory : IObjectFactory
                 obj = client;
                 break;
             case SparqlUpdateClient:
-                var updateEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, new INode[] { g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyUpdateEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri)) });
+                var updateEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, [g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyUpdateEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri))]);
                 if (updateEndpointUri == null) return false;
                 var updateClient = new SparqlUpdateClient(httpClient, new Uri(updateEndpointUri));
                 obj = updateClient;

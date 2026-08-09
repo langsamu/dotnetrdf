@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -192,9 +192,9 @@ public class LeftJoin
     /// <returns></returns>
     public ISparqlAlgebra Transform(IAlgebraOptimiser optimiser)
     {
-        if (optimiser is IExpressionTransformer)
+        if (optimiser is IExpressionTransformer transformer)
         {
-            return new LeftJoin(optimiser.Optimise(Lhs), optimiser.Optimise(Rhs), new UnaryExpressionFilter(((IExpressionTransformer)optimiser).Transform(Filter.Expression)));
+            return new LeftJoin(optimiser.Optimise(Lhs), optimiser.Optimise(Rhs), new UnaryExpressionFilter(transformer.Transform(Filter.Expression)));
         }
         else
         {
@@ -209,9 +209,9 @@ public class LeftJoin
     /// <returns></returns>
     public ISparqlAlgebra TransformLhs(IAlgebraOptimiser optimiser)
     {
-        if (optimiser is IExpressionTransformer)
+        if (optimiser is IExpressionTransformer transformer)
         {
-            return new LeftJoin(optimiser.Optimise(Lhs), Rhs, new UnaryExpressionFilter(((IExpressionTransformer)optimiser).Transform(Filter.Expression)));
+            return new LeftJoin(optimiser.Optimise(Lhs), Rhs, new UnaryExpressionFilter(transformer.Transform(Filter.Expression)));
         }
         else
         {
@@ -226,9 +226,9 @@ public class LeftJoin
     /// <returns></returns>
     public ISparqlAlgebra TransformRhs(IAlgebraOptimiser optimiser)
     {
-        if (optimiser is IExpressionTransformer)
+        if (optimiser is IExpressionTransformer transformer)
         {
-            return new LeftJoin(Lhs, optimiser.Optimise(Rhs), new UnaryExpressionFilter(((IExpressionTransformer)optimiser).Transform(Filter.Expression)));
+            return new LeftJoin(Lhs, optimiser.Optimise(Rhs), new UnaryExpressionFilter(transformer.Transform(Filter.Expression)));
         }
         else
         {

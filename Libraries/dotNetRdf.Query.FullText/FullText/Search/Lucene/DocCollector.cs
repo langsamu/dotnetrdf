@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ class DocCollector
 {
     private Scorer _scorer;
     private int _currBase;
-    private readonly List<KeyValuePair<int,double>> _docs = new();
+    private readonly List<KeyValuePair<int,double>> _docs = [];
     private readonly double _scoreThreshold = Double.NaN;
 
     /// <summary>

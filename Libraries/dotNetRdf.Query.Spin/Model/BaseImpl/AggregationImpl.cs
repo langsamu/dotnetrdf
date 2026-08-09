@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -85,13 +85,13 @@ internal class AggregationImpl : AbstractSPINResource, IAggregation
         }
 
         Triple exprS = getProperty(SP.PropertyExpression);
-        if (exprS != null && !(exprS.Object is ILiteralNode))
+        if (exprS != null && exprS.Object is not ILiteralNode)
         {
             IResource r = Resource.Get(exprS.Object, Graph, getModel());
             IResource expr = SPINFactory.asExpression(r);
-            if (expr is IPrintable)
+            if (expr is IPrintable printable)
             {
-                ((IPrintable)expr).Print(p);
+                printable.Print(p);
             }
             else
             {

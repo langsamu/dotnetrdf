@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -63,7 +63,7 @@ public class Graph
 
             // Include graph variable
             var graphVar = ((VariableToken) _graphSpecifier).Value.Substring(1);
-            return _pattern.Variables.Concat(graphVar.AsEnumerable()).Distinct();
+            return _pattern.Variables.Concat([graphVar]).Distinct();
         }
     }
 
@@ -78,7 +78,7 @@ public class Graph
             // Strictly speaking the graph variable should always be fixed but non-standard implementations may treat the default graph as a named graph with a null URI
             var graphVar = ((VariableToken) _graphSpecifier).Value.Substring(1);
             var fixedVars = new HashSet<string>(FixedVariables);
-            return fixedVars.Contains(graphVar) ? _pattern.FloatingVariables : _pattern.FloatingVariables.Concat(graphVar.AsEnumerable()).Distinct();
+            return fixedVars.Contains(graphVar) ? _pattern.FloatingVariables : _pattern.FloatingVariables.Concat([graphVar]).Distinct();
         }
     }
 
@@ -171,9 +171,8 @@ public class Graph
     /// <returns>A Graph instance representing the application of the graph constraint to the algebra.</returns>
     public static ISparqlAlgebra ApplyGraph(ISparqlAlgebra algebra, IToken graphSpecifier)
     {
-        if (!(algebra is Graph)) return new Graph(algebra, graphSpecifier);
+        if (algebra is not Graph other) return new Graph(algebra, graphSpecifier);
 
-        var other = (Graph) algebra;
         if (other.GraphSpecifier.TokenType == graphSpecifier.TokenType && other.GraphSpecifier.Value.Equals(graphSpecifier.Value))
         {
             // We already have the appropriate graph specifier applied to us so reapplying it is unnecessary

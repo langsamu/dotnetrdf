@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -175,7 +175,7 @@ public class ParsingSparqlConnector
     /// <param name="graphUri">URI of the Graph to load.</param>
     public virtual void LoadGraph(IGraph g, Uri graphUri)
     {
-        LoadGraph(g, graphUri.ToSafeString());
+        LoadGraph(g, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -185,7 +185,7 @@ public class ParsingSparqlConnector
     /// <param name="graphUri">URI of the Graph to load.</param>
     public virtual void LoadGraph(IRdfHandler handler, Uri graphUri)
     {
-        LoadGraph(handler, graphUri.ToSafeString());
+        LoadGraph(handler, graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -199,7 +199,7 @@ public class ParsingSparqlConnector
         {
             g.BaseUri = g.UriFactory.Create(graphUri);
         }
-        LoadGraph(new GraphHandler(g), graphUri.ToSafeString());
+        LoadGraph(new GraphHandler(g), graphUri ?? "");
     }
 
     /// <summary>
@@ -339,7 +339,7 @@ public class ParsingSparqlConnector
     /// Lists the Graphs in the Store.
     /// </summary>
     /// <returns></returns>
-    [Obsolete("Replaced by ListGraphNames()")]
+    [Obsolete("Replaced by ListGraphNames()", true)]
     public virtual IEnumerable<Uri> ListGraphs()
     {
         try
@@ -365,7 +365,7 @@ public class ParsingSparqlConnector
             }
             else
             {
-                return Enumerable.Empty<Uri>();
+                return [];
             }
         }
         catch (Exception ex)
@@ -403,7 +403,7 @@ public class ParsingSparqlConnector
                 return graphs;
             }
 
-            return Enumerable.Empty<string>();
+            return [];
         }
         catch (Exception ex)
         {

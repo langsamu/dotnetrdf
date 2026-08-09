@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,11 +42,14 @@ namespace VDS.RDF.Query.Datasets;
 /// </para>
 /// </remarks>
 public abstract class BaseTransactionalDataset
-    : BaseDataset
+    : BaseDataset, IDisposable
 {
-    private readonly List<GraphPersistenceAction> _actions = new List<GraphPersistenceAction>();
+    private readonly List<GraphPersistenceAction> _actions = [];
     private TripleStore _modifiableGraphs = new TripleStore();
-
+    /// <summary>
+    /// Flag to check whether the object had already been disposed.
+    /// </summary>
+    private bool _disposed;
     /// <summary>
     /// Creates a new Transactional Dataset.
     /// </summary>
@@ -63,7 +66,7 @@ public abstract class BaseTransactionalDataset
     /// Creates a new Transactional Dataset with a fixed Default Graph and no Union Default Graph.
     /// </summary>
     /// <param name="defaultGraphUri">Default Graph URI.</param>
-    [Obsolete("Replaced by BaseTransactionalDataset(IRefNode)")]
+    [Obsolete("Replaced by BaseTransactionalDataset(IRefNode)", true)]
     public BaseTransactionalDataset(Uri defaultGraphUri)
         : base(defaultGraphUri) { }
 
@@ -74,6 +77,11 @@ public abstract class BaseTransactionalDataset
     public BaseTransactionalDataset(IRefNode defaultGraphName)
         : base(defaultGraphName) { }
 
+    ~BaseTransactionalDataset()
+    {
+        Dispose(false);
+    }
+    
     /// <summary>
     /// Adds a Graph to the Dataset.
     /// </summary>
@@ -102,7 +110,7 @@ public abstract class BaseTransactionalDataset
     /// Removes a Graph from the Dataset.
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
-    [Obsolete("Replaced by RemoveGraph(IRefNode)")]
+    [Obsolete("Replaced by RemoveGraph(IRefNode)", true)]
     public sealed override bool RemoveGraph(Uri graphUri)
     {
         return RemoveGraph(graphUri == null ? null : new UriNode(graphUri));
@@ -147,7 +155,7 @@ public abstract class BaseTransactionalDataset
     /// <remarks>
     /// If the Graph has been modified during the active Transaction the modified version is returned rather than the original version.
     /// </remarks>
-    [Obsolete("Replaced by this[IRefNode]")]
+    [Obsolete("Replaced by this[IRefNode]", true)]
     public sealed override IGraph this[Uri graphUri]
     {
         get
@@ -263,6 +271,7 @@ public abstract class BaseTransactionalDataset
         {
             g.Flush();
         }
+        _modifiableGraphs?.Dispose();
         _modifiableGraphs = new TripleStore();
 
         FlushInternal();
@@ -316,6 +325,7 @@ public abstract class BaseTransactionalDataset
         {
             g.Discard();
         }
+        _modifiableGraphs?.Dispose();
         _modifiableGraphs = new TripleStore();
 
         DiscardInternal();
@@ -335,5 +345,30 @@ public abstract class BaseTransactionalDataset
     protected virtual void DiscardInternal()
     {
         // No actions by default
+    }
+    
+    /// <summary>
+    /// Disposes The BaseTransactionalDataset
+    /// </summary>
+    /// <param name="disposing">True if called via <see cref="Dispose"/>.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            _disposed = true;
+            if (disposing)
+            {
+                _modifiableGraphs?.Dispose();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Disposes The InMemoryDataset
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

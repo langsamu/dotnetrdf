@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace VDS.RDF.Query.Expressions.Functions.Arq;
 
@@ -74,7 +73,7 @@ public class PiFunction
     {
         get
         {
-            return Enumerable.Empty<string>();
+            return [];
         }
     }
 
@@ -107,7 +106,7 @@ public class PiFunction
     {
         get
         {
-            return Enumerable.Empty<ISparqlExpression>();
+            return [];
         }
     }
 

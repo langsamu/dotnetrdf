@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ public class DeleteCommand : BaseModificationCommand
     /// <param name="deletions">Pattern to construct Triples to delete.</param>
     /// <param name="where">Pattern to select data which is then used in evaluating the deletions pattern.</param>
     /// <param name="graphUri">URI of the affected Graph.</param>
-    [Obsolete("Replaced by DeleteCommand(GraphPatten, GraphPattern, IRefNode")]
+    [Obsolete("Replaced by DeleteCommand(GraphPatten, GraphPattern, IRefNode", true)]
     public DeleteCommand(GraphPattern deletions, GraphPattern where, Uri graphUri)
         : this(deletions, where, graphUri == null ? null : new UriNode(graphUri))
     {
@@ -86,7 +86,7 @@ public class DeleteCommand : BaseModificationCommand
     /// </summary>
     /// <param name="where">Pattern to construct Triples to delete.</param>
     /// <param name="graphUri">URI of the affected Graph.</param>
-    [Obsolete("Replaced by DeleteCommand(GraphPattern, IRefNode)")]
+    [Obsolete("Replaced by DeleteCommand(GraphPattern, IRefNode)", true)]
     public DeleteCommand(GraphPattern where, Uri graphUri)
         : this(where, where, graphUri) { }
 
@@ -134,7 +134,7 @@ public class DeleteCommand : BaseModificationCommand
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by AffectsGraph(IRefNode)")]
+    [Obsolete("Replaced by AffectsGraph(IRefNode)", true)]
     public override bool AffectsGraph(Uri graphUri)
     {
         var affectedUris = new List<string>();
@@ -155,7 +155,7 @@ public class DeleteCommand : BaseModificationCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphUri.ToSafeString());
+        return affectedUris.Contains(graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ public class DeleteCommand : BaseModificationCommand
     /// <returns></returns>
     public override bool AffectsGraph(IRefNode graphName)
     {
-        var affectedUris = new List<string> {TargetGraph.ToSafeString()};
+        var affectedUris = new List<string> {$"{TargetGraph}"};
 
         if (DeletePattern.IsGraph)
         {
@@ -179,13 +179,13 @@ public class DeleteCommand : BaseModificationCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphName.ToSafeString());
+        return affectedUris.Contains($"{graphName}");
     }
 
     /// <summary>
     /// Gets the URI of the Graph the deletions are made from.
     /// </summary>
-    [Obsolete("Replaced by TargetGraph")]
+    [Obsolete("Replaced by TargetGraph", true)]
     public Uri TargetUri
     {
         get

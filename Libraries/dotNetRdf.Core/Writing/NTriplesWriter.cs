@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -101,10 +101,8 @@ public class NTriplesWriter
     /// <param name="filename">File to save to.</param>
     public override void Save(IGraph g, string filename)
     {
-        using (var writer = new StreamWriter(File.Open(filename, FileMode.Create), Encoding.ASCII))
-        {
-            Save(g, writer);
-        }
+        using var writer = new StreamWriter(File.Open(filename, FileMode.Create), Encoding.ASCII);
+        Save(g, writer);
     }
 
     /// <summary>

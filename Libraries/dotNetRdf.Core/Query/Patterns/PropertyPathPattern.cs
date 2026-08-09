@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -88,7 +88,7 @@ public class PropertyPathPattern
     /// <summary>
     /// Gets the enumeration of floating variables in the pattern i.e. variables that are not guaranteed to have a bound value.
     /// </summary>
-    public override IEnumerable<string> FloatingVariables { get; } = Enumerable.Empty<string>();
+    public override IEnumerable<string> FloatingVariables { get; } = [];
 
     /// <inheritdoc />
     public override TResult Accept<TResult, TContext>(ISparqlQueryAlgebraProcessor<TResult, TContext> processor, TContext context)

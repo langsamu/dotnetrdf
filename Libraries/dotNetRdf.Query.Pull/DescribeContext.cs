@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ internal class DescriberContext(
                 _query.DescribeVariables.Where(v=>v.TokenType == Token.VARIABLE).Select(t=>t.Value.Substring(1)).ToList();
         if (descVars.Any())
         {
-            foreach (ISet? solution in solutionBindings.ToEnumerable())
+            foreach (ISet? solution in solutionBindings.ToEnumerable()) // TODO: Eliminate sync over async
             {
                 if (solution != null)
                 {

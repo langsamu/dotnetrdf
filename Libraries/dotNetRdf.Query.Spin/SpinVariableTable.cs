@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ namespace VDS.RDF.Query.Spin;
 
 internal class SpinVariableTable
 {
-    private Dictionary<String, INode> _vars = new Dictionary<string, INode>();
+    private Dictionary<String, INode> _vars = [];
     private IGraph _g;
 
     public SpinVariableTable(IGraph g)

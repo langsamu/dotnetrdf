@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,10 +50,10 @@ public class GraphPattern
     private bool _isService = false;
     private bool _isSilent = false;
     private IToken _graphSpecifier = null;
-    private readonly List<GraphPattern> _graphPatterns = new List<GraphPattern>();
-    private readonly List<ITriplePattern> _triplePatterns = new List<ITriplePattern>();
-    private readonly List<ISparqlFilter> _unplacedFilters = new List<ISparqlFilter>();
-    private readonly List<IAssignmentPattern> _unplacedAssignments = new List<IAssignmentPattern>();
+    private readonly List<GraphPattern> _graphPatterns = [];
+    private readonly List<ITriplePattern> _triplePatterns = [];
+    private readonly List<ISparqlFilter> _unplacedFilters = [];
+    private readonly List<IAssignmentPattern> _unplacedAssignments = [];
     private ISparqlFilter _filter;
     private BindingsPattern _data;
     private bool _break = false, _broken = false;
@@ -448,10 +448,10 @@ public class GraphPattern
                 // Set the Filter
                 _filter = value;
             }
-            else if (_filter is ChainFilter)
+            else if (_filter is ChainFilter chain)
             {
                 // Add to the Filter Chain
-                ((ChainFilter) _filter).Add(value);
+                chain.Add(value);
             }
             else
             {
@@ -607,7 +607,7 @@ public class GraphPattern
     public void Optimise(IQueryOptimiser optimiser)
     {
         if (_isOptimised) return;
-        optimiser.Optimise(this, Enumerable.Empty<string>());
+        optimiser.Optimise(this, []);
     }
 
     /// <summary>

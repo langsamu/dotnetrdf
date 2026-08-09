@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -67,20 +67,14 @@ public class HtmlWriter
     /// <inheritdoc />
     public void Save(IGraph g, string filename, Encoding fileEncoding)
     {
-        using (FileStream stream = File.Open(filename, FileMode.Create))
-        {
-            Save(g, new StreamWriter(stream, fileEncoding));
-        }
+        using var stream = File.Open(filename, FileMode.Create);
+        Save(g, new StreamWriter(stream, fileEncoding));
     }
 
     /// <inheritdoc />
     public void Save(IGraph g, string filename)
     {
-        Save(g, filename,
-#pragma warning disable CS0618 // Type or member is obsolete
-                new UTF8Encoding(Options.UseBomForUtf8) //new UTF8Encoding(false)
-#pragma warning restore CS0618 // Type or member is obsolete
-            );
+        Save(g, filename, new UTF8Encoding(false));
     }
 
     /// <inheritdoc />

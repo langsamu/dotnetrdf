@@ -342,7 +342,7 @@ public class DynamicGraphUriDictionaryTests
 
         void isEmpty(KeyValuePair<Uri, object> expected)
         {
-            Assert.Equal(default(KeyValuePair<Uri, object>), expected);
+            Assert.Equal(default, expected);
         }
 
         Action<KeyValuePair<Uri, object>> isKVWith(Uri expectedKey)
@@ -405,18 +405,14 @@ public class DynamicGraphUriDictionaryTests
         var p = UriFactory.Root.Create("urn:p");
         var o = UriFactory.Root.Create("urn:o");
 
-        using (var actual = g.Cast<KeyValuePair<Uri, object>>().GetEnumerator())
+        using var actual = g.Cast<KeyValuePair<Uri, object>>().GetEnumerator();
+        using var expected = new[] { s, p, o }.Cast<Uri>().GetEnumerator();
+        while (expected.MoveNext() | actual.MoveNext())
         {
-            using (var expected = new[] { s, p, o }.Cast<Uri>().GetEnumerator())
-            {
-                while (expected.MoveNext() | actual.MoveNext())
-                {
-                    var keyNode = g.CreateUriNode(expected.Current);
+            var keyNode = g.CreateUriNode(expected.Current);
 
-                    Assert.Equal(new KeyValuePair<Uri, object>(expected.Current, keyNode), actual.Current);
-                    Assert.IsType<DynamicNode>(actual.Current.Value);
-                }
-            }
+            Assert.Equal(new KeyValuePair<Uri, object>(expected.Current, keyNode), actual.Current);
+            Assert.IsType<DynamicNode>(actual.Current.Value);
         }
     }
 

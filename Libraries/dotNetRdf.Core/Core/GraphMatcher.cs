@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -360,9 +360,9 @@ public class GraphMatcher
         Debug.WriteLine("Attempting rules based equality mapping");
 
         // Start with new lists and dictionaries each time in case we get reused
-        _unbound = new List<INode>();
-        _bound = new List<INode>();
-        _mapping = new Dictionary<INode, INode>();
+        _unbound = [];
+        _bound = [];
+        _mapping = [];
 
         // Initialise the Source Triples list
         _sourceTriples = new HashSet<Triple>(g.Triples.Where(t=>!t.IsGroundTriple));
@@ -862,30 +862,22 @@ public class GraphMatcher
                 var partialMappings = new List<Dictionary<INode, INode>>();
                 var partialMappingSources = new List<IGraph>();
                 Debug.WriteLine("Dividing and conquering on isolated sub-graph with " + lhs.Triples.Count + " triples...");
-#if !NETCORE
                 Debug.Indent();
-#endif
                 var i = 1;
                 foreach (IGraph rhs in possibles)
                 {
                     Debug.WriteLine("Testing possiblity " + i + " of " + possibles.Count);
-#if !NETCORE
                     Debug.Indent();
-#endif
                     Dictionary<INode, INode> partialMapping;
                     if (lhs.Equals(rhs, out partialMapping))
                     {
                         partialMappings.Add(partialMapping);
                         partialMappingSources.Add(rhs);
                     }
-#if !NETCORE
                     Debug.Unindent();
-#endif
                     i++;
                 }
-#if !NETCORE
                 Debug.Unindent();
-#endif
                 Debug.WriteLine("Dividing and conquering done");
 
                 // Did we find a possible mapping for the sub-graph?
@@ -984,7 +976,7 @@ public class GraphMatcher
         {
             if (!_mapping.ContainsKey(gPair.Key))
             {
-                possibleMappings.Add(gPair.Key, new List<INode>());
+                possibleMappings.Add(gPair.Key, []);
                 foreach (KeyValuePair<INode, int> hPair in hNodes)
                 {
                     if (hPair.Value == gPair.Value && !_bound.Contains(hPair.Key))
@@ -1161,9 +1153,8 @@ class MappingPair
     public override bool Equals(object obj)
     {
         if (obj == null) return false;
-        if (obj is MappingPair)
+        if (obj is MappingPair p)
         {
-            var p = (MappingPair)obj;
             return (_x.Equals(p.X) && _y.Equals(p.Y) && _type == p.Type);
         }
         else

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -100,9 +100,9 @@ public class WeightedOptimiser
 /// </summary>
 class Weightings
 {
-    private Dictionary<INode, long> _subjectWeightings = new Dictionary<INode, long>();
-    private Dictionary<INode, long> _predicateWeightings = new Dictionary<INode, long>();
-    private Dictionary<INode, long> _objectWeightings = new Dictionary<INode, long>();
+    private Dictionary<INode, long> _subjectWeightings = [];
+    private Dictionary<INode, long> _predicateWeightings = [];
+    private Dictionary<INode, long> _objectWeightings = [];
 
     private double _defSubjWeight = WeightedOptimiser.DefaultSubjectWeight;
     private double _defPredWeight = WeightedOptimiser.DefaultPredicateWeight;

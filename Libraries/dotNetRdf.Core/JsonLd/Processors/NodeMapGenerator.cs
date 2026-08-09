@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -320,7 +320,7 @@ public class NodeMapGenerator : INodeMapGenerator
             {
                 var id = np.Name;
                 var node = np.Value as JObject;
-                if (!(result[id] is JObject mergedNode))
+                if (result[id] is not JObject mergedNode)
                 {
                     result[id] = mergedNode = new JObject(new JProperty("@id", id));
                 }
@@ -348,9 +348,9 @@ public class NodeMapGenerator : INodeMapGenerator
             parent[property] = new JArray();
         }
         var target = parent[property] as JArray;
-        if (values is JArray)
+        if (values is JArray array)
         {
-            foreach (JToken item in (values as JArray))
+            foreach (JToken item in array)
             {
                 target.Add(item);
             }

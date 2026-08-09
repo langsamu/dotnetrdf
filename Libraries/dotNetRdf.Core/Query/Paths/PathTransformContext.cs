@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ namespace VDS.RDF.Query.Paths;
 /// </summary>
 public class PathTransformContext
 {
-    private List<ITriplePattern> _patterns = new List<ITriplePattern>();
+    private List<ITriplePattern> _patterns = [];
     private int _nextID = 0;
     private PatternItem _currSubj, _currObj, _start, _end;
     private bool _top = true;
@@ -193,9 +193,9 @@ public class PathTransformContext
     /// <returns></returns>
     public ITriplePattern GetTriplePattern(PatternItem subj, ISparqlPath path, PatternItem obj)
     {
-        if (path is Property)
+        if (path is Property property)
         {
-            var nodeMatch = new NodeMatchPattern(((Property)path).Predicate, true);
+            var nodeMatch = new NodeMatchPattern(property.Predicate, true);
             return new TriplePattern(subj, nodeMatch, obj);
         }
         else

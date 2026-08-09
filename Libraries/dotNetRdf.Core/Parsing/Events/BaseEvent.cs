@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -138,7 +138,7 @@ public abstract class BaseRdfAEvent
     public BaseRdfAEvent(int eventType, PositionInfo pos, IEnumerable<KeyValuePair<string, string>> attributes)
         : base(eventType, pos)
     {
-        _attributes = new Dictionary<string, string>();
+        _attributes = [];
         foreach (KeyValuePair<string, string> attr in attributes)
         {
             _attributes.Add(attr.Key, attr.Value);

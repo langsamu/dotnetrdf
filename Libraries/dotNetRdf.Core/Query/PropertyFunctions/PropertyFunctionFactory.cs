@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ namespace VDS.RDF.Query.PropertyFunctions;
 /// </summary>
 public static class PropertyFunctionFactory
 {
-    private static List<IPropertyFunctionFactory> _factories = new List<IPropertyFunctionFactory>();
+    private static List<IPropertyFunctionFactory> _factories = [];
 
     /// <summary>
     /// Gets the number of globally registered factories.
@@ -106,7 +106,7 @@ public static class PropertyFunctionFactory
     /// <returns></returns>
     public static bool IsPropertyFunction(Uri u)
     {
-        return IsPropertyFunction(u, Enumerable.Empty<IPropertyFunctionFactory>());
+        return IsPropertyFunction(u, []);
     }
 
     /// <summary>
@@ -128,7 +128,7 @@ public static class PropertyFunctionFactory
     /// <returns></returns>
     public static bool TryCreatePropertyFunction(PropertyFunctionInfo info, out IPropertyFunctionPattern function)
     {
-        return TryCreatePropertyFunction(info, Enumerable.Empty<IPropertyFunctionFactory>(), out function);
+        return TryCreatePropertyFunction(info, [], out function);
     }
 
     /// <summary>

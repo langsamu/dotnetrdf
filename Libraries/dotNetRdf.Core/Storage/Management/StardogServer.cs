@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,11 +66,11 @@ public abstract class BaseStardogServer
     /// <summary>
     /// Available Stardog template types.
     /// </summary>
-    private readonly List<Type> _templateTypes = new List<Type>()
-        {
+    private readonly List<Type> _templateTypes =
+        [
             typeof (StardogMemTemplate),
             typeof (StardogDiskTemplate),
-        };
+        ];
 
     /// <summary>
     /// Creates a new connection to a Stardog Server.
@@ -151,8 +151,7 @@ public abstract class BaseStardogServer
     public virtual IEnumerable<string> ListStores()
     {
         // GET /admin/databases - application/json
-        HttpRequestMessage request = CreateAdminRequest("databases", "application/json", HttpMethod.Get,
-            new Dictionary<string, string>());
+        HttpRequestMessage request = CreateAdminRequest("databases", "application/json", HttpMethod.Get, []);
 
         try
         {
@@ -263,8 +262,7 @@ public abstract class BaseStardogServer
         JObject jsonTemplate = stardogTemplate.GetTemplateJson();
 
         // Create the request and write the JSON
-        HttpRequestMessage request = CreateAdminRequest("databases", MimeTypesHelper.Any, HttpMethod.Post,
-            new Dictionary<string, string>());
+        HttpRequestMessage request = CreateAdminRequest("databases", MimeTypesHelper.Any, HttpMethod.Post, []);
         request.Content =
             new MultipartFormDataContent(StorageHelper.HttpMultipartBoundary)
             {
@@ -280,7 +278,7 @@ public abstract class BaseStardogServer
     public virtual void DeleteStore(string storeId)
     {
         // DELETE /admin/databases/{db}
-        HttpRequestMessage request = CreateAdminRequest("databases/" + storeId, MimeTypesHelper.Any, HttpMethod.Delete, new Dictionary<string, string>());
+        HttpRequestMessage request = CreateAdminRequest("databases/" + storeId, MimeTypesHelper.Any, HttpMethod.Delete, []);
 
         try
         {
@@ -315,7 +313,7 @@ public abstract class BaseStardogServer
     public virtual void ListStores(AsyncStorageCallback callback, object state)
     {
         // GET /admin/databases - application/json
-        HttpRequestMessage request = CreateAdminRequest("databases", "application/json", HttpMethod.Get, new Dictionary<string, string>());
+        HttpRequestMessage request = CreateAdminRequest("databases", "application/json", HttpMethod.Get, []);
 
         try
         {
@@ -382,7 +380,7 @@ public abstract class BaseStardogServer
     /// <inheritdoc />
     public async Task<IEnumerable<string>> ListStoresAsync(CancellationToken cancellationToken)
     {
-        HttpRequestMessage request = CreateAdminRequest("databases", "application/json", HttpMethod.Get, new Dictionary<string, string>());
+        HttpRequestMessage request = CreateAdminRequest("databases", "application/json", HttpMethod.Get, []);
         HttpResponseMessage response = await HttpClient.SendAsync(request, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
@@ -523,7 +521,7 @@ public abstract class BaseStardogServer
     /// <inheritdoc />
     public virtual async Task<string> CreateStoreAsync(IStoreTemplate template, CancellationToken cancellationToken)
     {
-        if (!(template is BaseStardogTemplate))
+        if (template is not BaseStardogTemplate)
         {
             throw new RdfStorageException("Invalid template, templates must derive from BaseStardogTemplate");
         }
@@ -565,7 +563,7 @@ public abstract class BaseStardogServer
         {
             // DELETE /admin/databases/{db}
             HttpRequestMessage request = CreateAdminRequest("databases/" + storeId, MimeTypesHelper.Any,
-                HttpMethod.Delete, new Dictionary<string, string>());
+                HttpMethod.Delete, []);
             HttpClient.SendAsync(request).ContinueWith(requestTask =>
             {
                 if (requestTask.IsCanceled || requestTask.IsFaulted)
@@ -615,7 +613,7 @@ public abstract class BaseStardogServer
         try
         {
             HttpRequestMessage request = CreateAdminRequest("databases/" + storeId, MimeTypesHelper.Any,
-                HttpMethod.Delete, new Dictionary<string, string>());
+                HttpMethod.Delete, []);
             HttpResponseMessage response = await HttpClient.SendAsync(request, cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
@@ -657,7 +655,7 @@ public abstract class BaseStardogServer
     /// <param name="method">HTTP method to use.</param>
     /// <param name="requestParams">Additional request parameters.</param>
     /// <returns></returns>
-    [Obsolete("This method is obsolete and will be removed in a future release.")]
+    [Obsolete("This method is obsolete and will be removed in a future release.", true)]
     protected virtual HttpWebRequest CreateAdminRequest(string servicePath, string accept, string method, Dictionary<string, string> requestParams)
     {
         // Build the Request Uri

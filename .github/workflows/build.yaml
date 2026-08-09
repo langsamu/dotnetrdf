@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        framework: ["net8.0"]
+        framework: ["net10.0"]
         suite: 
           - "dotNetRdf.Tests"
           - "dotNetRdf.Dynamic.Tests"
@@ -28,7 +28,7 @@ jobs:
           - "dotNetRdf.Wrapping.Tests"
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
         submodules: 'true'
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: 
-        framework: ["net8.0"]
+        framework: ["net10.0"]
         suite: 
           - "dotNetRdf.Tests"
           - "dotNetRdf.Dynamic.Tests"
@@ -58,7 +58,7 @@ jobs:
           - "dotNetRdf.Wrapping.Tests"
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: 'true'
@@ -69,13 +69,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
     - name: Start Fuseki
       run: docker run --rm -d -p 3030:3030 --name fuseki atomgraph/fuseki --mem /ds
     - name: Test Fuseki Connector
-      run: dotnet test -c Release --framework net8.0 Testing/dotNetRdf.Connectors.Fuseki.Tests/dotNetRdf.Connectors.Fuseki.Tests.csproj
+      run: dotnet test -c Release --framework net10.0 Testing/dotNetRdf.Connectors.Fuseki.Tests/dotNetRdf.Connectors.Fuseki.Tests.csproj
     - name: Stop Fuseki
       run: docker stop fuseki
         
@@ -83,13 +83,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Start Allegrograph
         run: docker run -d -e AGRAPH_SUPER_USER=test -e AGRAPH_SUPER_PASSWORD=test -p 10000-10035:10000-10035 --shm-size 1g --name agraph --restart=always franzinc/agraph
       - name: Test Allegrograph Connector
-        run: dotnet test -c Release --framework net8.0 Testing/dotNetRdf.Connectors.Allegrograph.Tests/dotNetRdf.Connectors.Allegrograph.Tests.csproj
+        run: dotnet test -c Release --framework net10.0 Testing/dotNetRdf.Connectors.Allegrograph.Tests/dotNetRdf.Connectors.Allegrograph.Tests.csproj
       - name: Stop Allegrograph
         run: docker stop agraph
 

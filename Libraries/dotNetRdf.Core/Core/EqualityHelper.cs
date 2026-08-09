@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,9 +44,7 @@ public static class EqualityHelper
     /// <summary>
     /// Gets/Sets the Mode used to compute Literal Equality (Default is <see cref="LiteralEqualityMode.Strict">Strict</see> which enforces the W3C RDF Specification).
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public static LiteralEqualityMode LiteralEqualityMode { get; set; } = Options.LiteralEqualityMode; //LiteralEqualityMode.Strict;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public static LiteralEqualityMode LiteralEqualityMode { get; set; } = LiteralEqualityMode.Strict;
 
     /// <summary>
     /// Determines whether two URIs are equal.

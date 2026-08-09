@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ public class FusekiConnector
     /// <param name="serviceUri">The /data URI of the Fuseki Server.</param>
     /// <param name="writerMimeTypeDefinition">The MIME type of the syntax to use when sending RDF data to the server. Defaults to RDF/XML.</param>
     public FusekiConnector(Uri serviceUri, MimeTypeDefinition writerMimeTypeDefinition = null)
-        : this(serviceUri.ToSafeString(), writerMimeTypeDefinition) { }
+        : this(serviceUri?.AbsoluteUri ?? "", writerMimeTypeDefinition) { }
 
     /// <summary>
     /// Creates a new connection to a Fuseki Server.
@@ -84,7 +84,7 @@ public class FusekiConnector
     /// <param name="serviceUri">The /data URI of the Fuseki Server.</param>
     /// <param name="proxy">Proxy Server.</param>
     public FusekiConnector(Uri serviceUri, IWebProxy proxy)
-        : this(serviceUri.ToSafeString(), proxy) { }
+        : this(serviceUri?.AbsoluteUri ?? "", proxy) { }
 
     /// <summary>
     /// Creates a new connection to a Fuseki Server.
@@ -134,7 +134,7 @@ public class FusekiConnector
     /// Gets the List of Graphs from the store.
     /// </summary>
     /// <returns></returns>
-    [Obsolete("Replaced by ListGraphNames")]
+    [Obsolete("Replaced by ListGraphNames", true)]
     public override IEnumerable<Uri> ListGraphs()
     {
         try
@@ -307,7 +307,7 @@ public class FusekiConnector
     /// <param name="removals">Triples to be removed.</param>
     public override void UpdateGraph(Uri graphUri, IEnumerable<Triple> additions, IEnumerable<Triple> removals)
     {
-        UpdateGraph(graphUri.ToSafeString(), additions, removals);
+        UpdateGraph(graphUri?.AbsoluteUri ?? "", additions, removals);
     }
 
     /// <summary>
@@ -357,7 +357,7 @@ public class FusekiConnector
                 request = new HttpRequestMessage(HttpMethod.Post, queryUri);
                 request.Headers.Add("Accept", MimeTypesHelper.HttpRdfOrSparqlAcceptHeader);
                 request.Content =
-                    new FormUrlEncodedContent(new[] {new KeyValuePair<string, string>("query", sparqlQuery)});
+                    new FormUrlEncodedContent([new KeyValuePair<string, string>("query", sparqlQuery)]);
             }
 
             // Get the Response and process based on the Content Type
@@ -554,7 +554,7 @@ public class FusekiConnector
 
         // Build the Post Data and add to the Request Body
         request.Content =
-            new FormUrlEncodedContent(new[] {new KeyValuePair<string, string>("query", sparqlQuery)});
+            new FormUrlEncodedContent([new KeyValuePair<string, string>("query", sparqlQuery)]);
         return request;
     }
 
@@ -673,7 +673,7 @@ public class FusekiConnector
     /// </summary>
     /// <param name="callback">Callback.</param>
     /// <param name="state">State to pass to the callback.</param>
-    [Obsolete("Replaced with ListGraphsAsync(CancellationToken)")]
+    [Obsolete("Replaced with ListGraphsAsync(CancellationToken)", true)]
     public override void ListGraphs(AsyncStorageCallback callback, object state)
     {
         // Use ListUrisHandler and make an async query to list the graphs, when that returns we invoke the correct callback

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ internal class WebLink
         var mediaTypes = new List<string>();
         foreach (var field in fields)
         {
-            var split = field.Split(new char[] { '=' }, 2);
+            var split = field.Split(['='], 2);
             if (split.Length == 2)
             {
                 var key = split[0].Trim();

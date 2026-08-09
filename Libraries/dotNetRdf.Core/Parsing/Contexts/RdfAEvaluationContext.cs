@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -87,7 +87,7 @@ public class RdfAEvaluationContext
     /// <summary>
     /// Gets the list of incomplete Triples.
     /// </summary>
-    public List<IncompleteTriple> IncompleteTriples { get; } = new List<IncompleteTriple>();
+    public List<IncompleteTriple> IncompleteTriples { get; } = [];
 
     /// <summary>
     /// Gets/Sets the Local Vocabulary.
@@ -97,5 +97,5 @@ public class RdfAEvaluationContext
     /// <summary>
     /// Get the list mapping.
     /// </summary>
-    public Dictionary<INode, List<INode>> ListMapping { get; set; } = new();
+    public Dictionary<INode, List<INode>> ListMapping { get; set; } = [];
 }

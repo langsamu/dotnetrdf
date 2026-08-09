@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -85,7 +85,7 @@ public abstract class BaseQuadDataset
         var s = new Stack<IEnumerable<IRefNode>>();
         if (!_unionDefaultGraph)
         {
-            s.Push(new [] { _defaultGraphName });
+            s.Push([_defaultGraphName]);
         }
         return s;
     }
@@ -101,7 +101,7 @@ public abstract class BaseQuadDataset
     /// Sets the Active Graph.
     /// </summary>
     /// <param name="graphUris">Graph URIs.</param>
-    [Obsolete("Replaced by SetActiveGraph(IList<IRefNode>)")]
+    [Obsolete("Replaced by SetActiveGraph(IList<IRefNode>)", true)]
     public void SetActiveGraph(IEnumerable<Uri> graphUris)
     {
         _activeGraphs.Value.Push(graphUris.Select(u=>u == null ? null : new UriNode(u)).ToList());
@@ -120,7 +120,7 @@ public abstract class BaseQuadDataset
     /// Sets the Active Graph.
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
-    [Obsolete("Replaced by SetActiveGraph(IRefNode)")]
+    [Obsolete("Replaced by SetActiveGraph(IRefNode)", true)]
     public void SetActiveGraph(Uri graphUri)
     {
         SetActiveGraph(graphUri == null ? null : new UriNode(graphUri));
@@ -138,7 +138,7 @@ public abstract class BaseQuadDataset
         }
         else
         {
-            _activeGraphs.Value.Push(new [] { graphName });
+            _activeGraphs.Value.Push([graphName]);
         }
 
     }
@@ -147,7 +147,7 @@ public abstract class BaseQuadDataset
     /// Sets the Default Graph.
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
-    [Obsolete("Replaced by SetDefaultGraph(IRefNode)")]
+    [Obsolete("Replaced by SetDefaultGraph(IRefNode)", true)]
     public void SetDefaultGraph(Uri graphUri)
     {
         SetDefaultGraph(graphUri == null ? null : new UriNode(graphUri));
@@ -159,14 +159,14 @@ public abstract class BaseQuadDataset
     /// <param name="graphName"></param>
     public void SetDefaultGraph(IRefNode graphName)
     {
-        _defaultGraphs.Value.Push(new []{graphName});
+        _defaultGraphs.Value.Push([graphName]);
     }
 
     /// <summary>
     /// Sets the Default Graph.
     /// </summary>
     /// <param name="graphUris">Graph URIs.</param>
-    [Obsolete("Replaced by SetDefaultGraph(IList<IRefNode>)")]
+    [Obsolete("Replaced by SetDefaultGraph(IList<IRefNode>)", true)]
     public void SetDefaultGraph(IEnumerable<Uri> graphUris)
     {
         SetDefaultGraph(graphUris.Select(x=>x== null ? null : new UriNode(x) as IRefNode).ToList());
@@ -214,7 +214,7 @@ public abstract class BaseQuadDataset
     /// <summary>
     /// Gets the Default Graph URIs.
     /// </summary>
-    [Obsolete("Replaced by GDefaultGraphNames")]
+    [Obsolete("Replaced by GDefaultGraphNames", true)]
     public IEnumerable<Uri> DefaultGraphUris
     {
         get 
@@ -242,7 +242,7 @@ public abstract class BaseQuadDataset
             }
             else
             {
-                return Enumerable.Empty<IRefNode>();
+                return [];
             }
         }
     }
@@ -250,7 +250,7 @@ public abstract class BaseQuadDataset
     /// <summary>
     /// Gets the Active Graph URIs.
     /// </summary>
-    [Obsolete("Replaced by ActiveGraphNames")]
+    [Obsolete("Replaced by ActiveGraphNames", true)]
     public IEnumerable<Uri> ActiveGraphUris
     {
         get 
@@ -333,7 +333,7 @@ public abstract class BaseQuadDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <param name="t">Triple.</param>
-    [Obsolete("Replaced by AddQuad(IRefNode, Triple)")]
+    [Obsolete("Replaced by AddQuad(IRefNode, Triple)", true)]
     public abstract bool AddQuad(Uri graphUri, Triple t);
 
     /// <summary>
@@ -347,7 +347,7 @@ public abstract class BaseQuadDataset
     /// Removes a Graph from the Dataset.
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
-    [Obsolete("Replaced by RemoveGraph(IRefNode)")]
+    [Obsolete("Replaced by RemoveGraph(IRefNode)", true)]
     public abstract bool RemoveGraph(Uri graphUri);
 
     /// <summary>
@@ -362,7 +362,7 @@ public abstract class BaseQuadDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <param name="t">Triple.</param>
-    [Obsolete("Replaced by RemoveQuad(IRefNode, Triple)")]
+    [Obsolete("Replaced by RemoveQuad(IRefNode, Triple)", true)]
     public abstract bool RemoveQuad(Uri graphUri, Triple t);
 
     /// <summary>
@@ -378,7 +378,7 @@ public abstract class BaseQuadDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by HasGraph(IRefNode)")]
+    [Obsolete("Replaced by HasGraph(IRefNode)", true)]
     public bool HasGraph(Uri graphUri)
     {
         return HasGraph(new UriNode(graphUri));
@@ -429,7 +429,7 @@ public abstract class BaseQuadDataset
     /// <summary>
     /// Gets the URIs of the graphs in the dataset.
     /// </summary>
-    [Obsolete("Replaced by GraphNames")]
+    [Obsolete("Replaced by GraphNames", true)]
     public abstract IEnumerable<Uri> GraphUris
     {
         get;
@@ -450,7 +450,7 @@ public abstract class BaseQuadDataset
     /// This property need only return a read-only view of the Graph, code which wishes to modify Graphs should use the <see cref="ISparqlDataset.GetModifiableGraph(IRefNode)">GetModifiableGraph()</see> method to guarantee a Graph they can modify and will be persisted to the underlying storage.
     /// </para>
     /// </remarks>
-    [Obsolete("Replaced by this[IRefNode]")]
+    [Obsolete("Replaced by this[IRefNode]", true)]
     public virtual IGraph this[Uri graphUri]
     {
         get
@@ -511,7 +511,7 @@ public abstract class BaseQuadDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by GetModifiableGraph(IRefNode)")]
+    [Obsolete("Replaced by GetModifiableGraph(IRefNode)", true)]
     public virtual IGraph GetModifiableGraph(Uri graphUri)
     {
         throw new NotSupportedException("This dataset is immutable");

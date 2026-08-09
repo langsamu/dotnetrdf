@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ public abstract class BaseGraphCollection
     /// <remarks>
     /// The null URI is used to reference the Default Graph.
     /// </remarks>
-    [Obsolete("Replaced by Contains(IRefNode)")]
+    [Obsolete("Replaced by Contains(IRefNode)", true)]
     public abstract bool Contains(Uri graphUri);
 
     /// <summary>
@@ -70,7 +70,7 @@ public abstract class BaseGraphCollection
     /// <remarks>
     /// The null URI is used to reference the Default Graph.
     /// </remarks>
-    [Obsolete("Replaced by Remove(IRefNode)")]
+    [Obsolete("Replaced by Remove(IRefNode)", true)]
     public abstract bool Remove(Uri graphUri);
 
     /// <summary>
@@ -93,7 +93,7 @@ public abstract class BaseGraphCollection
     /// <summary>
     /// Provides access to the Graph URIs of Graphs in the Collection.
     /// </summary>
-    [Obsolete("Replaced by GraphNames")]
+    [Obsolete("Replaced by GraphNames", true)]
     public abstract IEnumerable<Uri> GraphUris
     {
         get;
@@ -112,7 +112,7 @@ public abstract class BaseGraphCollection
     /// <remarks>
     /// The null URI is used to reference the Default Graph.
     /// </remarks>
-    [Obsolete("Replaced by this[IRefNode]")]
+    [Obsolete("Replaced by this[IRefNode]", true)]
     public abstract IGraph this[Uri graphUri] 
     {
         get;
@@ -163,7 +163,10 @@ public abstract class BaseGraphCollection
     /// <param name="g">Graph.</param>
     protected virtual void RaiseGraphAdded(IGraph g)
     {
-        GraphAdded?.Invoke(this, new GraphEventArgs(g));
+        if (g != null)
+        {
+            GraphAdded?.Invoke(this, new GraphEventArgs(g));
+        }
     }
 
     /// <summary>
@@ -172,6 +175,9 @@ public abstract class BaseGraphCollection
     /// <param name="g">Graph.</param>
     protected virtual void RaiseGraphRemoved(IGraph g)
     {
-        GraphRemoved?.Invoke(this, new GraphEventArgs(g));
+        if (g != null)
+        {
+            GraphRemoved?.Invoke(this, new GraphEventArgs(g));
+        }
     }
 }

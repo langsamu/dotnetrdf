@@ -66,9 +66,9 @@ public abstract class BaseParserSuite<TParser, TResult> where TParser : class
         Parser = testParser ?? throw new ArgumentNullException(nameof(testParser));
         ResultsParser = resultsParser ?? throw new ArgumentNullException(nameof(resultsParser));
         _baseDir = Path.Combine("resources", baseDir);
-        _passedTests = new List<string>();
-        _failedTests = new List<TestFailure>();
-        _indeterminateTests = new List<string>();
+        _passedTests = [];
+        _failedTests = [];
+        _indeterminateTests = [];
     }
 
     /// <summary>
@@ -211,7 +211,7 @@ WHERE
     /// <param name="file">Manifest file</param>
     protected void RunManifest(string file, INode positiveSyntaxTest, INode negativeSyntaxTest)
     {
-        RunManifest(file, new[] { positiveSyntaxTest }, new[] { negativeSyntaxTest });
+        RunManifest(file, [positiveSyntaxTest], [negativeSyntaxTest]);
     }
 
     protected void RunManifest(string file, INode[] positiveSyntaxTests, INode[] negativeSyntaxTests)
@@ -368,11 +368,11 @@ WHERE
 
                 //Repeat parsing with tracing enabled if appropriate
                 //This gives us more useful debugging output for failed tests
-                if (Parser is ITraceableTokeniser)
+                if (Parser is ITraceableTokeniser tokeniser)
                 {
                     try
                     {
-                        ((ITraceableTokeniser)Parser).TraceTokeniser = true;
+                        tokeniser.TraceTokeniser = true;
                         ((IRdfReader)Parser).Load(new Graph(), Path.GetFileName(file));
                     }
                     catch
@@ -381,7 +381,7 @@ WHERE
                     }
                     finally
                     {
-                        ((ITraceableTokeniser)Parser).TraceTokeniser = false;
+                        tokeniser.TraceTokeniser = false;
                     }
                 }
 

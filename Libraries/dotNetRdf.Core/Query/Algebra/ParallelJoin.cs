@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ public class ParallelJoin : IJoin
     /// <param name="rhs">Right Hand Side.</param>
     public ParallelJoin(ISparqlAlgebra lhs, ISparqlAlgebra rhs)
     {
-        if (!lhs.Variables.IsDisjoint(rhs.Variables)) throw new RdfQueryException("Cannot create a ParallelJoin between two algebra operators which are not distinct");
+        if (lhs.Variables.Intersect(rhs.Variables).Any()) throw new RdfQueryException("Cannot create a ParallelJoin between two algebra operators which are not distinct");
         Lhs = lhs;
         Rhs = rhs;
     }

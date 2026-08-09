@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -177,7 +177,7 @@ public class InMemoryQuadDataset
     /// <summary>
     /// Gets all the URIs of Graphs in the Dataset.
     /// </summary>
-    [Obsolete("Replaced by GraphNames")]
+    [Obsolete("Replaced by GraphNames", true)]
     public override IEnumerable<Uri> GraphUris
     {
         get
@@ -232,7 +232,7 @@ public class InMemoryQuadDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <param name="t">Triple.</param>
-    [Obsolete("Replaced by AddQuad(IRefNode, Triple)")]
+    [Obsolete("Replaced by AddQuad(IRefNode, Triple)", true)]
     public override bool AddQuad(Uri graphUri, Triple t)
     {
         return AddQuad(new UriNode(graphUri), t);
@@ -273,7 +273,7 @@ public class InMemoryQuadDataset
     /// <returns></returns>
     public override IEnumerable<Triple> GetQuads(IRefNode graphName)
     {
-        return _store.HasGraph(graphName) ? _store[graphName].Triples : Enumerable.Empty<Triple>();
+        return _store.HasGraph(graphName) ? _store[graphName].Triples : [];
     }
 
     /// <summary>
@@ -283,7 +283,7 @@ public class InMemoryQuadDataset
     /// <returns></returns>
     public override IEnumerable<Triple> GetQuoted(IRefNode graphName)
     {
-        return _store.HasGraph(graphName) ? _store[graphName].Triples.Quoted : Enumerable.Empty<Triple>();
+        return _store.HasGraph(graphName) ? _store[graphName].Triples.Quoted : [];
     }
 
     /// <summary>
@@ -300,7 +300,7 @@ public class InMemoryQuadDataset
         }
         else
         {
-            return Enumerable.Empty<Triple>();
+            return [];
         }
     }
 
@@ -314,7 +314,7 @@ public class InMemoryQuadDataset
     {
         return _store.HasGraph(graphName)
             ? _store[graphName].GetQuotedWithObject(obj)
-            : Enumerable.Empty<Triple>();
+            : [];
     }
 
     /// <summary>
@@ -331,7 +331,7 @@ public class InMemoryQuadDataset
         }
         else
         {
-            return Enumerable.Empty<Triple>();
+            return [];
         }
     }
 
@@ -345,7 +345,7 @@ public class InMemoryQuadDataset
     {
         return _store.HasGraph(graphName)
             ? _store[graphName].GetQuotedWithPredicate(pred)
-            : Enumerable.Empty<Triple>();
+            : [];
     }
 
     /// <summary>
@@ -363,7 +363,7 @@ public class InMemoryQuadDataset
         }
         else
         {
-            return Enumerable.Empty<Triple>();
+            return [];
         }
     }
 
@@ -378,7 +378,7 @@ public class InMemoryQuadDataset
     {
         return _store.HasGraph(graphName)
             ? _store[graphName].GetQuotedWithPredicateObject(pred, obj)
-            : Enumerable.Empty<Triple>();
+            : [];
     }
 
     /// <summary>
@@ -395,7 +395,7 @@ public class InMemoryQuadDataset
         }
         else
         {
-            return Enumerable.Empty<Triple>();
+            return [];
         }
     }
 
@@ -409,7 +409,7 @@ public class InMemoryQuadDataset
     {
         return _store.HasGraph(graphName)
             ? _store[graphName].GetQuotedWithSubject(subj)
-            : Enumerable.Empty<Triple>();
+            : [];
     }
 
     /// <summary>
@@ -427,7 +427,7 @@ public class InMemoryQuadDataset
         }
         else
         {
-            return Enumerable.Empty<Triple>();
+            return [];
         }
     }
 
@@ -442,7 +442,7 @@ public class InMemoryQuadDataset
     {
         return _store.HasGraph(graphName)
             ? _store[graphName].GetQuotedWithSubjectObject(subj, obj)
-            : Enumerable.Empty<Triple>();
+            : [];
     }
 
     /// <summary>
@@ -454,7 +454,7 @@ public class InMemoryQuadDataset
     /// <returns></returns>
     public override IEnumerable<Triple> GetQuadsWithSubjectPredicate(IRefNode graphName, INode subj, INode pred)
     {
-        return _store.HasGraph(graphName) ? _store[graphName].GetTriplesWithSubjectPredicate(subj, pred) : Enumerable.Empty<Triple>();
+        return _store.HasGraph(graphName) ? _store[graphName].GetTriplesWithSubjectPredicate(subj, pred) : [];
     }
 
     /// <summary>
@@ -468,7 +468,7 @@ public class InMemoryQuadDataset
     {
         return _store.HasGraph(graphName)
             ? _store[graphName].GetQuotedWithSubjectPredicate(subj, pred)
-            : Enumerable.Empty<Triple>();
+            : [];
     }
 
     /// <summary>
@@ -476,7 +476,7 @@ public class InMemoryQuadDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <param name="t">Triple.</param>
-    [Obsolete("Replaced by RemoveQuad(IRefNode, Triple)")]
+    [Obsolete("Replaced by RemoveQuad(IRefNode, Triple)", true)]
     public override bool RemoveQuad(Uri graphUri, Triple t)
     {
         if (_store.HasGraph(graphUri))

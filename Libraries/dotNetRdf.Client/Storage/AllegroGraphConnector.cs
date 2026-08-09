@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -87,11 +87,7 @@ public class AllegroGraphConnector
     {
         _baseUri = baseUri;
         if (!_baseUri.EndsWith("/")) _baseUri += "/";
-#if NETCORE
-        this._agraphBase = this._baseUri.Copy();
-#else
         _agraphBase = string.Copy(_baseUri);
-#endif
         if (catalogID != null)
         {
             _baseUri += "catalogs/" + catalogID + "/";
@@ -194,10 +190,10 @@ public class AllegroGraphConnector
         try
         {
             // Create the Request
-            HttpRequestMessage request = CreateRequest(_repositoriesPrefix + _store + _updatePath, MimeTypesHelper.Any, HttpMethod.Post, new Dictionary<string, string>());
+            HttpRequestMessage request = CreateRequest(_repositoriesPrefix + _store + _updatePath, MimeTypesHelper.Any, HttpMethod.Post, []);
 
             // Build the Post Data and add to the Request Body
-            request.Content = new FormUrlEncodedContent(new []{new KeyValuePair<string, string>("query", sparqlUpdate)});
+            request.Content = new FormUrlEncodedContent([new KeyValuePair<string, string>("query", sparqlUpdate)]);
 
             // Get the Response and process based on the Content Type
             using HttpResponseMessage response = HttpClient.SendAsync(request).Result;
@@ -224,11 +220,11 @@ public class AllegroGraphConnector
         {
             // Create the Request
             HttpRequestMessage request = CreateRequest(_repositoriesPrefix + _store + _updatePath,
-                MimeTypesHelper.Any, HttpMethod.Post, new Dictionary<string, string>());
+                MimeTypesHelper.Any, HttpMethod.Post, []);
 
             // Build the Post Data and add to the Request Body
             request.Content =
-                new FormUrlEncodedContent(new[] {new KeyValuePair<string, string>("query", sparqlUpdate)});
+                new FormUrlEncodedContent([new KeyValuePair<string, string>("query", sparqlUpdate)]);
             HttpClient.SendAsync(request).ContinueWith(requestTask =>
             {
                 if (requestTask.IsCanceled || requestTask.IsFaulted)
@@ -274,11 +270,11 @@ public class AllegroGraphConnector
         try
         {
             HttpRequestMessage request = CreateRequest(_repositoriesPrefix + _store + _updatePath,
-                MimeTypesHelper.Any, HttpMethod.Post, new Dictionary<string, string>());
+                MimeTypesHelper.Any, HttpMethod.Post, []);
 
             // Build the Post Data and add to the Request Body
             request.Content =
-                new FormUrlEncodedContent(new[] {new KeyValuePair<string, string>("query", sparqlUpdate)});
+                new FormUrlEncodedContent([new KeyValuePair<string, string>("query", sparqlUpdate)]);
             HttpResponseMessage response = await HttpClient.SendAsync(request, cancellationToken);
             if (!response.IsSuccessStatusCode)
             {
@@ -317,7 +313,7 @@ public class AllegroGraphConnector
     /// <param name="method">HTTP Method.</param>
     /// <param name="queryParams">Querystring Parameters.</param>
     /// <returns></returns>
-    [Obsolete("This method is obsolete and will be removed in a future release. Use CreateRequest(string, string, HttpMethod, Dictionary<string, string>) instead.")]
+    [Obsolete("This method is obsolete and will be removed in a future release. Use CreateRequest(string, string, HttpMethod, Dictionary<string, string>) instead.", true)]
     protected override HttpWebRequest CreateRequest(string servicePath, string accept, string method, Dictionary<string, string> queryParams)
     {
         // Remove JSON Mime Types from supported Accept types

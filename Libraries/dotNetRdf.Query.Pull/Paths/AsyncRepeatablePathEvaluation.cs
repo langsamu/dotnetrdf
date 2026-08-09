@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,7 @@ namespace VDS.RDF.Query.Pull.Paths;
 internal class AsyncRepeatablePathEvaluation(
     int minIterations,
     int maxIterations,
-    IAsyncPathEvaluation stepEvaluation,
-    PatternItem pathEnd) : IAsyncPathEvaluation
+    IAsyncPathEvaluation stepEvaluation) : IAsyncPathEvaluation
 {
     public async IAsyncEnumerable<PathResult> Evaluate(PatternItem pathStart, PullEvaluationContext context, ISet? input, IRefNode? activeGraph,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -43,7 +42,7 @@ internal class AsyncRepeatablePathEvaluation(
         if (TryEvaluatePattern(pathStart, input, out INode? startNode))
         {
             await foreach (PathResult stepResult in EvaluateStep(context, input, activeGraph, cancellationToken, 
-                               startNode,  0, new NodeMatchPattern(startNode), new HashSet<INode>()))
+                               startNode,  0, new NodeMatchPattern(startNode), []))
             {
                 yield return stepResult;
             }
@@ -53,7 +52,7 @@ internal class AsyncRepeatablePathEvaluation(
             foreach (INode node in context.GetNodes(pathStart, activeGraph))
             {
                 await foreach (PathResult stepResult in EvaluateStep(context, input, activeGraph, cancellationToken, node, 0,
-                                   new NodeMatchPattern(node), new HashSet<INode>()))
+                                   new NodeMatchPattern(node), []))
                 {
                     yield return stepResult;
                 }

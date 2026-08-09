@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -96,9 +96,7 @@ public class RdfXmlWriter
     /// <summary>
     /// Gets/Sets whether DTDs are used in the output.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public bool UseDtd { get; set; } = Options.UseDtd; //= true;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public bool UseDtd { get; set; } = true;
 
     /// <summary>
     /// Gets/Sets the Default Namespaces that are always available.

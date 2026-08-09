@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -90,12 +90,12 @@ public class PathEvaluationContext
     /// <summary>
     /// Gets the hash set of incomplete paths generated so far.
     /// </summary>
-    public HashSet<PotentialPath> Paths { get; } = new HashSet<PotentialPath>();
+    public HashSet<PotentialPath> Paths { get; } = [];
 
     /// <summary>
     /// Gets the hash set of complete paths generated so far.
     /// </summary>
-    public HashSet<PotentialPath> CompletePaths { get; } = new HashSet<PotentialPath>();
+    public HashSet<PotentialPath> CompletePaths { get; } = [];
 
     /// <summary>
     /// Gets the pattern which is the start of the path.

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -55,9 +55,8 @@ public class IdentityFilterOptimiser
     {
         try
         {
-            if (algebra is Filter)
+            if (algebra is Filter f)
             {
-                var f = (Filter)algebra;
                 string var;
                 INode term;
                 var equals = false;
@@ -88,13 +87,13 @@ public class IdentityFilterOptimiser
                     return f.Transform(this);
                 }
             }
-            else if (algebra is IAbstractJoin)
+            else if (algebra is IAbstractJoin join)
             {
-                return ((IAbstractJoin)algebra).Transform(this);
+                return join.Transform(this);
             }
-            else if (algebra is IUnaryOperator)
+            else if (algebra is IUnaryOperator unary)
             {
-                return ((IUnaryOperator)algebra).Transform(this);
+                return unary.Transform(this);
             }
             else
             {
@@ -121,16 +120,14 @@ public class IdentityFilterOptimiser
         term = null;
         equals = false;
         ISparqlExpression lhs, rhs;
-        if (expr is EqualsExpression)
+        if (expr is EqualsExpression eq)
         {
             equals = true;
-            var eq = (EqualsExpression)expr;
             lhs = eq.Arguments.First();
             rhs = eq.Arguments.Last();
         } 
-        else if (expr is SameTermFunction)
+        else if (expr is SameTermFunction st)
         {
-            var st = (SameTermFunction)expr;
             lhs = st.Arguments.First();
             rhs = st.Arguments.Last();
         }

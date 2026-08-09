@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -87,7 +87,7 @@ abstract internal class BaseExpressionProcessor<TContext, TBinding>
     private readonly IValuedNode _eNode = new DoubleNode(Math.E);
     private readonly IValuedNode _piNode = new DoubleNode(Math.PI);
     private readonly Random _rnd = new Random();
-    private readonly Dictionary<string, ISparqlExpression> _functionCache = new Dictionary<string, ISparqlExpression>();
+    private readonly Dictionary<string, ISparqlExpression> _functionCache = [];
 
 
     protected BaseExpressionProcessor(ISparqlNodeComparer nodeComparer, IUriFactory uriFactory, bool useStrictOperators)
@@ -112,11 +112,11 @@ abstract internal class BaseExpressionProcessor<TContext, TBinding>
     private IValuedNode ApplyBinaryOperator(BaseBinaryExpression expr, SparqlOperatorType operatorType,
         TContext context, TBinding binding)
     {
-        IValuedNode[] inputs = new[]
-        {
+        IValuedNode[] inputs =
+        [
             expr.LeftExpression.Accept(this, context, binding),
             expr.RightExpression.Accept(this, context, binding),
-        };
+        ];
         if (!SparqlOperators.TryGetOperator(operatorType, UseStrictOperators, out ISparqlOperator op, inputs))
         {
             throw new RdfQueryException($"Cannot apply operator {operatorType} to the given inputs.");
@@ -2148,7 +2148,7 @@ abstract internal class BaseExpressionProcessor<TContext, TBinding>
             {
                 // Try to create the function and cache it - remember to respect the queries Expression Factories if present
                 func = SparqlExpressionFactory.CreateExpression(funcUri, call.Arguments.Skip(1).ToList(),
-                    GetExpressionFactories(context) ?? Enumerable.Empty<ISparqlCustomExpressionFactory>(), false);
+                    GetExpressionFactories(context) ?? [], false);
                 _functionCache.Add(funcUri.AbsoluteUri, func);
             }
             catch

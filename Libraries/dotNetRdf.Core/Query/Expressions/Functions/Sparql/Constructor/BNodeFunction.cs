@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -85,7 +85,7 @@ public class BNodeFunction
     {
         get
         {
-            return InnerExpression == null ? Enumerable.Empty<string>() : base.Variables;
+            return InnerExpression == null ? [] : base.Variables;
         }
     }
 
@@ -96,7 +96,7 @@ public class BNodeFunction
     {
         get
         {
-            if (InnerExpression == null) return Enumerable.Empty<ISparqlExpression>();
+            if (InnerExpression == null) return [];
             return base.Arguments;
         }
     }
@@ -118,7 +118,7 @@ public class BNodeFunction
     /// <returns></returns>
     public override string ToString()
     {
-        return SparqlSpecsHelper.SparqlKeywordBNode + "(" + InnerExpression.ToSafeString() + ")";
+        return SparqlSpecsHelper.SparqlKeywordBNode + $"({InnerExpression})";
     }
 
     /// <inheritdoc />

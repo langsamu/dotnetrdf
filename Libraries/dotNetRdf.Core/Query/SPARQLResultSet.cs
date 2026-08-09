@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ public sealed class SparqlResultSet
     /// <summary>
     /// Lists of Variables in the Result Set.
     /// </summary>
-    private readonly List<string> _variables = new List<string>();
+    private readonly List<string> _variables = [];
     /// <summary>
     /// Boolean Result.
     /// </summary>
@@ -140,7 +140,7 @@ public sealed class SparqlResultSet
     /// <summary>
     /// Gets the List of Results.
     /// </summary>
-    public List<ISparqlResult> Results { get; } = new List<ISparqlResult>();
+    public List<ISparqlResult> Results { get; } = [];
 
     /// <summary>
     /// Index directly into the Results.

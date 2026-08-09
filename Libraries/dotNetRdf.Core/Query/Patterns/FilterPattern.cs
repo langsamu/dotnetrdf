@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -104,13 +104,13 @@ public class FilterPattern
     /// </summary>
     public override IEnumerable<string> FixedVariables
     {
-        get { return Enumerable.Empty<string>(); }
+        get { return []; }
     }
 
     /// <summary>
     /// Returns the empty enumerable as don't know which variables will be bound.
     /// </summary>
-    public override IEnumerable<string> FloatingVariables { get { return Enumerable.Empty<string>(); } }
+    public override IEnumerable<string> FloatingVariables { get { return []; } }
 
     /// <summary>
     /// Gets whether the Pattern uses the Default Dataset.

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,6 @@
 using System;
 using System.Linq;
 using VDS.RDF.Query.Operators;
-#if NETCORE
-using System.Reflection;
-#endif
 
 namespace VDS.RDF.Configuration;
 
@@ -53,9 +50,9 @@ public class OperatorFactory
     {
         obj = null;
         var temp = Activator.CreateInstance(targetType);
-        if (temp is ISparqlOperator)
+        if (temp is ISparqlOperator @operator)
         {
-            obj = (ISparqlOperator)temp;
+            obj = @operator;
             return true;
         }
         else

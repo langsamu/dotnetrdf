@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -101,17 +101,6 @@ public sealed class PersistentTripleStore
     }
 
     /// <summary>
-    /// Finalizer which ensures that the instance is properly disposed of thereby persisting any outstanding changes to the underlying store
-    /// </summary>
-    /// <remarks>
-    /// If you do not wish to persist your changes you must call <see cref="PersistentTripleStore.Discard()">Discard()</see> prior to disposing of this instance or allowing it to go out of scope such that the finalizer gets called
-    /// </remarks>
-    ~PersistentTripleStore()
-    {
-        Dispose(false);
-    }
-
-    /// <summary>
     /// Get the preferred URI factory to use when creating URIs in this store.
     /// </summary>
     public override  IUriFactory UriFactory { get; }
@@ -133,15 +122,10 @@ public sealed class PersistentTripleStore
     /// <remarks>
     /// If you do not want to persist changes you have please ensure you call <see cref="PersistentTripleStore.Discard()">Discard()</see> prior to disposing of the instance.
     /// </remarks>
-    public override void Dispose()
+    protected override void Dispose(bool disposing)
     {
-        Dispose(true);
-    }
-
-    private void Dispose(bool disposing)
-    {
-        if (disposing) GC.SuppressFinalize(this);
         Flush();
+        base.Dispose(disposing);
     }
 
     /// <summary>
@@ -196,14 +180,14 @@ public sealed class PersistentTripleStore
     /// <param name="query">SPARQL Query as unparsed String.</param>
     public void ExecuteQuery(IRdfHandler rdfHandler, ISparqlResultsHandler resultsHandler, string query)
     {
-        if (_manager is IQueryableStorage)
+        if (_manager is IQueryableStorage storage)
         {
             if (!((PersistentGraphCollection)_graphs).IsSynced)
             {
                 throw new RdfQueryException("Unable to execute a SPARQL Query as the in-memory view of the store is not synced with the underlying store, please invoked Flush() or Discard() and try again.  Alternatively if you do not want to see in-memory changes reflected in query results you can invoke the Query() method directly on the underlying store by accessing it through the UnderlyingStore property.");
             }
 
-            ((IQueryableStorage)_manager).Query(rdfHandler, resultsHandler, query);
+            storage.Query(rdfHandler, resultsHandler, query);
         }
         else
         {
@@ -224,14 +208,14 @@ public sealed class PersistentTripleStore
     /// </remarks>
     public void ExecuteUpdate(string update)
     {
-        if (_manager is IUpdateableStorage)
+        if (_manager is IUpdateableStorage storage)
         {
             if (!((PersistentGraphCollection)_graphs).IsSynced)
             {
                 throw new SparqlUpdateException("Unable to execute a SPARQL Update as the in-memory view of the store is not synced with the underlying store, please invoked Flush() or Discard() and try again.  Alternatively if you do not want to see in-memory changes reflected in update results you can invoke the Update() method directly on the underlying store by accessing it through the UnderlyingStore property.");
             }
 
-            ((IUpdateableStorage)_manager).Update(update);
+            storage.Update(update);
         }
         else
         {

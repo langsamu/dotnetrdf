@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,10 +43,12 @@ internal class Property : Shape
     {
         get
         {
-            return
-                Vocabulary.Path.ObjectsOf(this)
-                .Select(x=>Path.Parse(x, Graph))
-                .Single();
+            var paths = Vocabulary.Path.ObjectsOf(this).Select(x=>Path.Parse(x, Graph)).ToList();
+            if (paths.Count != 1)
+            {
+                throw new ShaclProcessorException("A sh:PropertyShape must have exactly one sh:path property.");
+            }
+            return paths[0];
         }
     }
 

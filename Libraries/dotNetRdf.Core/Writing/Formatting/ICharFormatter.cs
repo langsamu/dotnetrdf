@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,14 +33,6 @@ namespace VDS.RDF.Writing.Formatting;
 /// </summary>
 public interface ICharFormatter
 {
-    /// <summary>
-    /// Formats a Character as a String.
-    /// </summary>
-    /// <param name="c">Character.</param>
-    /// <returns></returns>
-    [Obsolete("This form of the FormatChar() method is considered obsolete as it is inefficient", true)]
-    string FormatChar(char c);
-
     /// <summary>
     /// Formats a sequence of characters as a String.
     /// </summary>

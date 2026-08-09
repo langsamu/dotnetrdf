@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -174,9 +174,7 @@ public abstract class BaseGraph : IGraph
     /// <summary>
     /// Get or set whether to normalize the value strings of literal nodes on creation.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public virtual bool NormalizeLiteralValues { get; set; } = Options.LiteralValueNormalization;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public virtual bool NormalizeLiteralValues { get; set; }
 
     /// <inheritdoc />
     public LanguageTagValidationMode LanguageTagValidation

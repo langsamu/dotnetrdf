@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -104,7 +104,7 @@ internal class Resource : WrapperNode, IResource, IComparable<IResource>, IEquat
     }
 
     // A constructor cache to optimize half of the reflection work
-    private static readonly Dictionary<Type, ConstructorInfo> constructors = new Dictionary<Type, ConstructorInfo>();
+    private static readonly Dictionary<Type, ConstructorInfo> constructors = [];
     public IResource As(Type cls)
     {
         ConstructorInfo constructor;
@@ -114,7 +114,7 @@ internal class Resource : WrapperNode, IResource, IComparable<IResource>, IEquat
         }
         else
         {
-            constructor = cls.GetConstructor(new[] { typeof(INode), typeof(IGraph), typeof(SpinProcessor) });
+            constructor = cls.GetConstructor([typeof(INode), typeof(IGraph), typeof(SpinProcessor)]);
             constructors[cls] = constructor;
         }
 
@@ -122,7 +122,7 @@ internal class Resource : WrapperNode, IResource, IComparable<IResource>, IEquat
         {
             throw new SpinException("Unable to locate a usable constructor for type " + cls.FullName);
         }
-        return (IResource)constructor.Invoke(new object[] { Node, Graph, _model });
+        return (IResource)constructor.Invoke([Node, Graph, _model]);
     }
 
     public IEnumerable<IResource> getObjects(INode property)

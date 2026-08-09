@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,6 @@
 using System;
 using System.Linq;
 using VDS.RDF.Query.Optimisation;
-#if NETCORE
-using System.Reflection;
-#endif
 
 namespace VDS.RDF.Configuration;
 
@@ -71,9 +68,9 @@ public class OptimiserFactory
                 if (statsObj != null)
                 {
                     temp = ConfigurationLoader.LoadObject(g, statsObj);
-                    if (temp is IGraph)
+                    if (temp is IGraph graph)
                     {
-                        obj = new WeightedOptimiser((IGraph)temp);
+                        obj = new WeightedOptimiser(graph);
                     }
                     else
                     {

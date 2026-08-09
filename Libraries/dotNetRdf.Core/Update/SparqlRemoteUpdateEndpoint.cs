@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ namespace VDS.RDF.Update;
 /// <summary>
 /// A Class for connecting to a remote SPARQL Update endpoint and executing Updates against it.
 /// </summary>
-[Obsolete("This class is obsolete and will be removed in a future release. Replaced by VDS.RDF.Update.SparqlUpdateClient.")]
+[Obsolete("This class is obsolete and will be removed in a future release. Replaced by VDS.RDF.Update.SparqlUpdateClient.", true)]
 public class SparqlRemoteUpdateEndpoint 
     : BaseEndpoint
 {
@@ -125,22 +125,18 @@ public class SparqlRemoteUpdateEndpoint
             {
                 request.Method = "POST";
                 request.ContentType = MimeTypesHelper.Utf8WWWFormURLEncoded;
-                using (var writer = new StreamWriter(request.GetRequestStream(), new UTF8Encoding(false)))
-                {
-                    writer.Write(postData);
-                    writer.Close();
-                }
+                using var writer = new StreamWriter(request.GetRequestStream(), new UTF8Encoding(false));
+                writer.Write(postData);
+                writer.Close();
             }
             else
             {
                 request.Method = HttpMode;
             }
             request.Accept = MimeTypesHelper.Any;
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                // If we don't get an error then we should be fine
-                response.Close();
-            }
+            using var response = (HttpWebResponse)request.GetResponse();
+            // If we don't get an error then we should be fine
+            response.Close();
 
         }
         catch (WebException webEx)
@@ -187,11 +183,9 @@ public class SparqlRemoteUpdateEndpoint
                             {
                                 try
                                 {
-                                    using (var response = (HttpWebResponse) request.EndGetResponse(innerResult))
-                                    {
-                                        response.Close();
-                                        callback(state);
-                                    }
+                                    using var response = (HttpWebResponse)request.EndGetResponse(innerResult);
+                                    response.Close();
+                                    callback(state);
                                 }
                                 catch (SecurityException secEx)
                                 {

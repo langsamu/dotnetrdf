@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ public class Service
             if (EndpointSpecifier.TokenType == Token.VARIABLE)
             {
                 var serviceVar = ((VariableToken)EndpointSpecifier).Value.Substring(1);
-                return Pattern.Variables.Concat(serviceVar.AsEnumerable()).Distinct();
+                return Pattern.Variables.Concat([serviceVar]).Distinct();
             }
             else
             {
@@ -98,7 +98,7 @@ public class Service
     /// <summary>
     /// Gets the enumeration of fixed variables in the algebra i.e. variables that are guaranteed to have a bound value.
     /// </summary>
-    public IEnumerable<string> FixedVariables { get { return Enumerable.Empty<string>(); } }
+    public IEnumerable<string> FixedVariables { get { return []; } }
 
     /// <summary>
     /// Gets the Endpoint Specifier.

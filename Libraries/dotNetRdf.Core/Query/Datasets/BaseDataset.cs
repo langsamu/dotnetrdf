@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,7 @@ public abstract class BaseDataset
     /// Creates a new Dataset with a fixed Default Graph and without a Union Default Graph.
     /// </summary>
     /// <param name="defaultGraphUri"></param>
-    [Obsolete("Replaced by BaseDataset(IRefNode)")]
+    [Obsolete("Replaced by BaseDataset(IRefNode)", true)]
     public BaseDataset(Uri defaultGraphUri)
         : this()
     {
@@ -131,7 +131,7 @@ public abstract class BaseDataset
         var s = new Stack<IEnumerable<IRefNode>>();
         if (!_unionDefaultGraph)
         {
-            s.Push(new[] { _defaultGraphName });
+            s.Push([_defaultGraphName]);
         }
         return s;
     }
@@ -168,7 +168,7 @@ public abstract class BaseDataset
     /// Sets the Default Graph.
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
-    [Obsolete("Replaced by SetDefaultGraph(IRefNode)")]
+    [Obsolete("Replaced by SetDefaultGraph(IRefNode)", true)]
     public void SetDefaultGraph(Uri graphUri)
     {
         SetDefaultGraph(new UriNode(graphUri));
@@ -183,12 +183,12 @@ public abstract class BaseDataset
         if (HasGraph(graphName))
         {
             SetDefaultGraphInternal(this[graphName]);
-            _defaultGraphUris.Value.Push(new [] { graphName });
+            _defaultGraphUris.Value.Push([graphName]);
         }
         else
         {
             SetDefaultGraphInternal(new Graph());
-            _defaultGraphUris.Value.Push(Enumerable.Empty<IRefNode>());
+            _defaultGraphUris.Value.Push([]);
         }
     }
 
@@ -196,7 +196,7 @@ public abstract class BaseDataset
     /// Sets the Default Graph.
     /// </summary>
     /// <param name="graphUris">Graph URIs.</param>
-    [Obsolete("Replaced by SetDefaultGraph(IEnumerable<IRefNode>)")]
+    [Obsolete("Replaced by SetDefaultGraph(IEnumerable<IRefNode>)", true)]
     public void SetDefaultGraph(IEnumerable<Uri> graphUris)
     {
         SetDefaultGraph(graphUris.Select(x=>x == null ? null : new UriNode(x) as IRefNode).ToList());
@@ -211,7 +211,7 @@ public abstract class BaseDataset
         if (!graphNames.Any())
         {
             SetDefaultGraphInternal(new Graph());
-            _defaultGraphUris.Value.Push(Enumerable.Empty<IRefNode>());
+            _defaultGraphUris.Value.Push([]);
         }
         else if (graphNames.Count == 1)
         {
@@ -251,7 +251,7 @@ public abstract class BaseDataset
     /// <remarks>
     /// Helper function used primarily in the execution of GRAPH Clauses.
     /// </remarks>
-    [Obsolete("Replaced by SetActiveGraph(IRefNode)")]
+    [Obsolete("Replaced by SetActiveGraph(IRefNode)", true)]
     public void SetActiveGraph(Uri graphUri)
     {
         SetActiveGraph(graphUri == null ? null : new UriNode(graphUri));
@@ -269,18 +269,18 @@ public abstract class BaseDataset
             // If the default graph is null then it operates over the entire dataset
             _activeGraphs.Value.Push(_activeGraph.Value);
             _activeGraph.Value = _defaultGraph.Value;
-            _activeGraphUris.Value.Push(_defaultGraphUris.Value.Count > 0 ? _defaultGraphUris.Value.Peek() : Enumerable.Empty<IRefNode>());
+            _activeGraphUris.Value.Push(_defaultGraphUris.Value.Count > 0 ? _defaultGraphUris.Value.Peek() : []);
         }
         else if (HasGraph(graphName))
         {
             SetActiveGraphInternal(this[graphName]);
-            _activeGraphUris.Value.Push(new[] { graphName });
+            _activeGraphUris.Value.Push([graphName]);
         }
         else
         {
             // Active Graph is an empty Graph in the case where the Graph is not present in the Dataset
             SetActiveGraphInternal(new Graph());
-            _activeGraphUris.Value.Push(Enumerable.Empty<IRefNode>());
+            _activeGraphUris.Value.Push([]);
         }
     }
 
@@ -290,7 +290,7 @@ public abstract class BaseDataset
     /// </summary>
     /// <param name="graphUris">URIs of the Graphs which form the Active Graph.</param>
     /// <remarks>Helper function used primarily in the execution of GRAPH Clauses.</remarks>
-    [Obsolete("Replaced by SetActiveGraph(IList<IRefNode>)")]
+    [Obsolete("Replaced by SetActiveGraph(IList<IRefNode>)", true)]
     public void SetActiveGraph(IEnumerable<Uri> graphUris)
     {
         SetActiveGraph(graphUris.Select(x=>x == null ? null : new UriNode(x) as IRefNode).ToList());
@@ -365,7 +365,7 @@ public abstract class BaseDataset
     /// <summary>
     /// Gets the Default Graph URIs.
     /// </summary>
-    [Obsolete("Replaced by DefaultGraphNames. This property does not return the names of graphs that are named with a blank node.")]
+    [Obsolete("Replaced by DefaultGraphNames. This property does not return the names of graphs that are named with a blank node.", true)]
     public IEnumerable<Uri> DefaultGraphUris
     {
         get
@@ -387,14 +387,14 @@ public abstract class BaseDataset
         {
             return _defaultGraphUris.Value.Count > 0
                 ? _defaultGraphUris.Value.Peek()
-                : Enumerable.Empty<IRefNode>();
+                : [];
         }
     }
 
     /// <summary>
     /// Gets the Active Graph URIs.
     /// </summary>
-    [Obsolete("Replaced by ActiveGraphNames. This property does not return the names of any graphs named with a blank node.")]
+    [Obsolete("Replaced by ActiveGraphNames. This property does not return the names of any graphs named with a blank node.", true)]
     public IEnumerable<Uri> ActiveGraphUris
     {
         get
@@ -416,7 +416,7 @@ public abstract class BaseDataset
         {
             return _activeGraphUris.Value.Count > 0
                 ? _activeGraphUris.Value.Peek()
-                : Enumerable.Empty<IRefNode>();
+                : [];
         }
     }
 
@@ -445,7 +445,7 @@ public abstract class BaseDataset
     /// Removes a Graph from the Dataset.
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
-    [Obsolete("Replaced by RemoveGraph(IRefNode)")]
+    [Obsolete("Replaced by RemoveGraph(IRefNode)", true)]
     public virtual bool RemoveGraph(Uri graphUri)
     {
         return RemoveGraph(graphUri == null ? null : new UriNode(graphUri));
@@ -489,7 +489,7 @@ public abstract class BaseDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by HasGraph(IRefNode)")]
+    [Obsolete("Replaced by HasGraph(IRefNode)", true)]
     public bool HasGraph(Uri graphUri)
     {
         return HasGraph(graphUri == null ? null : new UriNode(graphUri));
@@ -528,7 +528,7 @@ public abstract class BaseDataset
     /// <summary>
     /// Gets all the URIs of Graphs in the Dataset.
     /// </summary>
-    [Obsolete("Replaced by GraphNames")]
+    [Obsolete("Replaced by GraphNames", true)]
     public virtual IEnumerable<Uri> GraphUris
     {
         get
@@ -563,7 +563,7 @@ public abstract class BaseDataset
     /// This property need only return a read-only view of the Graph, code which wishes to modify Graphs should use the <see cref="ISparqlDataset.GetModifiableGraph(IRefNode)">GetModifiableGraph()</see> method to guarantee a Graph they can modify and will be persisted to the underlying storage.
     /// </para>
     /// </remarks>
-    [Obsolete("Replaced by this[IRefNode]")]
+    [Obsolete("Replaced by this[IRefNode]", true)]
     public virtual IGraph this[Uri graphUri]
     {
         get
@@ -618,7 +618,7 @@ public abstract class BaseDataset
     /// Graphs returned from this method must be modifiable and the Dataset must guarantee that when it is Flushed or Disposed of that any changes to the Graph are persisted.
     /// </para>
     /// </remarks>
-    [Obsolete("Replaced by GetModifiableGraph(IRefNode)")]
+    [Obsolete("Replaced by GetModifiableGraph(IRefNode)", true)]
     public IGraph GetModifiableGraph(Uri graphUri)
     {
         return GetModifiableGraph(graphUri == null ? null : new UriNode(graphUri));

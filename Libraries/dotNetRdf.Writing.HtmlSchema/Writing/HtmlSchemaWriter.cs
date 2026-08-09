@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,20 +48,14 @@ public class HtmlSchemaWriter
     /// <inheritdoc />
     public void Save(IGraph g, string filename)
     {
-        Save(g, filename,
-#pragma warning disable CS0618 // Type or member is obsolete
-                new UTF8Encoding(Options.UseBomForUtf8) //new UTF8Encoding(false)
-#pragma warning restore CS0618 // Type or member is obsolete
-            );
+        Save(g, filename, new UTF8Encoding(false));
     }
 
     /// <inheritdoc />
     public void Save(IGraph g, string filename, Encoding fileEncoding)
     {
-        using (FileStream stream = File.Open(filename, FileMode.Create))
-        {
-            Save(g, new StreamWriter(stream, fileEncoding));
-        }
+        using FileStream stream = File.Open(filename, FileMode.Create);
+        Save(g, new StreamWriter(stream, fileEncoding));
     }
 
     /// <summary>
@@ -139,7 +133,7 @@ public class HtmlSchemaWriter
         context.HtmlWriter.WriteEncodedText("Schema");
         if (ontoNode != null && ontoLabel != null)
         {
-            context.HtmlWriter.WriteEncodedText(" - " + ontoLabel.ToSafeString());
+            context.HtmlWriter.WriteEncodedText(" - " + ontoLabel.ToString());
         }
         else if (context.Graph.BaseUri != null)
         {
@@ -165,7 +159,7 @@ public class HtmlSchemaWriter
         context.HtmlWriter.WriteEncodedText("Schema");
         if (ontoNode != null && ontoLabel != null)
         {
-            context.HtmlWriter.WriteEncodedText(" - " + ontoLabel.ToSafeString());
+            context.HtmlWriter.WriteEncodedText(" - " + ontoLabel.ToString());
         }
         else if (context.Graph.BaseUri != null)
         {
@@ -185,11 +179,11 @@ public class HtmlSchemaWriter
             try 
             {
                 results = context.Graph.ExecuteQuery(getOntoDescrip);
-                if (results is SparqlResultSet)
+                if (results is SparqlResultSet set)
                 {
-                    if (!((SparqlResultSet)results).IsEmpty)
+                    if (!set.IsEmpty)
                     {
-                        ISparqlResult ontoInfo = ((SparqlResultSet)results)[0];
+                        ISparqlResult ontoInfo = set[0];
 
                         // Show rdfs:comment on the Ontology
                         if (ontoInfo.HasValue("description"))
@@ -355,9 +349,8 @@ public class HtmlSchemaWriter
         try
         {
             results = context.Graph.ExecuteQuery(getClasses);
-            if (results is SparqlResultSet)
+            if (results is SparqlResultSet rs)
             {
-                var rs = (SparqlResultSet)results;
                 for (var i = 0; i < rs.Count; i++)
                 {
                     ISparqlResult r = rs[i];
@@ -405,9 +398,8 @@ public class HtmlSchemaWriter
         try
         {
             results = context.Graph.ExecuteQuery(getProperties);
-            if (results is SparqlResultSet)
+            if (results is SparqlResultSet rs)
             {
-                var rs = (SparqlResultSet)results;
                 for (var i = 0; i < rs.Count; i++)
                 {
                     ISparqlResult r = rs[i];
@@ -461,9 +453,9 @@ public class HtmlSchemaWriter
         try
         {
             results = context.Graph.ExecuteQuery(getClasses);
-            if (results is SparqlResultSet)
+            if (results is SparqlResultSet set)
             {
-                foreach (SparqlResult r in (SparqlResultSet)results)
+                foreach (SparqlResult r in set)
                 {
                     if (!r.HasValue("class")) continue;
                     var qname = context.NodeFormatter.Format(r["class"]);
@@ -571,9 +563,9 @@ public class HtmlSchemaWriter
         try
         {
             results = context.Graph.ExecuteQuery(getProperties);
-            if (results is SparqlResultSet)
+            if (results is SparqlResultSet set)
             {
-                foreach (SparqlResult r in (SparqlResultSet)results)
+                foreach (SparqlResult r in set)
                 {
                     if (!r.HasValue("property")) continue;
                     var qname = context.NodeFormatter.Format(r["property"]);

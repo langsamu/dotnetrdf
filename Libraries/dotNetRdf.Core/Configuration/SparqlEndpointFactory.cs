@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ namespace VDS.RDF.Configuration;
 /// <summary>
 /// Factory class for producing SPARQL Endpoints from Configuration Graphs.
 /// </summary>
-[Obsolete("This class is obsolete and will be removed in a future release. Replaced by VDS.RDF.Configuration.SparqlClientFactory")]
+[Obsolete("This class is obsolete and will be removed in a future release. Replaced by VDS.RDF.Configuration.SparqlClientFactory", true)]
 public class SparqlEndpointFactory 
     : IObjectFactory
 {
@@ -60,7 +60,7 @@ public class SparqlEndpointFactory
         switch (targetType.FullName)
         {
             case QueryEndpoint:
-                var queryEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, new INode[] { g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyQueryEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri)) });
+                var queryEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, [g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyQueryEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri))]);
                 if (queryEndpointUri == null) return false;
 
                 // Get Default/Named Graphs if specified
@@ -72,7 +72,7 @@ public class SparqlEndpointFactory
                 break;
 
             case UpdateEndpoint:
-                var updateEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, new INode[] { g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyUpdateEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri)) });
+                var updateEndpointUri = ConfigurationLoader.GetConfigurationValue(g, objNode, [g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyUpdateEndpointUri)), g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyEndpointUri))]);
                 if (updateEndpointUri == null) return false;
 
                 endpoint = new SparqlRemoteUpdateEndpoint(g.UriFactory.Create(updateEndpointUri));
@@ -84,15 +84,15 @@ public class SparqlEndpointFactory
                 foreach (INode e in endpoints)
                 {
                     var temp = ConfigurationLoader.LoadObject(g, e);
-                    if (temp is SparqlRemoteEndpoint)
+                    if (temp is SparqlRemoteEndpoint remoteEndpoint)
                     {
                         if (endpoint == null)
                         {
-                            endpoint = new FederatedSparqlRemoteEndpoint((SparqlRemoteEndpoint)temp);
+                            endpoint = new FederatedSparqlRemoteEndpoint(remoteEndpoint);
                         }
                         else
                         {
-                            ((FederatedSparqlRemoteEndpoint)endpoint).AddEndpoint((SparqlRemoteEndpoint)temp);
+                            ((FederatedSparqlRemoteEndpoint)endpoint).AddEndpoint(remoteEndpoint);
                         }
                     }
                     else
@@ -118,9 +118,9 @@ public class SparqlEndpointFactory
             if (proxyNode != null)
             {
                 var proxy = ConfigurationLoader.LoadObject(g, proxyNode);
-                if (proxy is IWebProxy)
+                if (proxy is IWebProxy webProxy)
                 {
-                    endpoint.Proxy = (IWebProxy)proxy;
+                    endpoint.Proxy = webProxy;
 
                     // Are we supposed to use the same credentials for the proxy as for the endpoint?
                     var useCredentialsForProxy = ConfigurationLoader.GetConfigurationBoolean(g, objNode, g.CreateUriNode(g.UriFactory.Create(ConfigurationLoader.PropertyUseCredentialsForProxy)), false);

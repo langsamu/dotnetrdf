@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -250,9 +250,9 @@ public partial class DynamicNode : IDictionary<INode, object>
     private IEnumerable<Triple> ConvertToTriples(INode predicate, object value)
     {
         // Strings are enumerable but not for our case
-        if (value is string || value is DynamicNode || !(value is IEnumerable enumerable))
+        if (value is string || value is DynamicNode || value is not IEnumerable enumerable)
         {
-            enumerable = value.AsEnumerable(); // When they're not enumerable, wrap them in an enumerable of one
+            enumerable = (IEnumerable<object>)[value]; // When they're not enumerable, wrap them in an enumerable of one
         }
 
         foreach (var @object in enumerable)

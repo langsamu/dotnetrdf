@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -69,16 +69,18 @@ public abstract class DeliminatedLineFormatter
         _lineEndChar = lineEndChar;
         _fullLiteralOutput = fullLiteralOutput;
 
-        _delimEscapes = new List<string[]>();
-        _delimEscapes.Add(new string[] { new string(new char[] { _deliminatorChar }), new string(new char[] { _escapeChar, _deliminatorChar }) });
-        _delimEscapes.Add(new string[] { new string(new char[] { '\n' }), new string(new char[] { _escapeChar, 'n' }) });
-        _delimEscapes.Add(new string[] { new string(new char[] { '\r' }), new string(new char[] { _escapeChar, 'r' }) });
-        _delimEscapes.Add(new string[] { new string(new char[] { '\t' }), new string(new char[] { _escapeChar, 't' }) });
+        _delimEscapes =
+        [
+            [new string([_deliminatorChar]), new string([_escapeChar, _deliminatorChar])],
+            [new string(['\n']), new string([_escapeChar, 'n'])],
+            [new string(['\r']), new string([_escapeChar, 'r'])],
+            [new string(['\t']), new string([_escapeChar, 't'])],
+        ];
 
         // TODO: Need to handle difference between standard and long literals better
         if (_literalWrapperChar.HasValue)
         {
-            _delimEscapes.Add(new string[] { new string(new char[] { _literalWrapperChar.Value }), new string(new char[] { _escapeChar, _literalWrapperChar.Value }) });
+            _delimEscapes.Add([new string([_literalWrapperChar.Value]), new string([_escapeChar, _literalWrapperChar.Value])]);
         }
     }
 
@@ -151,7 +153,7 @@ public abstract class DeliminatedLineFormatter
                     if (_literalWrapperChar == null && _longLiteralWrapperChar == null)
                     {
                         // Replace the deliminator
-                        value = value.Replace(new string(new char[] { _deliminatorChar }), new string(new char[] { _escapeChar, _deliminatorChar }));
+                        value = value.Replace(new string([_deliminatorChar]), new string([_escapeChar, _deliminatorChar]));
                     }
                 }
 
@@ -219,7 +221,7 @@ public abstract class DeliminatedLineFormatter
     {
         if (_uriEndChar != null)
         {
-            return u.Replace(new string(new char[] { (char)_uriEndChar }), new string(new char[] { _escapeChar, (char)_uriEndChar }));
+            return u.Replace(new string([(char)_uriEndChar]), new string([_escapeChar, (char)_uriEndChar]));
         }
         else
         {

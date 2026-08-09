@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -693,7 +693,7 @@ internal class ExpandProcessor : ProcessorBase
                                 // KA: Spec is not quite clear here but appears to indicate that the value of all properties should be an array or that array property values should be iterated over
                                 IEnumerable<JToken> items = property.Value is JArray itemsArray
                                     ? (IEnumerable<JToken>)itemsArray.Children()
-                                    : new[] { property.Value };
+                                    : [property.Value];
                                 foreach (JToken item in items)
                                 {
                                     // 13.4.13.4.2.1.1 - If item is a value object or list object, an invalid reverse property value has been detected and processing is aborted.

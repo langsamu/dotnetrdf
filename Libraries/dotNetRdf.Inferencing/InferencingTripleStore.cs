@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ public class InferencingTripleStore : TripleStore, IInferencingTripleStore
     /// <summary>
     /// List of Reasoners that are applied to Graphs as they are added to the Triple Store.
     /// </summary>
-    protected List<IInferenceEngine> _reasoners = new();
+    protected List<IInferenceEngine> _reasoners = [];
 
     #region Loading with Inference
 

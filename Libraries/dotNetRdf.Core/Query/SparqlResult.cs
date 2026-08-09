@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,8 @@ namespace VDS.RDF.Query;
 public sealed class SparqlResult 
     : ISparqlResult
 {
-    private List<string> _variables = new ();
-    private readonly Dictionary<string, INode> _resultValues = new();
+    private List<string> _variables = [];
+    private readonly Dictionary<string, INode> _resultValues = [];
 
     /// <summary>
     /// Creates a new empty SPARQL Result which can only be filled by methods internal to the dotNetRDF Library.

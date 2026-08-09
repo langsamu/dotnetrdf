@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -115,7 +115,7 @@ public class XPathFunctionFactory
                         XPathUnicodeNormalizationFormKD = "NFKD",
                         XPathUnicodeNormalizationFormFull = "FULLY-NORMALIZED";
 
-    private string[] FunctionUris = {
+    private string[] FunctionUris = [
                                         Not,
                                         Boolean,
                                         True,
@@ -148,9 +148,9 @@ public class XPathFunctionFactory
                                         MinutesFromDateTime,
                                         SecondsFromDateTime,
                                         TimezoneFromDateTime,
-                                    };
+                                    ];
 
-    private string[] AggregateUris = {StringJoin};
+    private string[] AggregateUris = [StringJoin];
 
     /// <summary>
     /// Argument Type Validator for validating that a Literal either has no datatype or is a String or langString.

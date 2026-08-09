@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -56,7 +56,7 @@ internal class SPINStatisticsManager
     }
 
 
-    private HashSet<ISPINStatisticsListener> _listeners = new HashSet<ISPINStatisticsListener>();
+    private HashSet<ISPINStatisticsListener> _listeners = [];
 
     private bool _recording;
 
@@ -65,7 +65,7 @@ internal class SPINStatisticsManager
     private bool _recordingSPINFunctions;
 
     //TODO: check for thread safety and synchronization. If order is not an issue, use System.Collections.Concurrent.ConcurrentBag instead
-    private List<SPINStatistics> stats = new List<SPINStatistics>();
+    private List<SPINStatistics> stats = [];
 
 
     public void addListener(ISPINStatisticsListener listener)

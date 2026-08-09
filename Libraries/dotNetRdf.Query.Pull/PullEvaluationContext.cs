@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -116,7 +116,7 @@ internal class PullEvaluationContext : IPatternEvaluationContext
             }
         }
 
-        _namedGraphs = namedGraphs != null ? namedGraphs.ToDictionary(g => g, g => data.HasGraph(g) ? data[g].Triples : new TripleCollection()) : new Dictionary<IRefNode, BaseTripleCollection>();
+        _namedGraphs = namedGraphs != null ? namedGraphs.ToDictionary(g => g, g => data.HasGraph(g) ? data[g].Triples : new TripleCollection()) : [];
         if (!unionDefaultGraph && !customDefaultGraph && !_namedGraphs.Any())
         {
             _namedGraphs = data.Graphs.Where(g => g.Name != null).ToDictionary(g => g.Name, g => g.Triples);
@@ -192,7 +192,7 @@ internal class PullEvaluationContext : IPatternEvaluationContext
                 {
                     // Return if the triple exists
                     var t = new Triple(subj, pred, obj);
-                    return ContainsTriple(t, activeGraph) ? t.AsEnumerable() : Enumerable.Empty<Triple>();
+                    return ContainsTriple(t, activeGraph) ? [t] : [];
                 }
             }
         }
@@ -247,14 +247,14 @@ internal class PullEvaluationContext : IPatternEvaluationContext
                 var t = new Triple(s, p, o);
                 if (tripleCollection.ContainsQuoted(t))
                 {
-                    return new[] { new TripleNode(t) };
+                    return [new TripleNode(t)];
                 }
-                return Enumerable.Empty<ITripleNode>();
+                return [];
             case TripleIndexType.None:
                 return tripleCollection.Quoted.Select(t => new TripleNode(t));
         }
 
-        return Enumerable.Empty<ITripleNode>();
+        return [];
     }
 
     public bool ContainsVariable(string varName)

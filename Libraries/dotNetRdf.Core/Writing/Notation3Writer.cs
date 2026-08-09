@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -107,9 +107,7 @@ public class Notation3Writer
     /// <para>
     /// If the Compression Level is set to <see cref="WriterCompressionLevel.More">More</see> or above then Blank Node Collections and Collection syntax will be used if the Graph contains Triples that can be compressed in that way.</para>
     /// </remarks>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public int CompressionLevel { get; set; } = Options.DefaultCompressionLevel;
-#pragma warning restore CS0618 // Type or member is obsolete
+    public int CompressionLevel { get; set; } = WriterCompressionLevel.More;
 
     /// <summary>
     /// Gets/Sets the Default Namespaces that are always available.
@@ -194,9 +192,8 @@ public class Notation3Writer
 
             foreach (Triple t in context.Graph.Triples)
             {
-                if (!contextWritten && t.Context != null && t.Context is VariableContext)
+                if (!contextWritten && t.Context is VariableContext varContext)
                 {
-                    var varContext = (VariableContext)t.Context;
                     contextWritten = GenerateVariableQuantificationOutput(context, varContext);
                 }
                 context.Output.WriteLine(GenerateTripleOutput(context, t));
@@ -229,9 +226,8 @@ public class Notation3Writer
                     if (lastSubj != null) context.Output.WriteLine(".");
 
                     // If there's a Variable Context insert the @forAll and @forSome
-                    if (!contextWritten && t.Context != null && t.Context is VariableContext)
+                    if (!contextWritten && t.Context is VariableContext varContext)
                     {
-                        var varContext = (VariableContext)t.Context;
                         contextWritten = GenerateVariableQuantificationOutput(context, varContext);
                     }
 
@@ -349,9 +345,9 @@ public class Notation3Writer
                 // Write Triples 1 at a Time on a single line
                 foreach (Triple t in subcontext.Graph.Triples) 
                 {
-                    if (!contextWritten && t.Context != null && t.Context is VariableContext)
+                    if (!contextWritten && t.Context is VariableContext tContext)
                     {
-                        contextWritten = GenerateVariableQuantificationOutput(subcontext, (VariableContext)t.Context);
+                        contextWritten = GenerateVariableQuantificationOutput(subcontext, tContext);
                         if (contextWritten) output.Append(temp);
                     }
 

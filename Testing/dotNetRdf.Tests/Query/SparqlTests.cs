@@ -205,10 +205,8 @@ public class SparqlTests : IClassFixture<MockRemoteSparqlEndpointFixture>
 
         object results = ExecuteQuery(store, query);
         Assert.IsType<SparqlResultSet>(results, exactMatch: false);
-        if (results is SparqlResultSet)
+        if (results is SparqlResultSet rset)
         {
-            var rset = (SparqlResultSet)results;
-
             //Serialize to both XML and JSON Results format
             var xmlwriter = new SparqlXmlWriter();
             xmlwriter.Save(rset, "results.xml");
@@ -318,25 +316,6 @@ SELECT * WHERE {
     }
 
     [Fact]
-    [Obsolete("Tests obsolete class")]
-    public void SparqlEndpointWithExtensions()
-    {
-        //var endpoint = new SparqlConnector(new Uri(TestConfigManager.GetSetting(TestConfigManager.RemoteSparqlQuery)));
-        var testQuery = @"PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT * WHERE {?s rdfs:label ?label . ?label bif:contains " + "\"London\" } LIMIT 1";
-
-        _serverFixture.RegisterSelectQueryGetHandler(testQuery);
-        var endpoint = new SparqlConnector(new Uri(_serverFixture.Server.Urls[0] + "/sparql"));
-
-        // As local SPARQL query parsing is no longer supposed, the server will receive the query (and in this case send back a response)
-        // endpoint.SkipLocalParsing = true;
-
-        var results = endpoint.Query(testQuery);
-        results.Should().BeOfType<SparqlResultSet>().Which.Results.Should().NotBeEmpty();
-        //TestTools.ShowResults(results);
-    }
-
-    [Fact]
     public void SparqlBNodeIDsInResults()
     {
         var xmlparser = new SparqlXmlParser();
@@ -441,7 +420,7 @@ WHERE
     }
 
     private readonly string[] _langSpecCaseQueries =
-            {
+            [
                 @"SELECT * WHERE { ?s ?p 'example'@en-gb }",
                 @"SELECT * WHERE { ?s ?p 'example'@en-GB }",
                 @"SELECT * WHERE { ?s ?p 'example'@EN-GB }",
@@ -454,7 +433,7 @@ WHERE
                 @"SELECT * WHERE { ?s ?p ?o . FILTER(LANGMATCHES(LANG(?o), 'en')) }",
                 @"SELECT * WHERE { ?s ?p ?o . FILTER(LANGMATCHES(LANG(?o), 'EN')) }",
                 @"SELECT * WHERE { ?s ?p ?o . FILTER(LANG(?o) = 'en-gb') }"
-            };
+            ];
 
     private void TestLanguageSpecifierCase(IGraph g)
     {

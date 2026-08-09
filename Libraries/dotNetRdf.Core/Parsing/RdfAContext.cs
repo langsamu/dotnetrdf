@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ public class RdfAContext: IRdfAContext
     /// </summary>
     public RdfAContext()
     {
-        _termMap = new Dictionary<string, string>();
+        _termMap = [];
         _namespaceMapper = new NamespaceMapper(true);
     }
 
@@ -61,7 +61,7 @@ public class RdfAContext: IRdfAContext
         IEnumerable<KeyValuePair<string, string>> prefixes)
     {
         VocabularyUri = vocabularyUri;
-        _termMap = terms?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? new Dictionary<string, string>();
+        _termMap = terms?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [];
         _namespaceMapper = new NamespaceMapper(true);
         if (prefixes != null)
         {
@@ -86,7 +86,7 @@ public class RdfAContext: IRdfAContext
         }
         else
         {
-            _termMap = new Dictionary<string, string>();
+            _termMap = [];
             foreach (KeyValuePair<string, string> entry in context.Mappings)
             {
                 _termMap[entry.Key.ToLowerInvariant()] = entry.Value;
@@ -207,7 +207,7 @@ public class RdfAContext: IRdfAContext
         if (prefix == null || uri == null)
         {
             // Graph contains no mappings
-            return Enumerable.Empty<KeyValuePair<string, string>>();
+            return [];
         }
         return GetMappings(prefix, uri, g);
     }
@@ -219,7 +219,7 @@ public class RdfAContext: IRdfAContext
         if (term == null || uri == null)
         {
             // Graph contains no mappings
-            return Enumerable.Empty<KeyValuePair<string, string>>();
+            return [];
         }
         return GetMappings(term, uri, g);
     }

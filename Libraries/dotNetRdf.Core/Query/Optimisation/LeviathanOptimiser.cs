@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,8 @@ namespace VDS.RDF.Query.Optimisation;
 public static class LeviathanOptimiser
 {
     private static IQueryOptimiser _queryOpt = new DefaultOptimiser();
-    private static List<IAlgebraOptimiser> _algebraOpt = new List<IAlgebraOptimiser>
-    {
+    private static List<IAlgebraOptimiser> _algebraOpt =
+    [
         // Optimise to insert Property Functions first - this is always a no-op if none registered
         new PropertyFunctionOptimiser(),
         // Optimise for Lazy Evaluation
@@ -49,7 +49,7 @@ public static class LeviathanOptimiser
         new IdentityFilterOptimiser(),
         new ImplicitJoinOptimiser(),
         new FilteredProductOptimiser(),
-    };
+    ];
 
     /// <summary>
     /// Namespace URI for the Optimiser Statistics vocabulary.
@@ -131,10 +131,10 @@ public static class LeviathanOptimiser
         {
             _queryOpt = new DefaultOptimiser();
         }
-        _algebraOpt = new List<IAlgebraOptimiser>()
-        {
+        _algebraOpt =
+        [
             new AskBgpOptimiser(),
             new LazyBgpOptimiser(),
-        };
+        ];
     }
 }

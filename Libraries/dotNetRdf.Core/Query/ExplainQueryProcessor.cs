@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -116,17 +116,17 @@ public class ExplainQueryProcessor
     /// <param name="context">SPARQL Evaluation Context.</param>
     private void PrintAnalysis(ISparqlAlgebra algebra, SparqlEvaluationContext context)
     {
-        if (algebra is IBgp)
+        if (algebra is IBgp bgp)
         {
-            PrintBgpAnalysis((IBgp) algebra);
+            PrintBgpAnalysis(bgp);
         }
-        else if (algebra is IAbstractJoin)
+        else if (algebra is IAbstractJoin join)
         {
-            PrintJoinAnalysis((IAbstractJoin) algebra);
+            PrintJoinAnalysis(join);
         }
-        else if (algebra is Algebra.Graph)
+        else if (algebra is Algebra.Graph graph)
         {
-            PrintGraphAnalysis((Algebra.Graph) algebra, context);
+            PrintGraphAnalysis(graph, context);
         }
     }
 
@@ -175,7 +175,7 @@ public class ExplainQueryProcessor
                 // Print the type of Join to be performed
                 if (i > 0 && (ps[i].PatternType == TriplePatternType.Match || ps[i].PatternType == TriplePatternType.SubQuery || ps[i].PatternType == TriplePatternType.Path))
                 {
-                    if (vars.IsDisjoint(ps[i].Variables))
+                    if (!vars.Overlaps(ps[i].Variables))
                     {
                         output.Append("Cross Product with ");
                     }
@@ -293,7 +293,7 @@ public class ExplainQueryProcessor
                     {
                         // Query specifies one/more named Graphs
                         PrintExplanations("Graph clause uses variable ?" + gvar + " which is restricted to graphs specified by the queries FROM NAMED clause(s)");
-                        activeGraphs.AddRange(context.Query.NamedGraphNames.Select(u => u.ToSafeString()));
+                        activeGraphs.AddRange(context.Query.NamedGraphNames.Select(u => $"{u}"));
                     }
                     else if (context.Query != null && context.Query.DefaultGraphNames.Any() && !context.Query.NamedGraphNames.Any())
                     {
@@ -305,7 +305,7 @@ public class ExplainQueryProcessor
                     {
                         // Query is over entire dataset/default Graph since no named Graphs are explicitly specified
                         PrintExplanations("Graph clause uses variable ?" + gvar + " which accesses all named graphs provided by the dataset");
-                        activeGraphs.AddRange(context.Data.GraphNames.Select(u => u.ToSafeString()));
+                        activeGraphs.AddRange(context.Data.GraphNames.Select(u => $"{u}"));
                     }
                 }
 
@@ -356,13 +356,11 @@ public class ExplainQueryProcessor
             System.Diagnostics.Debug.Write(indent);
             System.Diagnostics.Debug.WriteLine(output);
         }
-#if !NETCORE
         if (HasFlag(ExplanationLevel.OutputToTrace))
         {
             System.Diagnostics.Trace.Write(indent);
             System.Diagnostics.Trace.WriteLine(output);
         }
-#endif
     }
 
     /// <summary>

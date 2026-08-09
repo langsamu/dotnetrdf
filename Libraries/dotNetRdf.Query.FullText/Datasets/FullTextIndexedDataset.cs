@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,7 @@ public class FullTextIndexedDataset
     /// Removes a Graph from the Dataset updating the Full Text Index appropriately.
     /// </summary>
     /// <param name="graphUri">URI of the Graph to remove.</param>
-    [Obsolete("Replaced by RemoveGraph(IRefNode)")]
+    [Obsolete("Replaced by RemoveGraph(IRefNode)", true)]
     public override bool RemoveGraph(Uri graphUri)
     {
         if (HasGraph(graphUri))
@@ -118,7 +118,7 @@ public class FullTextIndexedDataset
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by GetModifiableGraph(IRefNode)")]
+    [Obsolete("Replaced by GetModifiableGraph(IRefNode)", true)]
     public override IGraph GetModifiableGraph(Uri graphUri)
     {
         //Use Events to pick up Triple Level changes in the Modifiable Graph
@@ -200,13 +200,13 @@ public class FullTextIndexedDataset
             base.SerializeConfiguration(context);
 
             //Then add additional configuration to the serialization
-            if (_indexer is IConfigurationSerializable)
+            if (_indexer is IConfigurationSerializable serializable)
             {
                 INode indexer = context.NextSubject;
                 context.NextSubject = indexer;
                 context.Graph.Assert(dataset, context.Graph.CreateUriNode(context.UriFactory.Create(FullTextHelper.PropertyIndexer)), indexer);
                 context.Graph.Assert(dataset, context.Graph.CreateUriNode(context.UriFactory.Create(FullTextHelper.PropertyIndexNow)), _indexNow.ToLiteral(context.Graph));
-                ((IConfigurationSerializable)_indexer).SerializeConfiguration(context);
+                serializable.SerializeConfiguration(context);
             }
             else
             {

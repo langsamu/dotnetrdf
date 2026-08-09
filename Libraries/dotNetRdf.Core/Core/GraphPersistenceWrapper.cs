@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ public class GraphPersistenceWrapper
     /// Underlying Graph this is a wrapper around.
     /// </summary>
     protected readonly IGraph _g;
-    private readonly List<TriplePersistenceAction> _actions = new();
+    private readonly List<TriplePersistenceAction> _actions = [];
     private readonly bool _alwaysQueueActions;
     private readonly TripleEventHandler _tripleAddedHandler;
     private readonly TripleEventHandler _tripleRemovedHandler;
@@ -1086,8 +1086,10 @@ public class GraphPersistenceWrapper
             {
                 TriplePersistenceAction action = _actions[0];
                 var isDelete = action.IsDelete;
-                var ts = new List<Triple>();
-                ts.Add(action.Triple);
+                var ts = new List<Triple>
+                {
+                    action.Triple,
+                };
 
                 var i = 1;
                 while (i < _actions.Count)
@@ -1217,6 +1219,7 @@ public class GraphPersistenceWrapper
     {
         if (disposing) GC.SuppressFinalize(this);
         Flush();
+        DetachEventHandlers(_g.Triples);
     }
 
 }

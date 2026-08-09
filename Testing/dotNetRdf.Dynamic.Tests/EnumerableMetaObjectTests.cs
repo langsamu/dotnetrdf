@@ -42,12 +42,7 @@ public class EnumerableMetaObjectTests
         var d = new DynamicNode(s, g);
         dynamic objects = new DynamicObjectCollection(d, p);
 
-#if NET7_0_OR_GREATER
         Assert.Throws<ArgumentException>(() => objects.Average());
-#else
-        Assert.Throws<InvalidOperationException>(() =>
-            objects.Average());
-#endif
     }
 
     [Fact]
@@ -111,12 +106,12 @@ public class EnumerableMetaObjectTests
             group =>
             {
                 Assert.Equal("en", group.Key);
-                Assert.Equal(new[] { "a", "b" }, group);
+                Assert.Equal(["a", "b"], group);
             },
             group =>
             {
                 Assert.Equal("fr", group.Key);
-                Assert.Equal(new[] { "c", "d" }, group);
+                Assert.Equal(["c", "d"], group);
             });
     }
 

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -136,9 +136,9 @@ public class UserGroupFactory : IObjectFactory
                 foreach (INode allow in allowed)
                 {
                     var temp = ConfigurationLoader.LoadObject(g, allow);
-                    if (temp is IPermission)
+                    if (temp is IPermission permission)
                     {
-                        result.AddAllowedAction((IPermission)temp);
+                        result.AddAllowedAction(permission);
                     }
                     else
                     {
@@ -151,9 +151,9 @@ public class UserGroupFactory : IObjectFactory
                 foreach (INode deny in denied)
                 {
                     var temp = ConfigurationLoader.LoadObject(g, deny);
-                    if (temp is IPermission)
+                    if (temp is IPermission permission)
                     {
-                        result.AddDeniedAction((IPermission)temp);
+                        result.AddDeniedAction(permission);
                     }
                     else
                     {

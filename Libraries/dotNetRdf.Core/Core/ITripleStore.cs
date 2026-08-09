@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -142,7 +142,7 @@ public interface ITripleStore
     /// Removes a Graph from the Triple Store.
     /// </summary>
     /// <param name="graphUri">Graph Uri of the Graph to remove.</param>
-    [Obsolete("Replaced by Remove(IRefNode)")]
+    [Obsolete("Replaced by Remove(IRefNode)", true)]
     bool Remove(Uri? graphUri);
 
     /// <summary>
@@ -161,7 +161,7 @@ public interface ITripleStore
     /// </summary>
     /// <param name="graphUri">Graph Uri.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by HasGraph(IRefNode)")]
+    [Obsolete("Replaced by HasGraph(IRefNode)", true)]
     bool HasGraph(Uri graphUri);
 
     /// <summary>
@@ -177,7 +177,7 @@ public interface ITripleStore
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by this[IRefNode]")]
+    [Obsolete("Replaced by this[IRefNode]", true)]
     IGraph this[Uri graphUri]
     {
         get;

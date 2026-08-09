@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -1011,6 +1011,19 @@ public abstract class WrapperGraph
         _g.TripleAsserted += TripleAssertedHandler;
         _g.TripleRetracted += TripleRetractedHandler;
     }
+    
+    /// <summary>
+    /// Helper method for detaching the necessary event handlers to the underlying graph.
+    /// </summary>
+    protected void DetachEventHandlers()
+    {
+        _g.TripleRetracted -= TripleRetractedHandler;
+        _g.TripleAsserted -= TripleAssertedHandler;
+        _g.Merged -= GraphMergedHandler;
+        _g.Changed -= GraphChangedHandler;
+        _g.Cleared -= GraphClearedHandler;
+    }
+
 
     #endregion
 
@@ -1019,6 +1032,7 @@ public abstract class WrapperGraph
     /// </summary>
     public virtual void Dispose()
     {
+        DetachEventHandlers();
         _g.Dispose();
     }
 

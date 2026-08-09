@@ -253,9 +253,10 @@ WHERE {
 }
 ");
         ISparqlResult result = results.Single();
-        var d = new DynamicSparqlResult(result);
-
-        d.Add("x", "y");
+        var d = new DynamicSparqlResult(result)
+        {
+            { "x", "y" },
+        };
 
         Assert.Equal("y", ((ILiteralNode)result["x"]).Value);
     }
@@ -412,14 +413,13 @@ WHERE {
         d.CopyTo(objects, 1); // start at the second item at destination
 
         Assert.Equal(
-            new[]
-            {
+            [
                 default,
                 new KeyValuePair<string, object>("s", UriFactory.Root.Create("urn:s")),
                 new KeyValuePair<string, object>("p", UriFactory.Root.Create("urn:p")),
                 new KeyValuePair<string, object>("o", UriFactory.Root.Create("urn:o")),
                 default
-            },
+            ],
             objects);
     }
 
@@ -441,19 +441,15 @@ WHERE {
         ISparqlResult result = results.Single();
         var d = (ICollection<KeyValuePair<string, object>>)new DynamicSparqlResult(result);
 
-        using (IEnumerator<KeyValuePair<string, object>> actual = d.GetEnumerator())
+        using IEnumerator<KeyValuePair<string, object>> actual = d.GetEnumerator();
+        using IEnumerator<KeyValuePair<string, INode>> expected = result.GetEnumerator();
+        while (expected.MoveNext() | actual.MoveNext())
         {
-            using (IEnumerator<KeyValuePair<string, INode>> expected = result.GetEnumerator())
-            {
-                while (expected.MoveNext() | actual.MoveNext())
-                {
-                    Assert.Equal(
-                        new KeyValuePair<string, object>(
-                            expected.Current.Key,
-                            ((IUriNode)expected.Current.Value).Uri),
-                        actual.Current);
-                }
-            }
+            Assert.Equal(
+                new KeyValuePair<string, object>(
+                    expected.Current.Key,
+                    ((IUriNode)expected.Current.Value).Uri),
+                actual.Current);
         }
     }
 
@@ -476,16 +472,14 @@ WHERE {
         var d = new DynamicSparqlResult(result);
 
         IEnumerator actual = d.GetEnumerator();
-        using (IEnumerator<KeyValuePair<string, INode>> expected = result.GetEnumerator())
+        using IEnumerator<KeyValuePair<string, INode>> expected = result.GetEnumerator();
+        while (expected.MoveNext() | actual.MoveNext())
         {
-            while (expected.MoveNext() | actual.MoveNext())
-            {
-                Assert.Equal(
-                    new KeyValuePair<string, object>(
-                        expected.Current.Key,
-                        ((IUriNode)expected.Current.Value).Uri),
-                    actual.Current);
-            }
+            Assert.Equal(
+                new KeyValuePair<string, object>(
+                    expected.Current.Key,
+                    ((IUriNode)expected.Current.Value).Uri),
+                actual.Current);
         }
     }
 

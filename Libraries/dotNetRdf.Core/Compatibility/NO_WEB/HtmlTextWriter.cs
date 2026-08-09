@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,8 +45,8 @@ public class HtmlTextWriter : TextWriter, IDisposable
     private bool _newline = true;
     private int _indent = 0;
     private Stack<string> _tags = new Stack<string>();
-    private List<KeyValuePair<string, string>> _attributes = new List<KeyValuePair<string, string>>();
-    private List<KeyValuePair<string, string>> _styles = new List<KeyValuePair<string, string>>();
+    private List<KeyValuePair<string, string>> _attributes = [];
+    private List<KeyValuePair<string, string>> _styles = [];
 
     /// <summary>
     /// Creates a new HTML Text Writer.
@@ -213,17 +213,10 @@ public class HtmlTextWriter : TextWriter, IDisposable
         _styles.Add(new KeyValuePair<string, string>(GetStyleName(key), value));
     }
 
-#if NETCORE
-    /// <summary>
-    /// Close the writer
-    /// </summary>
-    public void Close()
-#else
     /// <summary>
     /// Close the writer.
     /// </summary>
     public override void Close()
-#endif
     {
         _writer.Close();
     }

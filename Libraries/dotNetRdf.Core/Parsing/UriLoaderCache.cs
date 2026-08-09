@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -45,9 +45,9 @@ class UriLoaderCache
     private bool _canCacheGraphs = false, _canCacheETag = false;
     private string _graphDir;
     private string _etagFile;
-    private Dictionary<int, string> _etags = new Dictionary<int, string>();
+    private Dictionary<int, string> _etags = [];
     private CompressingTurtleWriter _ttlwriter = new CompressingTurtleWriter(WriterCompressionLevel.Medium);
-    private HashSet<string> _nocache = new HashSet<string>();
+    private HashSet<string> _nocache = [];
     private Type _formatterType = typeof(TurtleFormatter);
 
     /// <summary>
@@ -268,14 +268,12 @@ class UriLoaderCache
                 {
                     _etags.Remove(u.GetEnhancedHashCode());
                     // If we did remove an ETag then we need to rewrite our ETag cache file
-                    using (var writer = new StreamWriter(File.Open(_etagFile, FileMode.Create, FileAccess.Write), Encoding.UTF8))
+                    using var writer = new StreamWriter(File.Open(_etagFile, FileMode.Create, FileAccess.Write), Encoding.UTF8);
+                    foreach (KeyValuePair<int, string> etag in _etags)
                     {
-                        foreach (KeyValuePair<int, string> etag in _etags)
-                        {
-                            writer.WriteLine(etag.Key + "\t" + etag.Value);
-                        }
-                        writer.Close();
+                        writer.WriteLine(etag.Key + "\t" + etag.Value);
                     }
+                    writer.Close();
                 }
             }
         }
@@ -423,11 +421,9 @@ class UriLoaderCache
                 {
                     // Add a New ETag
                     _etags.Add(id, etag);
-                    using (var writer = new StreamWriter(File.Open(_etagFile, FileMode.Append, FileAccess.Write), Encoding.UTF8))
-                    {
-                        writer.WriteLine(id + "\t" + etag);
-                        writer.Close();
-                    }
+                    using var writer = new StreamWriter(File.Open(_etagFile, FileMode.Append, FileAccess.Write), Encoding.UTF8);
+                    writer.WriteLine(id + "\t" + etag);
+                    writer.Close();
                 }
 
                 // Cache under the Response URI as well if applicable
@@ -451,11 +447,9 @@ class UriLoaderCache
 
                     if (requireAdd)
                     {
-                        using (var writer = new StreamWriter(File.Open(_etagFile, FileMode.Append, FileAccess.Write), Encoding.UTF8))
-                        {
-                            writer.WriteLine(id + "\t" + etag);
-                            writer.Close();
-                        }
+                        using var writer = new StreamWriter(File.Open(_etagFile, FileMode.Append, FileAccess.Write), Encoding.UTF8);
+                        writer.WriteLine(id + "\t" + etag);
+                        writer.Close();
                     }
                 }
             }
@@ -473,7 +467,7 @@ class UriLoaderCache
                     // We should use the original handler in its capacity as node factory,
                     // otherwise there might be unexpected differences between its output
                     // and that of the MultiHandler's
-                    handler = new MultiHandler(new IRdfHandler[] { handler, new WriteThroughHandler(_formatterType, new StreamWriter(File.Open(graph, FileMode.Append, FileAccess.Write)), true) }, handler);
+                    handler = new MultiHandler([handler, new WriteThroughHandler(_formatterType, new StreamWriter(File.Open(graph, FileMode.Append, FileAccess.Write)), true)], handler);
                 }
             }
         }

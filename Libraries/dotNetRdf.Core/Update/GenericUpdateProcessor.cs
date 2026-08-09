@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -94,9 +94,9 @@ public class GenericUpdateProcessor
     /// <param name="cmd">Add Command.</param>
     public void ProcessAddCommand(AddCommand cmd)
     {
-        if (_manager is IUpdateableStorage)
+        if (_manager is IUpdateableStorage storage)
         {
-            ((IUpdateableStorage)_manager).Update(cmd.ToString());
+            storage.Update(cmd.ToString());
         }
         else
         {
@@ -144,9 +144,9 @@ public class GenericUpdateProcessor
     /// </remarks>
     public void ProcessClearCommand(ClearCommand cmd)
     {
-        if (_manager is IUpdateableStorage)
+        if (_manager is IUpdateableStorage storage)
         {
-            ((IUpdateableStorage)_manager).Update(cmd.ToString());
+            storage.Update(cmd.ToString());
         }
         else 
         {
@@ -233,9 +233,9 @@ public class GenericUpdateProcessor
     /// <param name="cmd">Copy Command.</param>
     public void ProcessCopyCommand(CopyCommand cmd)
     {
-        if (_manager is IUpdateableStorage)
+        if (_manager is IUpdateableStorage storage)
         {
-            ((IUpdateableStorage)_manager).Update(cmd.ToString());
+            storage.Update(cmd.ToString());
         }
         else
         {
@@ -402,9 +402,9 @@ public class GenericUpdateProcessor
         commands.UpdateExecutionTime = null;
         try
         {
-            if (_manager is IUpdateableStorage)
+            if (_manager is IUpdateableStorage storage)
             {
-                ((IUpdateableStorage)_manager).Update(commands.ToString());
+                storage.Update(commands.ToString());
             }
             else
             {
@@ -432,13 +432,13 @@ public class GenericUpdateProcessor
     /// </remarks>
     public void ProcessDeleteCommand(DeleteCommand cmd)
     {
-        if (_manager is IUpdateableStorage)
+        if (_manager is IUpdateableStorage storage)
         {
-            ((IUpdateableStorage)_manager).Update(cmd.ToString());
+            storage.Update(cmd.ToString());
         }
         else
         {
-            if (_manager is IQueryableStorage)
+            if (_manager is IQueryableStorage queryableStorage)
             {
                 // Check IO Behaviour
                 // For a delete we either need the ability to Update Delete Triples or to Overwrite Graphs
@@ -473,11 +473,11 @@ public class GenericUpdateProcessor
                     query.AddNamedGraph(new UriNode(u));
                 }
 
-                var results = ((IQueryableStorage)_manager).Query(query.ToString());
-                if (results is SparqlResultSet)
+                var results = queryableStorage.Query(query.ToString());
+                if (results is SparqlResultSet set)
                 {
                     // Now need to transform the Result Set back to a Multiset
-                    var mset = new Multiset((SparqlResultSet)results);
+                    var mset = new Multiset(set);
 
                     // Generate the Triples for each Solution
                     var deletedTriples = new List<Triple>();
@@ -544,7 +544,7 @@ public class GenericUpdateProcessor
                                         // Any other Graph Specifier we have to ignore this solution
                                         continue;
                                 }
-                                if (!deletedGraphTriples.ContainsKey(graphUri)) deletedGraphTriples.Add(graphUri, new List<Triple>());
+                                if (!deletedGraphTriples.ContainsKey(graphUri)) deletedGraphTriples.Add(graphUri, []);
                                 var context = new ConstructContext(s, true);
                                 foreach (IConstructTriplePattern p in gp.TriplePatterns.OfType<IConstructTriplePattern>())
                                 {
@@ -571,10 +571,10 @@ public class GenericUpdateProcessor
                     // Now decide how to apply the update
                     if (_manager.UpdateSupported)
                     {
-                        _manager.UpdateGraph(cmd.WithGraphName, Enumerable.Empty<Triple>(), deletedTriples);
+                        _manager.UpdateGraph(cmd.WithGraphName, [], deletedTriples);
                         foreach (KeyValuePair<IUriNode, List<Triple>> graphDeletion in deletedGraphTriples)
                         {
-                            _manager.UpdateGraph(graphDeletion.Key, Enumerable.Empty<Triple>(), graphDeletion.Value);
+                            _manager.UpdateGraph(graphDeletion.Key, [], graphDeletion.Value);
                         }
                     }
                     else
@@ -711,7 +711,7 @@ public class GenericUpdateProcessor
 
                 if (_manager.UpdateSupported)
                 {
-                    _manager.UpdateGraph(graphUri, Enumerable.Empty<Triple>(), g.Triples);
+                    _manager.UpdateGraph(graphUri, [], g.Triples);
                 }
                 else
                 {
@@ -727,9 +727,9 @@ public class GenericUpdateProcessor
     /// <param name="cmd">Drop Command.</param>
     public void ProcessDropCommand(DropCommand cmd)
     {
-        if (_manager is IUpdateableStorage)
+        if (_manager is IUpdateableStorage storage)
         {
-            ((IUpdateableStorage)_manager).Update(cmd.ToString());
+            storage.Update(cmd.ToString());
         }
         else
         {
@@ -934,7 +934,7 @@ public class GenericUpdateProcessor
                                         // Any other Graph Specifier we have to ignore this solution
                                         continue;
                                 }
-                                if (!insertedGraphTriples.ContainsKey(graphUri)) insertedGraphTriples.Add(graphUri, new List<Triple>());
+                                if (!insertedGraphTriples.ContainsKey(graphUri)) insertedGraphTriples.Add(graphUri, []);
                                 var context = new ConstructContext(s, true);
                                 foreach (IConstructTriplePattern p in gp.TriplePatterns.OfType<IConstructTriplePattern>())
                                 {
@@ -961,10 +961,10 @@ public class GenericUpdateProcessor
                     // Now decide how to apply the update
                     if (queryableStorage.UpdateSupported)
                     {
-                        queryableStorage.UpdateGraph(cmd.WithGraphName, insertedTriples, Enumerable.Empty<Triple>());
+                        queryableStorage.UpdateGraph(cmd.WithGraphName, insertedTriples, []);
                         foreach (KeyValuePair<IUriNode, List<Triple>> graphInsertion in insertedGraphTriples)
                         {
-                            queryableStorage.UpdateGraph(graphInsertion.Key, graphInsertion.Value, Enumerable.Empty<Triple>());
+                            queryableStorage.UpdateGraph(graphInsertion.Key, graphInsertion.Value, []);
                         }
                     }
                     else
@@ -1082,7 +1082,7 @@ public class GenericUpdateProcessor
 
                 if (_manager.UpdateSupported)
                 {
-                    _manager.UpdateGraph(graphUri, g.Triples, Enumerable.Empty<Triple>());
+                    _manager.UpdateGraph(graphUri, g.Triples, []);
                 }
                 else
                 {
@@ -1128,7 +1128,7 @@ public class GenericUpdateProcessor
                 Loader.LoadGraph(g, cmd.SourceUri);
                 if (_manager.UpdateSupported)
                 {
-                    _manager.UpdateGraph(cmd.TargetGraphName, g.Triples, Enumerable.Empty<Triple>());
+                    _manager.UpdateGraph(cmd.TargetGraphName, g.Triples, []);
                 }
                 else
                 {
@@ -1278,7 +1278,7 @@ public class GenericUpdateProcessor
                                         // Any other Graph Specifier we have to ignore this solution
                                         continue;
                                 }
-                                if (!deletedGraphTriples.ContainsKey(graphUri)) deletedGraphTriples.Add(graphUri, new List<Triple>());
+                                if (!deletedGraphTriples.ContainsKey(graphUri)) deletedGraphTriples.Add(graphUri, []);
                                 var context = new ConstructContext(s, true);
                                 foreach (IConstructTriplePattern p in gp.TriplePatterns.OfType<IConstructTriplePattern>())
                                 {
@@ -1366,7 +1366,7 @@ public class GenericUpdateProcessor
                                         // Any other Graph Specifier we have to ignore this solution
                                         continue;
                                 }
-                                if (!insertedGraphTriples.ContainsKey(graphUri)) insertedGraphTriples.Add(graphUri, new List<Triple>());
+                                if (!insertedGraphTriples.ContainsKey(graphUri)) insertedGraphTriples.Add(graphUri, []);
                                 var context = new ConstructContext(s, true);
                                 foreach (IConstructTriplePattern p in gp.TriplePatterns.OfType<IConstructTriplePattern>())
                                 {
@@ -1399,11 +1399,11 @@ public class GenericUpdateProcessor
                         // e.g. ignoring Triples which are both asserted and retracted in one update
                         foreach (KeyValuePair<IUriNode, List<Triple>> graphDeletion in deletedGraphTriples)
                         {
-                            queryableStorage.UpdateGraph(graphDeletion.Key, Enumerable.Empty<Triple>(), graphDeletion.Value);
+                            queryableStorage.UpdateGraph(graphDeletion.Key, [], graphDeletion.Value);
                         }
                         foreach (KeyValuePair<IUriNode, List<Triple>> graphInsertion in insertedGraphTriples)
                         {
-                            queryableStorage.UpdateGraph(graphInsertion.Key, graphInsertion.Value, Enumerable.Empty<Triple>());
+                            queryableStorage.UpdateGraph(graphInsertion.Key, graphInsertion.Value, []);
                         }
                     }
                     else
@@ -1441,9 +1441,9 @@ public class GenericUpdateProcessor
     /// <param name="cmd">Move Command.</param>
     public void ProcessMoveCommand(MoveCommand cmd)
     {
-        if (_manager is IUpdateableStorage)
+        if (_manager is IUpdateableStorage storage)
         {
-            ((IUpdateableStorage)_manager).Update(cmd.ToString());
+            storage.Update(cmd.ToString());
         }
         else
         {

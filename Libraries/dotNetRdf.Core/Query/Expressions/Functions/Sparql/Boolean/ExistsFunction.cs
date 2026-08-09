@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -151,7 +151,7 @@ public class ExistsFunction
     {
         get
         {
-            return new ISparqlExpression[] { new GraphPatternTerm(Pattern) };
+            return [new GraphPatternTerm(Pattern)];
         }
     }
 
@@ -163,9 +163,9 @@ public class ExistsFunction
     public ISparqlExpression Transform(IExpressionTransformer transformer)
     {
         ISparqlExpression temp = transformer.Transform(new GraphPatternTerm(Pattern));
-        if (temp is GraphPatternTerm)
+        if (temp is GraphPatternTerm term)
         {
-            return new ExistsFunction(((GraphPatternTerm)temp).Pattern, MustExist);
+            return new ExistsFunction(term.Pattern, MustExist);
         }
         else
         {

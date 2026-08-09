@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,11 +43,8 @@ public class TurtleParser
     private bool _traceParsing;
     private bool _traceTokeniser;
 
-#pragma warning disable CS0618 // Type or member is obsolete
-    private readonly bool _validateIris = Options.ValidateIris; // = false;
-#pragma warning restore CS0618 // Type or member is obsolete
+    private readonly bool _validateIris;
     
-    //private TokenQueueMode _queueMode = TokenQueueMode.SynchronousBufferDuringParsing;
     private readonly TurtleSyntax _syntax;
 
     /// <summary>
@@ -60,7 +57,7 @@ public class TurtleParser
     /// </summary>
     /// <param name="syntax">Turtle Syntax.</param>
     /// <remarks>IRIs will only be validated if <paramref name="syntax"/> is <see cref="TurtleSyntax.W3C"/> and <see cref="Options.ValidateIris"/> is true.</remarks>
-    [Obsolete("The Options.ValidateIris API has been deprecated. Please use the constructor that allows IRI validation to be set directly.")]
+    [Obsolete("The Options.ValidateIris API has been deprecated. Please use the constructor that allows IRI validation to be set directly.", true)]
     public TurtleParser(TurtleSyntax syntax)
     {
         _syntax = syntax;
@@ -130,9 +127,7 @@ public class TurtleParser
     /// <summary>
     /// Gets/Sets the token queue mode used.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    public TokenQueueMode TokenQueueMode { get; set; } = Options.DefaultTokenQueueMode; // TokenQueueMode.SynchronousBufferDuringParsing
-#pragma warning restore CS0618 // Type or member is obsolete
+    public TokenQueueMode TokenQueueMode { get; set; } = TokenQueueMode.SynchronousBufferDuringParsing;
 
     /// <summary>
     /// Loads a Graph by reading Turtle syntax from the given input.
@@ -378,7 +373,7 @@ public class TurtleParser
                 // Set the Base Uri resolving against the current Base if any
                 try
                 {
-                    Uri baseUri = context.UriFactory.Create(Tools.ResolveUri(u.Value, context.BaseUri.ToSafeString()));
+                    Uri baseUri = context.UriFactory.Create(Tools.ResolveUri(u.Value, context.BaseUri?.AbsoluteUri ?? ""));
                     context.BaseUri = baseUri;
                     if (!context.Handler.HandleBaseUri(baseUri)) ParserHelper.Stop();
                 }
@@ -404,7 +399,7 @@ public class TurtleParser
                     // Register a Namespace resolving the Namespace Uri against the Base Uri
                     try
                     {
-                        Uri nsUri = context.UriFactory.Create(Tools.ResolveUri(ns.Value, context.BaseUri.ToSafeString()));
+                        Uri nsUri = context.UriFactory.Create(Tools.ResolveUri(ns.Value, context.BaseUri?.AbsoluteUri ?? ""));
                         var nsPrefix = (pre.Value.Length > 1) ? pre.Value.Substring(0, pre.Value.Length - 1) : string.Empty;
                         context.Namespaces.AddNamespace(nsPrefix, nsUri);
                         if (!context.Handler.HandleNamespace(nsPrefix, nsUri)) ParserHelper.Stop();
@@ -1063,7 +1058,7 @@ public class TurtleParser
                         if (next.Value.StartsWith("<"))
                         {
                             dturi = next.Value.Substring(1, next.Value.Length - 2);
-                            return context.Handler.CreateLiteralNode(lit.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri.ToSafeString())));
+                            return context.Handler.CreateLiteralNode(lit.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri?.AbsoluteUri ?? "")));
                         }
                         else
                         {
@@ -1089,7 +1084,7 @@ public class TurtleParser
                     if (litdt.DataType.StartsWith("<"))
                     {
                         dturi = litdt.DataType.Substring(1, litdt.DataType.Length - 2);
-                        return context.Handler.CreateLiteralNode(litdt.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri.ToSafeString())));
+                        return context.Handler.CreateLiteralNode(litdt.Value, context.UriFactory.Create(Tools.ResolveUri(dturi, context.BaseUri?.AbsoluteUri ?? "")));
                     }
                     else
                     {

@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,11 +39,6 @@ public interface IQueryBuilder
     /// Gets the query type of the generated SPARQL query.
     /// </summary>
     SparqlQueryType QueryType { get; }
-    /// <summary>
-    /// Gets the builder associated with the root graph pattern.
-    /// </summary>
-    [Obsolete("Please use Root property", true)]
-    GraphPatternBuilder RootGraphPatternBuilder { get; }
     /// <summary>
     /// Gets the builder associated with the root graph pattern.
     /// </summary>

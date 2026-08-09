@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -70,7 +70,7 @@ public class DeleteDataCommand : SparqlUpdateCommand
         if (p.IsGraph)
         {
             // If a GRAPH clause then all triple patterns must be constructable and have no Child Graph Patterns
-            return !p.HasChildGraphPatterns && p.TriplePatterns.All(tp => tp is IConstructTriplePattern && ((IConstructTriplePattern)tp).HasNoVariables);
+            return !p.HasChildGraphPatterns && p.TriplePatterns.All(tp => tp is IConstructTriplePattern { HasNoVariables: true });
         }
         else if (p.IsExists || p.IsMinus || p.IsNotExists || p.IsOptional || p.IsService || p.IsSubQuery || p.IsUnion)
         {
@@ -82,7 +82,7 @@ public class DeleteDataCommand : SparqlUpdateCommand
             // For other patterns all Triple patterns must be constructable with no explicit variables
             // If top level then any Child Graph Patterns must be valid
             // Otherwise must have no Child Graph Patterns
-            return p.TriplePatterns.All(tp => tp is IConstructTriplePattern && ((IConstructTriplePattern)tp).HasNoVariables) && ((top && p.ChildGraphPatterns.All(gp => IsValidDataPattern(gp, false))) || !p.HasChildGraphPatterns);
+            return p.TriplePatterns.All(tp => tp is IConstructTriplePattern { HasNoVariables: true }) && ((top && p.ChildGraphPatterns.All(gp => IsValidDataPattern(gp, false))) || !p.HasChildGraphPatterns);
         }
     }
 
@@ -133,7 +133,7 @@ public class DeleteDataCommand : SparqlUpdateCommand
     /// </summary>
     /// <param name="graphUri">Graph URI.</param>
     /// <returns></returns>
-    [Obsolete("Replaced by AffectsGraph(IRefNode)")]
+    [Obsolete("Replaced by AffectsGraph(IRefNode)", true)]
     public override bool AffectsGraph(Uri graphUri)
     {
         var affectedUris = new List<string>();
@@ -153,7 +153,7 @@ public class DeleteDataCommand : SparqlUpdateCommand
         }
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphUri.ToSafeString());
+        return affectedUris.Contains(graphUri?.AbsoluteUri ?? "");
     }
 
     /// <summary>
@@ -182,7 +182,7 @@ public class DeleteDataCommand : SparqlUpdateCommand
 
         if (affectedUris.Any(u => u != null)) affectedUris.Add(string.Empty);
 
-        return affectedUris.Contains(graphName.ToSafeString());
+        return affectedUris.Contains($"{graphName}");
     }
 
 

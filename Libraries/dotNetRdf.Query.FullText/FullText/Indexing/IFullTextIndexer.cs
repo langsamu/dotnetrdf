@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -67,16 +67,6 @@ public interface IFullTextIndexer
     }
 
     /// <summary>
-    /// Indexes a Triple.
-    /// </summary>
-    /// <param name="t">Triple.</param>
-    /// <remarks>
-    /// Implementations <emph>SHOULD NOT</emph> automatically Flush changes to the indexes at the end of this operation.
-    /// </remarks>
-    [Obsolete("This method is replaced by Index(IGraph, Triple). As triple no longer carry a reference to a parent graph, this method should no longer be used.", true)]
-    void Index(Triple t);
-
-    /// <summary>
     /// Indexes a triple in the context of a graph.
     /// </summary>
     /// <param name="g">The graph context of the triple.</param>
@@ -100,16 +90,6 @@ public interface IFullTextIndexer
     /// Implementations <emph>SHOULD</emph> automatically Flush changes to the indexes at the end of this operation.
     /// </remarks>
     void Index(ISparqlDataset dataset);
-
-    /// <summary>
-    /// Unindexes a Triple.
-    /// </summary>
-    /// <param name="t">Triple.</param>
-    /// <remarks>
-    /// Implementations <emph>SHOULD NOT</emph> automatically Flush changes to the indexes at the end of this operation.
-    /// </remarks>
-    [Obsolete("Replaced by Unindex(IGraph, Triple). As triples no longer have a reference to a parent graph, this method should no longer be used.", true)]
-    void Unindex(Triple t);
 
     /// <summary>
     /// Unindexes a triple in the context of a graph.

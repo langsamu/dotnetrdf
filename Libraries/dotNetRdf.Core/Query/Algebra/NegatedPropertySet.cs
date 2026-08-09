@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ namespace VDS.RDF.Query.Algebra;
 /// </summary>
 public class NegatedPropertySet : ISparqlAlgebra
 {
-    private readonly List<INode> _properties = new List<INode>();
+    private readonly List<INode> _properties = [];
 
     /// <summary>
     /// Creates a new Negated Property Set.
@@ -108,7 +108,7 @@ public class NegatedPropertySet : ISparqlAlgebra
     /// </summary>
     public IEnumerable<string> FloatingVariables
     {
-        get { return Enumerable.Empty<string>(); }
+        get { return []; }
     }
 
     /// <summary>
@@ -130,11 +130,11 @@ public class NegatedPropertySet : ISparqlAlgebra
         PropertyPathPattern pp;
         if (Inverse)
         {
-            pp = new PropertyPathPattern(PathStart, new NegatedSet(Enumerable.Empty<Property>(), _properties.Select(p => new Property(p))), PathEnd);
+            pp = new PropertyPathPattern(PathStart, new NegatedSet([], _properties.Select(p => new Property(p))), PathEnd);
         }
         else
         {
-            pp = new PropertyPathPattern(PathStart, new NegatedSet(_properties.Select(p => new Property(p)), Enumerable.Empty<Property>()), PathEnd);
+            pp = new PropertyPathPattern(PathStart, new NegatedSet(_properties.Select(p => new Property(p)), []), PathEnd);
         }
         gp.AddTriplePattern(pp);
         return gp;

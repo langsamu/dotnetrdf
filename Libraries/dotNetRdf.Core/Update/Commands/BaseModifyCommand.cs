@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ public abstract class BaseModificationCommand
         {
             if (_usingUris == null)
             {
-                return Enumerable.Empty<Uri>();
+                return [];
             }
             else
             {
@@ -80,7 +80,7 @@ public abstract class BaseModificationCommand
         {
             if (_usingNamedUris == null)
             {
-                return Enumerable.Empty<Uri>();
+                return [];
             }
             else
             {
@@ -92,7 +92,7 @@ public abstract class BaseModificationCommand
     /// <summary>
     /// Gets the URI of the Graph specified in the WITH clause.
     /// </summary>
-    [Obsolete("Replaced by WithGraphName")]
+    [Obsolete("Replaced by WithGraphName", true)]
     public Uri GraphUri
     {
         get
@@ -116,7 +116,7 @@ public abstract class BaseModificationCommand
     /// <param name="u">URI.</param>
     public void AddUsingUri(Uri u)
     {
-        if (_usingUris == null) _usingUris = new List<Uri>();
+        if (_usingUris == null) _usingUris = [];
         _usingUris.Add(u);
     }
 
@@ -126,7 +126,7 @@ public abstract class BaseModificationCommand
     /// <param name="u">URI.</param>
     public void AddUsingNamedUri(Uri u)
     {
-        if (_usingNamedUris == null) _usingNamedUris = new List<Uri>();
+        if (_usingNamedUris == null) _usingNamedUris = [];
         _usingNamedUris.Add(u);
     }
 
@@ -141,7 +141,7 @@ public abstract class BaseModificationCommand
         if (p.IsGraph)
         {
             // If a GRAPH clause then all triple patterns must be constructable and have no Child Graph Patterns
-            return !p.HasChildGraphPatterns && p.TriplePatterns.All(tp => tp is IConstructTriplePattern && ((IConstructTriplePattern)tp).HasNoBlankVariables);
+            return !p.HasChildGraphPatterns && p.TriplePatterns.All(tp => tp is IConstructTriplePattern { HasNoBlankVariables: true });
         }
         else if (p.IsExists || p.IsMinus || p.IsNotExists || p.IsOptional || p.IsService || p.IsSubQuery || p.IsUnion)
         {
@@ -153,7 +153,7 @@ public abstract class BaseModificationCommand
             // For other patterns all Triple patterns must be constructable with no blank variables
             // If top level then any Child Graph Patterns must be valid
             // Otherwise must have no Child Graph Patterns
-            return p.TriplePatterns.All(tp => tp is IConstructTriplePattern && ((IConstructTriplePattern)tp).HasNoBlankVariables) && ((top && p.ChildGraphPatterns.All(gp => IsValidDeletePattern(gp, false))) || !p.HasChildGraphPatterns);
+            return p.TriplePatterns.All(tp => tp is IConstructTriplePattern { HasNoBlankVariables: true }) && ((top && p.ChildGraphPatterns.All(gp => IsValidDeletePattern(gp, false))) || !p.HasChildGraphPatterns);
         }
     }
 }

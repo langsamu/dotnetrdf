@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 // </copyright>
 */
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -45,10 +46,12 @@ public class SparqlXmlWriter : ISparqlResultsWriter
     /// <param name="fileEncoding">The text encoding to use for the output file.</param>
     public virtual void Save(SparqlResultSet results, string filename, Encoding fileEncoding)
     {
-        using (FileStream stream = File.Open(filename, FileMode.Create))
-        {
-            Save(results, new StreamWriter(stream, fileEncoding));
-        }
+        if (results == null) throw  new ArgumentNullException(nameof(results), "Cannot write a null results set");
+        if (filename == null) throw new ArgumentNullException(nameof(filename), "Cannot write to a null file");
+        if (fileEncoding == null) throw new ArgumentNullException(nameof(fileEncoding), "Cannot write to a file with a null encoding");
+
+        using var stream = File.Open(filename, FileMode.Create);
+        Save(results, new StreamWriter(stream, fileEncoding));
     }
 
     /// <summary>
@@ -60,11 +63,7 @@ public class SparqlXmlWriter : ISparqlResultsWriter
     public virtual void Save(SparqlResultSet results, string filename)
 
     {
-        Save(results, filename,
-#pragma warning disable CS0618 // Type or member is obsolete
-                new UTF8Encoding(Options.UseBomForUtf8) //new UTF8Encoding(false)
-#pragma warning restore CS0618 // Type or member is obsolete
-            );
+        Save(results, filename, new UTF8Encoding(false));
     }
 
     private static XmlWriterSettings GetSettings(Encoding fileEncoding)
@@ -88,6 +87,9 @@ public class SparqlXmlWriter : ISparqlResultsWriter
     /// <param name="output"></param>
     public virtual void Save(SparqlResultSet results, TextWriter output)
     {
+        if (results == null) throw  new ArgumentNullException(nameof(results), "Cannot write a null results set");
+        if (output == null) throw new ArgumentNullException(nameof(output), "Cannot write to a null output writer");
+
         try
         {
             var writer = XmlWriter.Create(output, GetSettings(output.Encoding));

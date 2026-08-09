@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -77,7 +77,7 @@ public class SparqlUpdateClient : IConfigurationSerializable
     public async Task UpdateAsync(string sparqlUpdate, CancellationToken cancellationToken)
     {
         var content = new FormUrlEncodedContent(
-            new[] {new KeyValuePair<string, string>("update", sparqlUpdate)}
+            [new KeyValuePair<string, string>("update", sparqlUpdate)]
         );
         HttpResponseMessage response = await _httpClient.PostAsync(EndpointUri, content, cancellationToken);
         if (!response.IsSuccessStatusCode)

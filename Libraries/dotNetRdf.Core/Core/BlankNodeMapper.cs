@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace VDS.RDF;
@@ -36,8 +35,8 @@ namespace VDS.RDF;
 /// </summary>
 public class BlankNodeMapper
 {
-    private Dictionary<string, BlankNodeIDAssigment> _idmap = new Dictionary<string, BlankNodeIDAssigment>();
-    private Dictionary<string, string> _remappings = new Dictionary<string, string>();
+    private Dictionary<string, BlankNodeIDAssigment> _idmap = [];
+    private Dictionary<string, string> _remappings = [];
     private static long _nextid = 0;
     private static long _nextremap = 0;
     private string _prefix = "autos";
@@ -118,6 +117,9 @@ public class BlankNodeMapper
         }
     }
 
+    /// <summary>
+    /// Converts all current blank node assignments to auto-assigned, resetting user-assigned status for all tracked blank nodes.
+    /// </summary>
     public void FlushBlankNodeAssignments()
     {
         var newMap = new Dictionary<string, BlankNodeIDAssigment>();
@@ -139,7 +141,7 @@ public class BlankNodeMapper
 public class BlankNodeOutputMapper
 {
     private Func<string, bool> _validator;
-    private Dictionary<string, BlankNodeIDAssigment> _remappings = new Dictionary<string, BlankNodeIDAssigment>();
+    private Dictionary<string, BlankNodeIDAssigment> _remappings = [];
     private int _nextid = 1;
 
     /// <summary>

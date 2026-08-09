@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -193,16 +193,10 @@ public static partial class UriLoader
 
             // Use HTTP GET
             request.Method = "GET";
-#if !NETCORE
             request.Timeout = Timeout;
-#endif
             if (_userAgent != null && !_userAgent.Equals(string.Empty))
             {
-#if NETCORE
-                request.Headers[HttpRequestHeader.UserAgent] = _userAgent;
-#else
                 request.UserAgent = _userAgent;
-#endif
             }
 
             try
@@ -211,21 +205,19 @@ public static partial class UriLoader
                     {
                         try
                         {
-                            using (var response = (HttpWebResponse) request.EndGetResponse(result))
+                            using var response = (HttpWebResponse)request.EndGetResponse(result);
+                            // Get a Parser and load the RDF
+                            if (parser == null)
                             {
-                                // Get a Parser and load the RDF
-                                if (parser == null)
-                                {
-                                    // Only need to auto-detect the parser if a specific one wasn't specified
-                                    parser = MimeTypesHelper.GetParser(response.ContentType);
-                                }
-                                parser.Warning += RaiseWarning;
-
-                                parser.Load(handler, new StreamReader(response.GetResponseStream()));
-
-                                // Finally can invoke the callback
-                                callback(handler, state);
+                                // Only need to auto-detect the parser if a specific one wasn't specified
+                                parser = MimeTypesHelper.GetParser(response.ContentType);
                             }
+                            parser.Warning += RaiseWarning;
+
+                            parser.Load(handler, new StreamReader(response.GetResponseStream()));
+
+                            // Finally can invoke the callback
+                            callback(handler, state);
                         }
                         catch (WebException webEx)
                         {
@@ -398,16 +390,10 @@ public static partial class UriLoader
 
             // Use HTTP GET
             request.Method = "GET";
-#if !NETCORE
             request.Timeout = Timeout;
-#endif
             if (_userAgent != null && !_userAgent.Equals(string.Empty))
             {
-#if NETCORE
-                request.Headers[HttpRequestHeader.UserAgent] = _userAgent;
-#else
                 request.UserAgent = _userAgent;
-#endif
             }
 
             try
@@ -416,46 +402,44 @@ public static partial class UriLoader
                     {
                         try
                         {
-                            using (var response = (HttpWebResponse) request.EndGetResponse(result))
+                            using var response = (HttpWebResponse)request.EndGetResponse(result);
+                            // Get a Parser and load the RDF
+                            if (parser == null)
                             {
-                                // Get a Parser and load the RDF
-                                if (parser == null)
+                                try
                                 {
+                                    // Only need to auto-detect the parser if a specific one wasn't specified
+                                    parser = MimeTypesHelper.GetStoreParser(response.ContentType);
+                                    parser.Warning += RaiseWarning;
+                                    parser.Load(handler, new StreamReader(response.GetResponseStream()));
+                                }
+                                catch (RdfParserSelectionException)
+                                {
+                                    RaiseStoreWarning("Unable to select a RDF Dataset parser based on Content-Type: " + response.ContentType + " - seeing if the content is an RDF Graph instead");
+
                                     try
                                     {
-                                        // Only need to auto-detect the parser if a specific one wasn't specified
-                                        parser = MimeTypesHelper.GetStoreParser(response.ContentType);
-                                        parser.Warning += RaiseWarning;
-                                        parser.Load(handler, new StreamReader(response.GetResponseStream()));
+                                        // If not a RDF Dataset format see if it is a Graph
+                                        IRdfReader rdfParser = MimeTypesHelper.GetParser(response.ContentType);
+                                        rdfParser.Load(handler, new StreamReader(response.GetResponseStream()));
                                     }
                                     catch (RdfParserSelectionException)
                                     {
-                                        RaiseStoreWarning("Unable to select a RDF Dataset parser based on Content-Type: " + response.ContentType + " - seeing if the content is an RDF Graph instead");
-
-                                        try
-                                        {
-                                            // If not a RDF Dataset format see if it is a Graph
-                                            IRdfReader rdfParser = MimeTypesHelper.GetParser(response.ContentType);
-                                            rdfParser.Load(handler, new StreamReader(response.GetResponseStream()));
-                                        }
-                                        catch (RdfParserSelectionException)
-                                        {
-                                            var data = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                                            parser = StringParser.GetDatasetParser(data);
-                                            parser.Warning += RaiseStoreWarning;
-                                            parser.Load(handler, new StringReader(data));
-                                        }
+                                        var data = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                                        parser = StringParser.GetDatasetParser(data);
+                                        parser.Warning += RaiseStoreWarning;
+                                        parser.Load(handler, new StringReader(data));
                                     }
                                 }
-                                else
-                                {
-                                    parser.Warning += RaiseStoreWarning;
-                                    parser.Load(handler, new StreamReader(response.GetResponseStream()));
-                                }
-
-                                // Finally can invoke the callback
-                                callback(handler, state);
                             }
+                            else
+                            {
+                                parser.Warning += RaiseStoreWarning;
+                                parser.Load(handler, new StreamReader(response.GetResponseStream()));
+                            }
+
+                            // Finally can invoke the callback
+                            callback(handler, state);
                         }
                         catch (WebException webEx)
                         {

@@ -91,7 +91,7 @@ public class FullTextSparqlTests2
         var provider = new LuceneSearchProvider(LuceneTestHarness.LuceneVersion, _testHarness.Index);
         try
         {
-            q.AlgebraOptimisers = new IAlgebraOptimiser[] { new FullTextOptimiser(provider) };
+            q.AlgebraOptimisers = [new FullTextOptimiser(provider)];
             var processor = new LeviathanQueryProcessor(_dataset);
             var results = processor.ProcessQuery(q) as SparqlResultSet;
             if (results != null)
@@ -122,7 +122,7 @@ public class FullTextSparqlTests2
     [Fact]
     public void FullTextSparqlComplexLuceneSubjects1()
     {
-        RunTest(new LuceneSubjectsIndexer(_testHarness.Index, _testHarness.Analyzer, _testHarness.Schema), "SELECT * WHERE { ?match pf:textMatch 'http' . ?match a <http://example.org/noSuchThing> }", Enumerable.Empty<INode>());
+        RunTest(new LuceneSubjectsIndexer(_testHarness.Index, _testHarness.Analyzer, _testHarness.Schema), "SELECT * WHERE { ?match pf:textMatch 'http' . ?match a <http://example.org/noSuchThing> }", []);
     }
 
     [Fact]

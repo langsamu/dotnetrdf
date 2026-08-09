@@ -551,7 +551,7 @@ public class DynamicGraphNodeDictionaryTests
 
         void isEmpty(KeyValuePair<INode, object> actual)
         {
-            Assert.Equal(default(KeyValuePair<INode, object>), actual);
+            Assert.Equal(default, actual);
         }
 
         Action<KeyValuePair<INode, object>> isKVWith(INode expected)
@@ -612,16 +612,12 @@ public class DynamicGraphNodeDictionaryTests
         var p = g.CreateUriNode(UriFactory.Root.Create("urn:p"));
         var o = g.CreateUriNode(UriFactory.Root.Create("urn:o"));
 
-        using (var actual = g.Cast<KeyValuePair<INode, object>>().GetEnumerator())
+        using var actual = g.Cast<KeyValuePair<INode, object>>().GetEnumerator();
+        using var expected = new[] { s, p, o }.Cast<INode>().GetEnumerator();
+        while (expected.MoveNext() | actual.MoveNext())
         {
-            using (var expected = new[] { s, p, o }.Cast<INode>().GetEnumerator())
-            {
-                while (expected.MoveNext() | actual.MoveNext())
-                {
-                    Assert.Equal(new KeyValuePair<INode, object>(expected.Current, expected.Current), actual.Current);
-                    Assert.IsType<DynamicNode>(actual.Current.Value);
-                }
-            }
+            Assert.Equal(new KeyValuePair<INode, object>(expected.Current, expected.Current), actual.Current);
+            Assert.IsType<DynamicNode>(actual.Current.Value);
         }
     }
 

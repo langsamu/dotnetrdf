@@ -339,7 +339,7 @@ public class DynamicGraphStringDictionaryTests
 
         void isEmpty(KeyValuePair<string, object> expected)
         {
-            Assert.Equal(default(KeyValuePair<string, object>), expected);
+            Assert.Equal(default, expected);
         }
 
         Action<KeyValuePair<string, object>> isKVWith(string expected)
@@ -402,18 +402,14 @@ public class DynamicGraphStringDictionaryTests
         var p = "urn:p";
         var o = "urn:o";
 
-        using (var actual = g.Cast<KeyValuePair<string, object>>().GetEnumerator())
+        using var actual = g.Cast<KeyValuePair<string, object>>().GetEnumerator();
+        using var expected = new[] { s, p, o }.Cast<string>().GetEnumerator();
+        while (expected.MoveNext() | actual.MoveNext())
         {
-            using (var expected = new[] { s, p, o }.Cast<string>().GetEnumerator())
-            {
-                while (expected.MoveNext() | actual.MoveNext())
-                {
-                    var keyNode = g.CreateUriNode(UriFactory.Root.Create(expected.Current));
+            var keyNode = g.CreateUriNode(UriFactory.Root.Create(expected.Current));
 
-                    Assert.Equal(new KeyValuePair<string, object>(expected.Current, keyNode), actual.Current);
-                    Assert.IsType<DynamicNode>(actual.Current.Value);
-                }
-            }
+            Assert.Equal(new KeyValuePair<string, object>(expected.Current, keyNode), actual.Current);
+            Assert.IsType<DynamicNode>(actual.Current.Value);
         }
     }
 

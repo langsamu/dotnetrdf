@@ -13,7 +13,7 @@ public class RdfTestSuite
     private readonly Dictionary<string, MethodInfo> _runners;
     protected RdfTestSuite()
     {
-        _runners = new Dictionary<string, MethodInfo>();
+        _runners = [];
         foreach (MethodInfo m in GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic|BindingFlags.Public))
         {
             if (m.GetCustomAttribute(typeof(ManifestTestRunnerAttribute)) is ManifestTestRunnerAttribute runnerAttr)
@@ -33,6 +33,6 @@ public class RdfTestSuite
     {
         Assert.True(_runners.ContainsKey(t.Type.AbsoluteUri), "No runner found for test of type " + t.Type.AbsoluteUri);
         MethodInfo runner = _runners[t.Type.AbsoluteUri];
-        runner.Invoke(this, new[] { t });
+        runner.Invoke(this, [t]);
     }
 }

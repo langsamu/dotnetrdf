@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,7 @@ namespace VDS.RDF.Query.Inference;
 /// </remarks>
 public class SimpleN3RulesReasoner : IInferenceEngine
 {
-    private List<string[]> _rules = new List<string[]>();
+    private List<string[]> _rules = [];
     private SparqlUpdateValidator _validator = new SparqlUpdateValidator();
     private SparqlFormatter _formatter = new SparqlFormatter();
 
@@ -142,7 +142,7 @@ public class SimpleN3RulesReasoner : IInferenceEngine
         var variableMap = new Dictionary<INode, INode>();
         var nextVarID = 1;
         VariableContext vars = null;
-        if (t.Context != null && t.Context is VariableContext) vars = (VariableContext)t.Context;
+        if (t.Context is VariableContext context) vars = context;
 
         var output = new StringBuilder();
 

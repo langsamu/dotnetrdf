@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ internal class Node : Constraint
         IEnumerable<INode> invalidValues =
             from valueNode in valueNodes
             let shape = new Shapes.Node(this, this.Graph)
-            where !shape.Validate(dataGraph, valueNode, valueNode.AsEnumerable())
+            where !shape.Validate(dataGraph, valueNode, [valueNode])
             select valueNode;
 
         return ReportValueNodes(focusNode, invalidValues, report);

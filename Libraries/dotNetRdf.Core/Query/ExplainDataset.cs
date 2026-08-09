@@ -3,7 +3,7 @@
 // dotNetRDF is free and open source software licensed under the MIT License
 // -------------------------------------------------------------------------
 // 
-// Copyright (c) 2009-2025 dotNetRDF Project (http://dotnetrdf.org/)
+// Copyright (c) 2009-2026 dotNetRDF Project (http://dotnetrdf.org/)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,20 +39,20 @@ class ExplainDataset
 
     public ExplainQueryProcessor Processor { get; set; }
 
-    [Obsolete("Replaced by SetActiveGraph(IRefNode)")]
+    [Obsolete("Replaced by SetActiveGraph(IRefNode)", true)]
     public override void SetActiveGraph(Uri graphUri)
     {
         if (Processor != null)
         {
             if (Processor.HasFlag(ExplanationLevel.AnalyseNamedGraphs))
             {
-                Processor.PrintExplanations("Switching to named graph " + graphUri.ToSafeString());
+                Processor.PrintExplanations($"Switching to named graph {graphUri}");
             }
         }
         base.SetActiveGraph(graphUri);
     }
 
-    [Obsolete("Replaced by SetActiveGraph(IList<IRefNode>)")]
+    [Obsolete("Replaced by SetActiveGraph(IList<IRefNode>)", true)]
     public override void SetActiveGraph(IEnumerable<Uri> graphUris)
     {
         IList<Uri> gs = graphUris as IList<Uri> ?? graphUris.ToList();
@@ -63,7 +63,7 @@ class ExplainDataset
                 Processor.PrintExplanations("Switching to named graph as merge of the following graphs:");
                 foreach (Uri graphUri in gs)
                 {
-                    Processor.PrintExplanations(graphUri.ToSafeString());
+                    Processor.PrintExplanations(graphUri?.AbsoluteUri ?? "");
                     
                 }
             }

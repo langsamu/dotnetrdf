@@ -16,7 +16,7 @@ public static class ValueMappings
         {
             null => default,
             T typed => typed,
-            _ => throw new InvalidCastException(), // TODO: describe
+            var result => throw new InvalidCastException($"Cannot cast [{result}] to [{typeof(T)}]"),
         };
 
     public static string StringFromIri(GraphWrapperNode? node) => (node as IUriNode).Uri.ToString();

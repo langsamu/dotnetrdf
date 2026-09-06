@@ -30,6 +30,7 @@ internal static class Extensions
             TimeSpanNode timeSpanNode => timeSpanNode.AsTimeSpan(),
             NumericNode numericNode => numericNode.AsInteger(),
             StringNode stringNode when stringNode.DataType.AbsoluteUri.Equals(XmlSpecsHelper.XmlSchemaDataTypeString) => stringNode.AsString(),
+            StringNode stringNode when stringNode.DataType.AbsoluteUri.Equals(XmlSpecsHelper.XmlSchemaDataTypeAnyUri) => new Uri(stringNode.Value, UriKind.RelativeOrAbsolute),
             _ => node,
         };
 

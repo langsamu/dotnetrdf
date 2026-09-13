@@ -11,7 +11,7 @@ public class BlankNodeMapperTests
 
     [Fact]
     public void DefaultPrefixUsed() =>
-        new BlankNodeMapper().GetNextID().Should().StartWith("autos");
+        new BlankNodeMapper().GetNextID().Should().StartWith(BlankNodeMapper.DefaultPrefix);
 
     [Fact]
     public void GivenPrefixUsed() =>

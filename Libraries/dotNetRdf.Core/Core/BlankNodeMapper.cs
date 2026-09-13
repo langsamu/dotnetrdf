@@ -39,12 +39,17 @@ public class BlankNodeMapper
     private Dictionary<string, string> _remappings = [];
     private static long _nextid = 0;
     private static long _nextremap = 0;
-    private string _prefix = "autos";
+    private readonly string _prefix;
+
+    /// <summary>
+    /// The default used when no prefix is given.
+    /// </summary>
+    public const string DefaultPrefix = "autos";
 
     /// <summary>
     /// Creates a new Blank Node Mapper.
     /// </summary>
-    public BlankNodeMapper()
+    public BlankNodeMapper() : this(DefaultPrefix)
     { }
 
     /// <summary>

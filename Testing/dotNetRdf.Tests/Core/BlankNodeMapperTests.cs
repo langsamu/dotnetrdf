@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using static FluentAssertions.FluentActions;
+using System;
 using Xunit;
 
 namespace VDS.RDF;
@@ -12,18 +14,18 @@ public class BlankNodeMapperTests
         new BlankNodeMapper().GetNextID().Should().StartWith("autos");
 
     [Fact]
-    public void GivenPrefixNotUsed() =>
-        new BlankNodeMapper(GivenPrefix).GetNextID().Should().StartWith("autos");
+    public void GivenPrefixUsed() =>
+        new BlankNodeMapper(GivenPrefix).GetNextID().Should().StartWith(GivenPrefix);
 
     [Fact]
-    public void NullPrefixDoesNotThrow() =>
-        new BlankNodeMapper(null).GetNextID().Should().StartWith("autos");
+    public void NullPrefixThrows() =>
+        Invoking(() => new BlankNodeMapper(null)).Should().Throw<ArgumentNullException>();
 
     [Fact]
-    public void EmptyPrefixDoesNotThrow() =>
-        new BlankNodeMapper(string.Empty).GetNextID().Should().StartWith("autos");
+    public void EmptyPrefixThrows() =>
+        Invoking(() => new BlankNodeMapper(string.Empty)).Should().Throw<ArgumentException>();
 
     [Fact]
-    public void WhitespacePrefixDoesNotThrow() =>
-        new BlankNodeMapper(" ").GetNextID().Should().StartWith("autos");
+    public void WhitespacePrefixThrows() =>
+        Invoking(() => new BlankNodeMapper(" ")).Should().Throw<ArgumentException>();
 }

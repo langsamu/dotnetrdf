@@ -51,9 +51,20 @@ public class BlankNodeMapper
     /// Creates a new Blank Node Mapper that uses a custom Prefix.
     /// </summary>
     /// <param name="prefix">Prefix.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="prefix"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="prefix"/> is empty or whitespace.</exception>
     public BlankNodeMapper(string prefix)
     {
-        if (prefix == null || prefix.EndsWith(string.Empty)) prefix = "autos";
+        if (prefix is null)
+        {
+            throw new ArgumentNullException(nameof(prefix));
+        }
+
+        if (string.IsNullOrWhiteSpace(prefix))
+        {
+            throw new ArgumentException("Prefix cannot be empty or whitespace.", nameof(prefix));
+        }
+
         _prefix = prefix;
     }
 

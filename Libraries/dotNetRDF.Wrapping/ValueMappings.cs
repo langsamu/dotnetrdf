@@ -72,6 +72,11 @@ public static class ValueMappings
 
     public static ValueMapping<T> EnumFromUri<T>(string prefix) where T : Enum => node =>
     {
+        if (node is null)
+        {
+            return default;
+        }
+
         if (node is not IUriNode { Uri: var uri })
         {
             throw new Exception("node is not a URI node");

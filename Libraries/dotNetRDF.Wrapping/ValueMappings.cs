@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using VDS.RDF.Nodes;
 using VDS.RDF.Query.Builder;
 using VDS.RDF.Query.Patterns;
@@ -33,6 +34,8 @@ public static class ValueMappings
     public static Uri UriFromStringLiteral(GraphWrapperNode? node) => new((node as ILiteralNode).Value);
 
     public static DateTimeOffset DateTimeOffsetFromStringLiteral(GraphWrapperNode? node) => DateTimeOffset.Parse((node as ILiteralNode).Value);
+
+    public static Regex RegexFromStringLiteral(GraphWrapperNode? node) => new((node as ILiteralNode).Value);
 
     public static IGraph? GraphFromGraphLiteral(GraphWrapperNode? node) => (node as IGraphLiteralNode)?.SubGraph;
 

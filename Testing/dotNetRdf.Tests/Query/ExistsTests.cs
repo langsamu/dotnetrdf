@@ -141,7 +141,7 @@ WHERE
             }
             """;
 
-        for (var i = 0; i < 500; i++)
+        for (var i = 0; i < 5000; i++)
         {
             var results = (SparqlResultSet)g.ExecuteQuery(query);
             Assert.False(results.Result);
